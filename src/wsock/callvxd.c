@@ -1,7 +1,12 @@
 /*
  *  libsocket - BSD socket like library for DJGPP
  *  Copyright 1997, 1998 by Indrek Mandre
- *  Copyright 1997, 1998 by Richard Dawe
+ *  Copyright 1997-2000 by Richard Dawe
+ *
+ *  Portions of libsocket Copyright 1985-1993 Regents of the University of 
+ *  California.
+ *  Portions of libsocket Copyright 1991, 1992 Free Software Foundation, Inc.
+ *  Portions of libsocket Copyright 1997, 1998 by the Regdos Group.
  *
  *  This library is free software; you can redistribute it and/or modify it
  *  under the terms of the GNU Library General Public License as published
@@ -22,50 +27,79 @@
  * CallVXD functions in this C file taken from Dan Hedlund's wsock library.
  */
 
-#include <sys/farptr.h>
-#include <sys/segments.h>
 #include <stdio.h>
-#include <dpmi.h>
-#include <pc.h>
 #include <string.h>
 #include <fcntl.h>
 #include <errno.h>
 
-#include <lsck/wsock.h>
-#include <lsck/ws.h>
-#include <winsock.h>
+#include <dpmi.h>
+#include <sys/farptr.h>
+#include <sys/segments.h>
 
-#include "lsckglob.h"
+#include "wsock.h"
 #include "farptrx.h"
 
+int VXDError (int wsock_errno);
+
 int _VXDError;
-extern LSCK_WSOCK_ERROR WSA_ERRORS[];
+extern int WSockEntry[2];
 
-void CallVxD (int func)
+/* -------------------
+ * - __wsock_callvxd -
+ * ------------------- */
+
+void __wsock_callvxd (int func)
 {
-    asm volatile ("pushl   %%es                     \n\
-                   pushl   %%ecx                    \n\
-                   popl    %%es                     \n\
-                   lcall   _WSockEntry              \n\
-                   andl    %%eax, 0x0000ffff        \n\
-                   popl    %%es"
-                   : "=a" (_VXDError)
-                   : "a" (func), "b" (0), "c" (SocketP));
+    __asm__ __volatile__ ("pushw   %%es                     \n\
+                           pushw   %%cx                     \n\
+                           popw    %%es                     \n\
+                          "
+#if    (GAS_MAJOR == 2) \
+    && ((GAS_MINOR < 9) || ((GAS_MINOR == 9) && (GAS_MINORMINOR < 5)))
+                          "lcall   _WSockEntry              \n\
+                          "
+#else
+			  "lcall   *_WSockEntry              \n\
+                          "
+#endif			  
+                          "andl    $0x0000ffff, %%eax       \n\
+                           popw    %%es"
+			  :"=a" (_VXDError)
+			  :"a" (func), "b" (0), "c" (SocketP)
+    );
 
-    /* andl    0x0000ffff, %%eax       \n\ */
-
-    if ( _VXDError == 0xffff ) errno = EAGAIN;
-    if (_VXDError && (_VXDError != 0xffff)) VXDError ();
+    if (_VXDError == 0xffff)
+	errno = EAGAIN;
+    if (_VXDError && (_VXDError != 0xffff))
+	errno = __wsock_errno (_VXDError);
 }
 
-void VXDError (void)
+/* --------------------
+ * - __wsock_callvxd2 -
+ * -------------------- */
+
+void __wsock_callvxd2 (int func, int sel)
 {
-  int a;
+    __asm__ __volatile__ ("pushw   %%es                     \n\
+                           pushw   %%cx                     \n\
+                           popw    %%es                     \n\
+                          "
+#if    (GAS_MAJOR == 2) \
+    && ((GAS_MINOR < 9) || ((GAS_MINOR == 9) && (GAS_MINORMINOR < 5)))
+                          "lcall   _WSockEntry              \n\
+                          "
+#else
+			  "lcall   *_WSockEntry              \n\
+                          "
+#endif			  
+                          "andl    $0x0000ffff, %%eax       \n\
+                           popw    %%es"
+			  :"=a" (_VXDError)
+			  :"a" (func), "b" (0), "c" (sel)
+    );
 
-  for (a = 0; (WSA_ERRORS [a].ErrorNum != _VXDError) && (WSA_ERRORS [a].ErrorNum != -1); ++ a);
-
-  errno = WSA_ERRORS[a].error;
-
-/*  printf ("%s\r\n", WSA_ERRORS [a].Error);
-			IM: no need for that, we're not so alpha anymore */
+    if (_VXDError == 0xffff)
+	errno = EAGAIN;
+    if (_VXDError && (_VXDError != 0xffff))
+	errno = __wsock_errno (_VXDError);
 }

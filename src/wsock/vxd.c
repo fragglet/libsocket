@@ -1,7 +1,12 @@
 /*
  *  libsocket - BSD socket like library for DJGPP
  *  Copyright 1997, 1998 by Indrek Mandre
- *  Copyright 1997, 1998 by Richard Dawe
+ *  Copyright 1997-2000 by Richard Dawe
+ *
+ *  Portions of libsocket Copyright 1985-1993 Regents of the University of 
+ *  California.
+ *  Portions of libsocket Copyright 1991, 1992 Free Software Foundation, Inc.
+ *  Portions of libsocket Copyright 1997, 1998 by the Regdos Group.
  *
  *  This library is free software; you can redistribute it and/or modify it
  *  under the terms of the GNU Library General Public License as published
@@ -24,16 +29,23 @@
 
 #include <lsck/vxd.h>
 
+/* RD: Modified the assembly code slightly: "pushl %%es" -> "pushw %%es" &
+ * used xorl ... instead of movl $0, ... . Made it volatile too. */
+
+/* ---------------
+ * - VxdGetEntry -
+ * --------------- */
+
 void VxdGetEntry (int *Entry, int ID)
 {
-  asm ("pushl   %%es            \n\
-        movw    %%di, %%es      \n\
-        intb    $0x2f           \n\
-        movl    $0, %%ecx       \n\
-        movw    %%es, %%cx      \n\
-        popl    %%es"
-        : "=c" (Entry [1]), "=D" (Entry [0])
-        : "a" (0x1684), "b" (ID), "D" (0)
-        : "%eax", "%edx");
+  __asm__ __volatile__ ("pushw   %%es            \n\
+                         movw    %%di, %%es      \n\
+                         int     $0x2f           \n\
+                         xorl    %%ecx, %%ecx    \n\
+                         movw    %%es, %%cx      \n\
+                         popw    %%es"
+			  : "=c" (Entry[1]), "=D" (Entry[0])
+			  : "a" (0x1684), "b" (ID), "D" (0)
+			  : "cc"
+    );
 }
-

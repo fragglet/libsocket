@@ -1,0 +1,76 @@
+@comment The start of a comment is indicated by the following comment. This
+@comment syntax is used by the script funcstxh.sh: @comment function <name>
+
+@comment function connect
+
+@node connect, socket
+@findex connect
+
+@subheading Syntax
+
+@example
+#include <sys/types.h>
+#include <sys/socket.h>
+
+int connect (int s, struct sockaddr *serv_addr, size_t *addrlen);
+@end example
+
+@subheading Description
+
+If @var{s} refers to a stream socket (@code{SOCK_STREAM}), @code{connect()}
+will attempt to establish a connection to the specified destination address.
+
+If @var{s} refers to a datagram socket (@code{SOCK_DGRAM}), @code{connect()}
+associates a default destination address for use by @code{send()} and
+@code{sendto()}.  It also limits @code{recv()} calls to receiving from this
+address, rather than the default of any.  To remove the association, call
+@code{connect()} with an invalid address, e.g. a null address (0.0.0.0).
+
+@subheading Return Value
+
+On successful completion the function returns zero.  Otherwise, a value of -1
+is returned and @var{errno} is set appropriately.
+
+@table @samp
+@item EBADF
+The parameter @var{s} is not valid.
+@item EFAULT
+The address data cannot be accessed.
+@item ENOTSOCK
+The descriptor is not a socket.
+@item EISCONN
+The socket is already connected.
+@item ECONNREFUSED
+The connection was refused by the server.
+@item ETIMEDOUT
+The connection timed out.
+@item ENETUNREACH
+The network is unreachable.
+@item EADDRINUSE
+The address is already in use.
+@item EINTR
+The call was interrupted by a signal.
+@item EOPNOTSUPP
+The interface does not support @code{connect()}.
+@item EINPROGRESS
+The socket is non-blocking and the connection cannot be made immediately.  On
+completion, the socket can be selected for writing
+(@pxref{select, , select, libc}).  Use
+@code{getsockopt()} to read the option @code{SO_ERROR} at level
+@code{SOL_SOCKET} to check if the call completed successfully -
+@code{SO_ERROR}'s value will be 0 on success, or an @var{errno} value
+otherwise.
+@item EALREADY
+The socket is non-blocking and a previous @code{connect()} request is
+completing.
+@end table
+
+@subheading Portability
+
+@portability posix, unix98
+
+@subheading Example
+
+@example
+
+@end example

@@ -1,0 +1,71 @@
+@c From: Alain Magloire <alainm@rcsm.ece.mcgill.ca>
+@c Some modifications by Richard Dawe <richdawe@bigfoot.com>
+
+@comment The start of a comment is indicated by the following comment. This
+@comment syntax is used by the script funcstxh.sh: @comment function <name>
+
+@comment function accept
+
+@node accept, socket
+@findex accept
+
+@subheading Syntax
+
+@example
+#include <sys/types.h>
+#include <sys/socket.h>
+
+int accept (int s, struct sockaddr *address, size_t *addresslen);
+@end example
+
+@subheading Description
+
+The @code{accept()} function returns the first completed connection from the
+the pending connection queue form a listening socket.  The parameter @var{s}
+is a socket descriptor that has been created with @code{socket()}, bound
+to a local socket-address with @code{bind()} and is listening for connections
+after @code{listen()}.  The @code{accept()} will return a brand new socket
+descriptor.  If the socket is not marked non-blocking, @code{accept()}
+blocks the caller until a connection is present.  If marked non-blocking
+and no pending connections are present it returns -1 and set @var{errno} to
+EWOULDBLOCK.  If @var{address} is not NULL it specifies a buffer
+in which to return the socket address, the @var{addresslen} is a value-result
+that specified the amount of space for @var{address}. On return
+when @var{addresslen} will hold the size written to @var{address}.
+
+@subheading Return Value
+
+On successful completion the function returns the descriptor of the accepted
+socket.  Otherwise, a value of -1,  and @var{errno} is set.
+
+@table @samp
+@item EBADF
+The parameter s is not valid.
+@item ECONNABORTED
+The peer has closed the connection.
+@item EINTR
+The call was interrupted by a signal.
+@item EINVAL
+The socket was not in the listening state.
+@item EMFILE
+The per-process descriptor table is full.
+@item ENFILE
+The system file table is full.
+@item ENOBUFS
+Insufficient resources.
+@item ENOTSOCK
+The descriptor is not a socket.
+@item EOPNOTSUPP
+The interface does not support @code{accept()}
+@item EWOULDBLOCK
+The socket is marked non-blocking and no connections are present.
+@end table
+
+@subheading Portability
+
+@portability posix, unix98
+
+@subheading Example
+
+@example
+@end example

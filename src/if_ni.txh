@@ -1,0 +1,45 @@
+@comment The start of a comment is indicated by the following comment. This
+@comment syntax is used by the script funcstxh.sh: @comment function <name>
+
+@comment function if_nameindex
+
+@node if_nameindex, socket
+@findex if_nameindex
+
+@subheading Syntax
+
+@example
+#include <net/if.h>
+
+struct if_nameindex *if_nameindex (void);
+@end example
+
+@subheading Description
+
+This function returns an array of @samp{if_nameindex} structures, one per
+interface.  The array is terminated with an entry with a @samp{if_index} field
+of 0 and a @samp{if_name} field of NULL.
+
+The function @code{if_freenameindex()} (@pxref{if_freenameindex}) should be
+called, passing the pointer returned by this function, in order to free memory.
+
+@subheading Return Value
+
+A pointer to the array of @samp{if_nameindex} structures or @samp{NULL} on
+error.  On error, @var{errno} will contain the error code.
+
+Possible errors for this function are:
+
+@table @samp
+@item ENOBUFS
+There were insufficient system resources to complete the request.
+@end table
+
+@subheading Portability
+
+Open Group XNS 5.2 Draft 1.0
+
+@subheading Example
+
+@example
+@end example

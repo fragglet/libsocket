@@ -1,0 +1,66 @@
+libsocket 0.7.5 To-dos
+======================
+
+- Implement send/recv timeouts with csock module? And wsock too?
+. Yep, use non-blocking I/O to avoid blocking in VxD. Do it with Unix domain
+  sockets too.
+. Make this part of the generic layer in 0.7.5.
+
+- Write guide to interfaces. Mention:
+. ioctl modifying lsd->blocking.
+. __dpmi_yield() - when it's necessary, when it's not, e.g. __*_select_wait().
+. Base it on my doc about the interfaces - did I delete it during my clean-up?
+
+- Function to return list of IP addresses?
+
+- Write program to kill all csock sockets.
+
+- Fake MSG_WAITALL for csock interface.
+. Maybe this could be done in the BSD socket layer?
+. No, would be better to do it at the interface level, rather than assume that
+  the interface can't handle it.
+. Later: Actually use interface descriptor flags to indicate whether the
+  generic support is necessary?
+. Yes, use a generic interface to support this kind of stuff (see blue book).
+
+- SO_ERROR support for csock?
+. What should this contain?
+
+- Put in next release: *msg() functions & then implement recv[from](),
+  send[to]() on top of them.
+. This requires me to understand scatter-gather I/O.
+
+- Watt-32 for libsocket 0.7.5: (CVS branch libsocket-0_7_5)
+- Sort out packing stuff in Watt-32 includes
+- Make Watt-32 code is updating socket descriptor fields in right places.
+
+- Program to kill all protocol handlers for packet drivers?
+
+- getaddrinfo() support, gai_strerror(), freeaddrinfo()
+
+- getnameinfo() support
+
+- Generalise the MSG_PEEK support from csock to allow wsock & future modules
+  to use it - add support for different addresses, a queue, etc. Winsock's
+  MSG_PEEK and FIONREAD support is broken, apparently. MSG_WAITALL?
+
+- MSG_DONTWAIT flag - non-blocking for one op. Just flip in & out of non-block
+  mode.
+
+- OOB? sockatmark? (alainm)
+
+- Add examination of routing table through ioctl? Add Linux-compatible routing
+  table - see net/route.h from Linux.
+
+- Make win9x functions use static memory -> addresses table can be rebuilt
+  without having to restart program. If dynamic -> lots of memory allocation
+  = nasty.
+. Later: No, just have to be careful.
+
+- Socket address stored in union?
+
+- Add support for other __FSEXT_* like dup?
+. => reference count on socket structures? This should be OK now sockets are
+  associated with their descriptors via FSEXT.
+
+Richard Dawe <richdawe@bigfoot.com> 2000-05-27

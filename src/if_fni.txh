@@ -1,0 +1,42 @@
+@comment The start of a comment is indicated by the following comment. This
+@comment syntax is used by the script funcstxh.sh: @comment function <name>
+
+@comment function if_freenameindex
+
+@node if_freenameindex, socket
+@findex if_freenameindex
+
+@subheading Syntax
+
+@example
+#include <net/if.h>
+
+void if_freenameindex (struct if_nameindex *ptr);
+@end example
+
+@subheading Description
+
+This function frees the memory used by the array returned by
+@xref{if_nameindex}.  The program should not use @var{ptr} after calling
+@code{if_freenameindex()}.
+
+@subheading Return Value
+
+None. However, an error may occur.  The error code will be stored in
+@var{errno}.
+
+Possible errors for this function are:
+
+@table @samp
+@item EFAULT
+The memory pointed to by @var{ptr} could not be accessed.
+@end table
+
+@subheading Portability
+
+Open Group XNS 5.2 Draft 1.0
+
+@subheading Example
+
+@example
+@end example

@@ -1,0 +1,229 @@
+libsocket Development To-dos
+============================
+
+    It'll never be finished, but here's some stuff that needs doing:
+
+- Doc supported forms of sockets! +++DONE
+. Doc fact diag program tests some.
+
+- Update BSD compatibility for Coda SOCK.VXD interface.
+. Make a new HTML page for compatibility testing.
+
+- Better handling of string length in mailslots -> avoid buffer overruns.
+
+- Unix domain sockets: Flags, notably OOB, could be supported by new bitfields
+  in header. Socket options? Sort out the mix-up with datagram sockets that are
+  connected. I don't think they will work too well. Sequence numbers with
+  datagrams will require a list to keep track of all the received sequence
+  numbers. This would allow secrets to be used with datagrams too. It is
+  probably better to move towards this. Currently the code assumes one
+  connection.
+
+. Secret should be combo of random number + pid. +++DONE
+
+- Unix domain sockets: Make __unix_[send|recv]() shells that call
+  __unix_[sendto|recvfrom](). The latter would then have to check that the
+  spec'd address is the same as the socket is connected to. This would add
+  a little overhead, but it would save duplicating code => less bugs.
+
+- Check 8+3 convention of mailslot names. If they aren't, map them to
+  some other pathname that is. Maybe split it into 8+3 convention?
+
+- shutdown() for Unix domain sockets. +++DONE, but only a shell
+. socket options too?
+. fcntl, ioctl support.
+
+- Fix bugs in length calcs in src/unix/u_*.c
+
+- To comply better with XNS standard:
+. f[getÝset]pos(), ftell(), lseek() should return ESPIPE.
+  +++DONE for lseek() - the others don't have FSEXT calls!
+  Later: Ahhh, but fgetpos(), ftell() call lseek() & notice its return value.
+         fsetpos() calls fseek(), but appears to ignore its return value!
+. poll() function?
+. socketpair() function +++EMPTY
+. if_name*() functions +++DONE
+. inet_pton(), inet_ntop() function +++DONE, NEED DOCS
+. Alter the include files
+
+- Memory allocation monitoring -> check for memory leaks causing JW's problems.
+. Problems solved, but using MSS would be a good idea.
+
+- Note about what has been tested/not tested? multicast particularly
+
+- Test suite should use bash to spawn clients & server.
+. Look at comp.software.testing FAQ - Later: this isn't terribly helpful.
+
+- sendto() - Unix98 spec diag
+. send() -> calls sendto() -> interface funcs & sim for recv() & recvfrom()?
+
+- Broadcast doesn't work on wsock interface?
+. Broadcast should not be enabled by default. Does csock handle this?
+
+- Move more from interface routines to BSD layer:
+. socket length checks => interface descriptor should contain sockaddress sizes
+
+- Bug in SOCK.VXD? Line 140 in do_poll() in socket.c - surely if a connection
+  is established select() should return read-ready before the connection has
+  been accept()'d? (Reported by Jason Winnebeck)
+
+- Update FAQ with oth Winsock 2 file.
+. What other Winsock 2 file?
+
+- Multiple network connection configs in lsck.cfg?
+
+- Support BSD IF flags ioctl? (See BSD manuals).
+. Need to add interface flags ioctl?
+. SIOC[GS]PGRP ioctls equivalent to fcntl() F_[GS]ETOWN
+. Broadcast address, as with dest addr?
+. Interface lists to get example on pp. 426- of Stevens's book to run.
+
+- Relative path names with Unix domain sockets?
++++DONE, added support, but drops drive spec
+
+- EAGAIN on server first transmit over new UDP - reported by JasonW.
+. Same cause as EINVAL? Probably not.
+
+- EINVAL on client first send over new UDP - reported by JasonW.
++++FIXED, but needs testing
+
+- Sort out the functionality split between BSD layer and interfaces - it's
+  a mess.
+. bind()
+. connect() - needs more commenting - may automatically bind() => should know
+  interface address, should be stored by interface?
+
+- Write internal func docs
+. Put in proper linking between funcs?
+. Add descriptions, based on notes.
+. Add internal func docs to info manual.
+
+- wsock getsockopt() bug - if you ask for a parameter and it's an int, then
+  on return Value = NULL, ValueLength = 0 and the value is in IntValue.
+. Need to update WSOCK.VXD docs.
+.  SO_RCVLOWAT, SO_SNDLOWAT not supported, but WSOCK.VXD returns status OK!
+   . Later: Er, does it? Nope.
+. SO_RCVTIMEO, SO_SNDTIMEO supported, return -1 = infinite wait.
+   . According to the Win32 API, these shouldn't be supported!
+. Update using list supplied in Win32 API?
+. Only seems to return - generates EFAULT if you don't enter with an address.
+. setsockopt() has similar entry conditions.
+
+- Change listen() code so that interface maxima are set in backlog field, if
+  necessary. Currently interface functions cannot set backlog - if __x_listen()
+  succeeds, backlog is set to the value asked for. Is there an ioctl/sockopt
+  to probe backlog?
+
+- Update dox with Unix98-style func decls.
+. Have to update func decls too!
+
+- BSD socket ioctls should work on bound datagram sockets too - they have an
+  interface address.
++++DONE, needs testing, but dgram should pass, once bound.
+
+- Name clash on Unix domain sockets? What happens - what mailslot return?
+
+- Doc and ref which func's from DJGPP's libc can be used on sockets.
+
+- rexec() docs?
+. Defined in netdb.h on Linux - check this plus other r*() funcs, so can
+  define in right place.
+
+- Winsock 1, 2.x interoperability problems?
+
+- Problem solving guide, getting started guide.
+. Config guide should be doc'd somewhere
+
+- Need to re-read WSOCK.VXD, SOCK.VXD and note any potential issues in using
+  libsocket in the new info FAQ.
+
+- Examples in info docs?
+
+- Concept index, definitions, etc.?
+
+- How do you view docs - explain in the manual. 'info libsocket ...' - explain
+  useful indices - 'info libsocket alpha socket', etc.
++++OK, added to getting started section.
+
+- Fix bug in recv(), recvfrom() for csock interface. They need to distinguish
+  between streams & datagrams because of SOCK.VXD.
+
+- connect() also limits recv's to connect'd dest addr for datagram sockets.
+  I think this is broken right now!
+
+- JW says prob's with select(), accept() on csock interface.
+
+- Sort out SIGPIPE, EPIPE handling.
++++DONE, not tested though.
+
+- csock: cli connect() before srv accept() doesn't -> connect?
+. Reported by JW, confirmed
+. Cristian Emmerick also gets a crash.
+. Failed connect is then signalled by ENOTCONN error on sending data? Yep,
+  actually clientn did not check connect() return code.
++++OK, I think
+
+- SOCK.VXD accept() call hogs processor?
+. Non-blocking accept() implementation has a lot of overhead, if call fails.
+  Should link lsd with created nsd, so can just re-use on next call to
+  accept(), until succesful init?
+
+- DSM violates syntax.
+. pakke needs to be fixed.
++++DONE
+
+- Fix bug in netsetup with scanf().
++++DONE - tightened up the input parsing.
+
+- Roll FAQ into info docs.
+. As separate texinfo doc, to allow to be updated separately.
+
+- Fix bug on select() for read when non-accept() but connection waiting with
+  SOCK.VXD.
+
+- Merge config.txt, u-guide.txt; config.txt should be in top-level directory
+  as well as redist/
+. config.txt now in top-level directory too.
+
+- Make package on old man pages, for those who want them.
++++DONE
+
+- Set up Bugzilla for libsocket 0.8.0.
++++DONE
+
+- VxD loading routines don't actually cope with failure?
+
+- Linking code that uses shutdown() -> undefined symbols?
++++OK, it seems to work?
+
+- hstrerror(), inet_net_ntop() and inet_net_pton() functions?
+. From bind's libresolv library?
+
+- Doc diff bet FIONBIO and O_NONBLOCK for fcntl(), ioctl() as per thread
+  in comp.os.msdos.djgpp.
++++DONE
+
+- Rename 'netsetup' -> 'lsckcfg'; make 'diag' a distributable program in its
+  own right, e.g. 'lsckdiag'.
+
+- Include demos, Beej's tutorial in binary dist!
++++DONE, added to 'install' target.
+
+- Make install-info auto script using /dev/env/DJDIR.
+
+- Get docs to build with texi2dvi and dvi2ps for doc dist.
+
+- SOCK.VXD docs - recommend that select is called before send/recv.
+
+- Use Cristian's suggestion for removing globals from src/csock/c_send.c.
+
+- Add instinfo.bat to CVS repository (use Cygwin client).
+
+- Example lsck.cfg.
+
+- Fix binutils ver workaround to use Makefile subst + macros.
+
+Well, I thought it was almost finished <g>. It may look like gibberish, but
+they're my personal development notes, so what can you expect?
+
+Rich Dawe <richdawe@bigfoot.com> 2002-07-28

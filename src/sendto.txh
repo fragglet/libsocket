@@ -1,0 +1,87 @@
+@c From: Alain Magloire <alainm@rcsm.ece.mcgill.ca>
+@c Some modifications by Richard Dawe <richdawe@bigfoot.com>
+
+@comment The start of a comment is indicated by the following comment. This
+@comment syntax is used by the script funcstxh.sh: @comment function <name>
+
+@comment function sendto
+
+@node sendto, socket
+@findex sendto
+
+@subheading Syntax
+
+@example
+#include <sys/types.h>
+#include <sys/socket.h>
+
+ssize_t sendto (int s, const void * msg, size_t len,
+                int flags, const struct sockaddr *to, size_t tolen);
+@end example
+
+@subheading Description
+
+The function @code{sendto()} is used to transmit a message to another socket.
+The address of the target is given by @var{to} with @var{tolen} specifying
+its size.  A NULL value fo @var{to} indicats that no socket-address is 
+specifiend and the socket is in the CONNECTED state, the corresponding 
+@var{tolen} is then ignored.  The length of the message is given by @var{len}.
+If the message is too long to pass atomically through the underlying protocol,
+the error @samp{EMSGSIZE} is returned, and the message is not transmitted.
+If no messages space is available at the socket to hold the message to be
+transmitted, then @code{sendto} normally blocks, unless the socket has been
+placed in non-blocking I/O mode.  The @code{select()}
+(@pxref{select, , select, libc})
+call may be used to determine when it is possible to send more data.
+The @var{flags} parameter may include one or more of the following:
+
+@table @samp
+@item MSG_OOB
+Used to send @samp{out-of-band} data on sockets that support this notion.
+@item MSG_DONTROUTE
+Used only by diagnostic or routing programs.
+@item MSG_EOR
+Terminates a record for protocols which support that concept.
+@end table
+
+@subheading Return values
+
+The call returns the number of characters sent, or -1 and
+@var{errno} set, if an error occurred.
+
+@table @samp
+@item EBADF
+An invalid descriptor was specified.
+
+@item ENOTSOCK
+The argument @samp{s} is not a socket.
+
+@item EFAULT
+An invalid user space address was specified for a parameter.
+
+@item EMSGSIZE
+The socket requires that message be sent atomically, and the size
+of the message to be sent made this impossible.
+
+@item EWOULDBLOCK
+The socket is marked non-blocking and the requested operation would block.
+
+@item EPIPE
+The socket is shut for writing (@pxref{shutdown}).  If the socket is a stream,
+the SIGPIPE signal is raised (@pxref{signal, , signal, libc}).
+
+@item ENOBUFS
+The system was unable to allocate an internal buffer.
+The operation may succeed when buffers become available.
+
+@end table
+
+@subheading  Portability
+
+@portability posix, unix98
+
+@subheading Example
+
+@example
+@end example
+

@@ -1,0 +1,45 @@
+@comment The start of a function description is indicated by the following
+@comment comment. This syntax is used by the script functxh.sh:
+@comment @comment function <name>
+
+@comment function inet_pton
+
+@node inet_pton, socket
+@findex inet_pton
+
+@subheading Syntax
+
+@example
+#include <sys/socket.h>
+#include <arpa/inet.h>
+
+int inet_pton (int af, const char *src, void *dst);
+@end example
+
+@subheading Description
+
+This function converts network addresses from presentation format
+(i.e. strings) into numeric format (i.e. binary).  This is a replacement for
+@code{inet_aton} (@pxref{inet_aton}), which cannot cope with IPv6 addresses.
+
+@var{af} specifies the address family of the presentation format, e.g.
+@samp{AF_INET} or @samp{AF_INET6}.  The address string @var{src} will be
+converted to the appropriate address format, e.g. @samp{struct in_addr} or
+@samp{struct in6_addr}, and stored in @var{dst}.
+
+@subheading Return Values
+
+On successful completion the function returns 1.  If the presentation format
+is not understood, 0 is returned.  If the address family @var{af} is not
+known or supported, -1 is returned and @var{errno} is set to
+@samp{EAFNOSUPPORT}.
+
+@subheading Portability
+
+@portability posix
+
+@subheading Example
+
+@example
+@end example
+

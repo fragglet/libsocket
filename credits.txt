@@ -1,0 +1,157 @@
+File: lsck.inf,  Node: Credits,  Next: Changelog,  Prev: Known Bugs,  Up: Top
+
+Credits
+*******
+
+The following people have contributed to libsocket.  The list is in no
+particular order.  A big thank you to all those listed!
+
+   * Dan M. Hedlund `http://www.geocities.com/SiliconValley/Peaks/8523/'
+
+
+     His Wsock library is the base of this library.
+
+
+   * Alfons Hoogervorst `http://www.hoogervorst.demon.nl/'
+
+
+     His dsock library helped Indrek to get select() and blocking
+     recv() calls work.  He also contributed some information on how to
+     obtain Windows machine and DNS IP addresses.
+
+
+   * The Regdos Group `http://www.hoogervorst.demon.nl/'
+
+
+     They contributed the registry-access code that is used to
+     automatically find out some IP settings.  Alfons is the maintainer.
+
+
+   * Michael Callahan, Peter Braam and the Coda Project
+     `http://www.coda.cs.cmu.edu/'
+
+
+     For Win95 port of the Coda network file system, a VxD for BSD
+     socket networking was produced.  This enabled me to add Winsock 2
+     support to libsocket.  This is something I had been trying to do
+     for over a year, so I am extremely grateful and happy that this
+     has happened! Big thanks.   - _Rich_
+
+
+   * Heiko Jappe
+
+
+     He has a very nice habit of finding all the nastiest bugs and
+     reporting them.  There would be some very bad "features" in the
+     library without him. - _Indrek_
+
+   * Wojciech Galazka
+
+
+     He pointed out some bugs and has some great ideas.  A man with an
+     open mind. - _Indrek_ - I agree - _Rich_
+
+
+   * Indrek Mandre `http://www.pld.ttu.ee/~indrek/'
+
+
+     Thanks to Indrek for writing the library in the first place,
+     letting me contribute to it, and then, gulp, trusting me to look
+     after it.  This man has a lot faith and trust!  Thanks also for
+     providing a mirror site.   - _Rich_
+
+
+   * Petr Frisch
+
+
+     Thanks to Petr for finding that libsocket's non-blocking sockets
+     didn't work properly, and for informing me how they should work. -
+     _Rich_
+
+
+   * Vlad Pambucol
+
+
+     Thanks to Vlad for noticing that his data was being mangled by
+     libsocket, which lead to me finding an absolutely _huge_ bug! -
+     _Rich_
+
+
+   * Philippe Hanrigou
+
+
+     Thanks to Phillipe for trying to port BSD traceroute, finding
+     problems and then diving into libsocket's internals to find out
+     the problem.  Bravery!  Thanks for the feedback. - _Rich_
+
+
+   * Ove Kaaven
+
+
+     Thanks to Ove for providing me with information about how Windows
+     3.11 stores its DNS IP addresses.  Thanks for your packet driver
+     code - sorry I was unable to integrate it into libsocket. - _Rich_
+
+
+   * Michael Mauch
+
+
+     Thanks to Michael for pointing out that the resolving code didn't
+     open the files in text mode, which meant that setting fmode to
+     binary could lead to the resolving code failing inexplicably. -
+     _Rich_
+
+
+   * Alex Fiori
+
+
+     Thanks for providing a mirror site for a while. - _Rich_
+
+
+   * Federico Bianchi
+
+
+     Thanks for sending me a *huge* amount of networking information.
+     I hope I actually have enough time at some point to something
+     useful with it ;) Thanks for the support and ideas! - _Rich_
+
+
+   * Alain Magloire
+
+
+     Thanks for all the advice on sockets on Unix, POSIX, etc.  Thanks
+     for motivating me to add Unix domain socket support.  I think
+     libsocket will improve and prosper greatly with your support! -
+     _Rich_
+
+
+   * Beej `http://www.ecst.csuchico.edu/~beej/'
+
+
+     Thanks for letting me distribute your sockets programming guide
+     with libsocket. - _Rich_
+
+
+   * Jason Winnebeck `http://skyscraper.fortunecity.com/solarcity/552/'
+
+
+     Thanks for being patient, giving me copious debugging info and
+     feedback generally! - _Rich_
+
+
+   * Eli Zaretskii
+
+
+     For his continual advice and help with all things DJGPP - an
+     inspiration.
+
+
+   * DJ Delorie
+
+
+     For the DJGPP phenomenom!
+
+
+Thanks to everyone else who has shown interest in libsocket, and has
+mailed me to say they are using it.  Please continue to do this!
+

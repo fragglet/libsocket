@@ -1,0 +1,117 @@
+@comment The start of a comment is indicated by the following comment. This
+@comment syntax is used by the script funcstxh.sh: @comment function <name>
+
+@comment function ioctl_list
+
+@node ioctl_list, socket
+
+@subheading Syntax
+
+@example
+#include <sys/ioctl.h>
+#include <ioctls.h>
+#include <sys/socket.h>
+#include <net/if.h>
+@end example
+
+@subheading Description
+
+@c TODO: More ioctls?
+
+This page documents the ioctls that are supported by libsocket.  These are
+used with the @code{ioctl()} function (@pxref{ioctl, , ioctl, libc}).  Many
+BSD ioctls are not listed here, because libsocket does not support them.
+Some BSD socket ioctls are supported.
+
+@table @samp
+@item FIONBIO
+This can be used to toggle non-blocking I/O. @code{ioctl()} should be passed
+an integer - if this is non-zero, non-blocking I/O will be enabled,
+otherwise blocking I/O will be used.
+
+@example
+/* Flip into non-blocking mode */
+int x = 1;
+ioctl(sock, FIONBIO, &x);
+@end example
+
+@samp{FIONBIO} is like the @samp{O_NONBLOCK} flag that can be set using
+@code{fcntl()} (@pxref{fcntl, , libc, libc}):
+
+@example
+/* Flip into non-blocking mode */
+int flags = flags = fcntl(sock, F_GETFL);
+flags |= O_NONBLOCK;
+fcntl(sock, F_SETFL, flags);
+@end example
+
+@item FIONREAD
+This can be used to discover the maximum atomic read that can be performed
+on the socket, i.e. the largest single read operation.  @code{ioctl()} should
+be passed an integer - on return this will contain the maximum read size.
+
+@example
+int maxsz = 0;
+ioctl(sock, FIONREAD, &maxsz)
+@end example
+
+@item SIOCATMARK
+This determines if all out-of-band data has been read.  This only applies to
+@samp{SOCK_STREAM} type sockets that have been set with the option
+@samp{SO_OOBINLINE} (@pxref{getsockopt}, @pxref{setsockopt}).
+It returns 1 (true) or 0 (false) in the ioctl parameter.
+
+The @code{sockatmark()} function should be used instead (@pxref{sockatmark}).
+
+@item SIOCGIFNAME
+This copies the interface name into a user buffer of size @samp{IFNAMSIZ}.
+The pointer to the buffer is passed as the parameter to ioctl, e.g.
+
+@example
+ioctl(sock, SIOCGIFNAME, (int *) name)
+@end example
+
+@item SIOCGIFADDR
+This copies the local socket address into a user structure of type
+@samp{struct ifreq}.  The pointer to the buffer is passed as the parameter to
+ioctl, e.g.
+
+@example
+ioctl(sock, SIOCGIFADDR, (int *) &ifr)
+@end example
+
+The socket address can then be accessed via the @samp{ifr_ifru.ifru_addr}
+member of @samp{struct ifreq}.
+
+@item SIOCGIFDSTADDR
+This copies the peer's socket address into a user structure of type
+@samp{struct ifreq}.  The pointer to the buffer is passed as the parameter to
+ioctl, e.g.
+
+@example
+ioctl(sock, SIOCGIFDSTADDR, (int *) &ifr)
+@end example
+
+The peer's socket address can then be accessed via the
+@samp{ifr_ifru.ifru_dstaddr} member of @samp{struct ifreq}.
+
+@item SIOCGIFNETMASK
+This copies the socket's network mask into a user structure of type
+@samp{struct ifreq}.  The pointer to the buffer is passed as the parameter to
+ioctl, e.g.
+
+@example
+ioctl(sock, SIOCGIFDSTADDR, (int *) &ifr)
+@end example
+
+The peer's socket address can then be accessed via the
+@samp{ifr_ifru.ifru_netmask} member of @samp{struct ifreq}.
+
+@end table
+
+@subheading Return Values
+
+@subheading Portability
+
+ioctls cannot be guaranteed to be portable.  However, because of the ubiquity
+of BSD sockets, these ioctls should work on most Unices.

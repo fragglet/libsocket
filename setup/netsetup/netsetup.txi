@@ -1,0 +1,93 @@
+\input texinfo	@c -*-texinfo-*-
+@c %**start of header
+@setfilename netsetup.inf
+@settitle netsetup 1.2 Manual
+@paragraphindent 0
+@setchapternewpage odd
+@c %**end of header
+
+@c Title page
+@titlepage
+@title netsetup 1.2 Manual
+@author Richard Dawe
+@page
+
+@c Copyright page
+libsocket Copyright @copyright{} 1997, 1998 by Indrek Mandre,
+Copyright @copyright{} 1997-2000 by Richard Dawe
+
+netsetup Copyright @copyright{} 1997-2000 by Richard Dawe
+
+@end titlepage
+
+@ifinfo
+@dircategory Networking
+@direntry
+* netsetup: (netsetup).       Setup program for libsocket
+@end direntry
+@end ifinfo
+
+@node		Top,        	Introduction,	(dir),		(dir)
+@comment	node-name,	next,		previous,	up
+@top
+@chapter netsetup 1.2 Manual
+
+@ifnottex
+
+@menu
+* Introduction::
+* Concept Index::
+@end menu
+
+@end ifnottex
+
+@node Introduction, Concept Index, Top, Top
+@section Introduction
+
+libsocket Copyright @copyright{} 1997, 1998 by Indrek Mandre,
+Copyright @copyright{} 1997-2000 by Richard Dawe
+
+netsetup Copyright @copyright{} 1997-2000 by Richard Dawe
+
+netsetup sets up various configuration files for libsocket.
+
+netsetup is an interactive program that creates versions of
+@samp{host.conf}, @samp{resolv.conf} and @samp{hosts},
+because these are not usually present on Windows '95 computers.  These are
+required for libsocket's networking to function correctly.  The files created
+need to moved and renamed to the Windows directory, usually
+@samp{C:\WINDOWS}.
+
+In order to create the files, netsetup needs the following information:
+
+@itemize @bullet
+@item
+Your computer's name and IP address,
+@item
+Your domain name,
+@item
+Whether there is a DNS server and its IP address (if applicable).
+@end itemize
+
+The first piece of information is used to create the @samp{hosts} file.  The
+remainder is used to create the @samp{host.conf} and @samp{resolv.conf}
+files.
+
+The @samp{hosts} file created contains entries for @samp{localhost}
+and whatever name you entered for your computer.  This file is used to
+resolve names when no DNS server is present - it is used to translate names
+to IP addresses, e.g. myserver -> 192.168.0.2.
+
+If there is no DNS server present, then netsetup will tell libsocket to use
+the @samp{hosts} file for name resolution before using a DNS server.
+If one is present, then the order will be reversed.
+
+@c TODO: Add hosts, etc. docs in here.
+
+@node		Concept Index, , Introduction, Top
+@unnumbered Concept Index
+
+@printindex cp
+
+@contents
+@bye

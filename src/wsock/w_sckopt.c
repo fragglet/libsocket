@@ -1,7 +1,12 @@
 /*
  *  libsocket - BSD socket like library for DJGPP
  *  Copyright 1997, 1998 by Indrek Mandre
- *  Copyright 1997, 1998 by Richard Dawe
+ *  Copyright 1997-2000 by Richard Dawe
+ *
+ *  Portions of libsocket Copyright 1985-1993 Regents of the University of 
+ *  California.
+ *  Portions of libsocket Copyright 1991, 1992 Free Software Foundation, Inc.
+ *  Portions of libsocket Copyright 1997, 1998 by the Regdos Group.
  *
  *  This library is free software; you can redistribute it and/or modify it
  *  under the terms of the GNU Library General Public License as published
@@ -19,80 +24,184 @@
  */
 
 /* INFO: Comments starting with 'IM' indicate that Indrek Mandre made changes.
-   Comments starting wiht 'RD' indicate that Richard Dawe made changes. If no
-   comment is given, then the code was written by Indrek Mandre. */
+ * Comments starting wiht 'RD' indicate that Richard Dawe made changes. If no
+ * comment is given, then the code was written by Indrek Mandre. */
 
+#include <errno.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
+#include <time.h>
+
+#include <dpmi.h>
 #include <sys/farptr.h>
 #include <sys/segments.h>
-#include <dpmi.h>
-#include <pc.h>
-#include <sys/fsext.h>
+
+#include <sys/socket.h>
 
 #include <lsck/if.h>
-#include <lsck/ws.h>
-#include <winsock.h>
-
-#include "lsckglob.h"
-#include "wsockvxd.h"
+#include "wsock.h"
 #include "farptrx.h"
+#include "wsockvxd.h"
 
-int wsock_getsockopt (LSCK_SOCKET *lsd, int level, int optname, void *optval,
-                      int *optlen)
+/* ----------------------
+ * - __wsock_getsockopt -
+ * ---------------------- */
+
+/* TODO: This needs to perform better parameter-length checking. */
+
+int __wsock_getsockopt (LSCK_SOCKET *lsd, int *rv,
+			int level, int optname,
+                        void *optval, size_t *optlen)
 {
-    WSOCK_GETSOCKOPT_PARAMS params;
+	LSCK_SOCKET_WSOCK *wsock = (LSCK_SOCKET_WSOCK *) lsd->idata;
+	WSOCK_GETSOCKOPT_PARAMS params;
+	int is_int = 0;
 
-    /* RD: Check that the buffer won't overflow! */
-    if ((*optlen + (6 * 4)) > _SocketP.size) {
-        errno = EFAULT;
-        return(-1);
-    }
+	switch (optname) {
+	/* Catch the non-supported BSD options. WSOCK.VXD doesn't seem to
+	 * return error messages for some of these, in spite of the fact
+	 * they're not supported by Winsock (source: Win32 API help file)! */
+	case SO_RCVLOWAT:
+	case SO_RCVTIMEO:
+	case SO_SNDLOWAT:
+	case SO_SNDTIMEO:
+		errno = ENOPROTOOPT;
+		*rv = -1;
+		return(1);
+		break;
 
-    params.Value = (void *) ((SocketP<<16)+ (6 * 4));
-    params.Socket = (void *) lsd->wsock._Socket;
-    params.OptionLevel = level;
-    params.OptionName = optname;
-    params.ValueLength = *optlen;
-    params.IntValue = 0;
+	default:
+		break;
+	}
+	
+	/* RD: Check that the buffer won't overflow! */
+	if ((*optlen + sizeof (WSOCK_GETSOCKOPT_PARAMS)) > _SocketP.size) {
+		errno = ENOBUFS;
+		*rv   = -1;
+		return(1);
+	}
+	
+	bzero (&params, sizeof (params));
 
-    _farpokex ( SocketP, 0, &params, sizeof ( WSOCK_GETSOCKOPT_PARAMS ) );
-    _farpokex ( SocketP, 6 * 4, optval, *optlen );
+	params.Value = (void *) (  (SocketP << 16)
+				 + sizeof (WSOCK_GETSOCKOPT_PARAMS));
+	params.Socket = (void *) wsock->_Socket;
+	params.OptionLevel = level;
+	params.OptionName = optname;
+	params.ValueLength = *optlen;
+	params.IntValue = 0;
 
-    CallVxD ( WSOCK_GETSOCKOPT_CMD );
+	_farpokex (SocketP, 0, &params, sizeof (WSOCK_GETSOCKOPT_PARAMS));
+	_farpokex (SocketP, sizeof (WSOCK_GETSOCKOPT_PARAMS), optval, *optlen);
 
-    if ( _VXDError && _VXDError != 0xffff ) return -1;
+	__wsock_callvxd (WSOCK_GETSOCKOPT_CMD);
 
-    _farpeekx ( SocketP, 0, &params, sizeof ( WSOCK_GETSOCKOPT_PARAMS ) );
-    *optlen = params.ValueLength;
-    _farpeekx ( SocketP, 6 * 4, optval, *optlen );
+	if (_VXDError && _VXDError != 0xffff) {
+		/* We've handled it & it failed. */
+		*rv = -1;
+		return(1);
+	}
 
-    return 0;
+	_farpeekx (SocketP, 0, &params, sizeof (WSOCK_GETSOCKOPT_PARAMS));
+
+	/* The return value may be returned using Value & ValueLength, or it
+	 * may be present in the params structure as IntValue. In the latter
+	 * case, both Value & ValueLength will be set to zero. */
+	if ((params.Value == NULL) && (params.ValueLength == 0)) is_int = 1;
+
+	if (!is_int)
+		*optlen = params.ValueLength;
+	else
+		*optlen = sizeof(params.IntValue);
+
+	switch (optname) {
+	case SO_ERROR:
+		/* This error needs converting to a BSD-style error. */
+		if (!is_int) {
+			_farpeekx (SocketP, sizeof (WSOCK_GETSOCKOPT_PARAMS),
+				   optval, *optlen);		
+			*(int *) optval = __wsock_errno(*(int *) optval);
+		} else {
+			*(int *) optval = __wsock_errno(params.IntValue);
+		}
+		break;
+
+	default:
+		if (!is_int) {
+			_farpeekx (SocketP, sizeof (WSOCK_GETSOCKOPT_PARAMS),
+				   optval, *optlen);
+		} else {
+			*(int *) optval = params.IntValue;
+		}
+		break;
+	}
+
+	/* Call handled and succeeded. */
+	*rv = 0;
+	return(1);
 }
 
-int wsock_setsockopt (LSCK_SOCKET *lsd, int level, int optname,
-                      const void *optval, int optlen)
+/* ----------------------
+ * - __wsock_setsockopt -
+ * ---------------------- */
+
+int __wsock_setsockopt (LSCK_SOCKET *lsd, int *rv,
+			int level, int optname,
+			const void *optval, size_t optlen)
 {
-    WSOCK_SETSOCKOPT_PARAMS params;
+	LSCK_SOCKET_WSOCK *wsock = (LSCK_SOCKET_WSOCK *) lsd->idata;
+	WSOCK_SETSOCKOPT_PARAMS params;
+	int a_optlen = optlen;
+	void *a_optval = (void *) optval;
 
-    /* RD: Check that the buffer won't overflow! */
-    if ((optlen + (6 * 4)) > _SocketP.size) {
-        errno = EFAULT;
-        return(-1);
-    }
+	switch (optname) {
+	/* Catch the non-supported BSD options. WSOCK.VXD doesn't seem to
+	 * return error messages for some of these, in spite of the fact
+	 * they're not supported by Winsock (source: Win32 API help file)! */
+	case SO_ACCEPTCONN:
+	case SO_RCVLOWAT:
+	case SO_RCVTIMEO:
+	case SO_SNDLOWAT:
+	case SO_SNDTIMEO:
+	case SO_TYPE:
+		errno = ENOPROTOOPT;
+		*rv = -1;
+		return(1);
+		break;
 
-    params.Value = (void *) ((SocketP<<16)+ (6 * 4));
-    params.Socket = (void *) lsd->wsock._Socket;
-    params.OptionLevel = level;
-    params.OptionName = optname;
-    params.ValueLength = optlen;
-    params.IntValue = *((int *)optval);
+	default:
+		a_optval = (void *) optval;
+		a_optlen = optlen;
+		break;
+	}
 
-    _farpokex ( SocketP, 0, &params, sizeof ( WSOCK_SETSOCKOPT_PARAMS ) );
-    _farpokex ( SocketP, 6 * 4, optval, optlen );
+	/* RD: Check that the buffer won't overflow! */
+	if ((a_optlen + sizeof (WSOCK_SETSOCKOPT_PARAMS)) > _SocketP.size) {
+		errno = ENOBUFS;
+		*rv   = -1;
+		return(1);
+	}
 
-    CallVxD ( WSOCK_SETSOCKOPT_CMD );
+	bzero(&params, sizeof(params));
+	params.Value = (void *) (  (SocketP << 16)
+				 + sizeof (WSOCK_SETSOCKOPT_PARAMS));
+	params.Socket = (void *) wsock->_Socket;
+	params.OptionLevel = level;
+	params.OptionName = optname;
+	params.ValueLength = a_optlen;
+	params.IntValue = 0;
 
-    if ( _VXDError && _VXDError != 0xffff ) return -1;
-    return 0;
+	_farpokex (SocketP, 0, &params, sizeof (WSOCK_SETSOCKOPT_PARAMS));
+	_farpokex (SocketP, sizeof (WSOCK_SETSOCKOPT_PARAMS),
+		   a_optval, a_optlen);
+
+	__wsock_callvxd (WSOCK_SETSOCKOPT_CMD);
+
+	if (_VXDError && _VXDError != 0xffff)
+		*rv = -1;
+	else
+		*rv = 0;
+	
+	return(1);
 }

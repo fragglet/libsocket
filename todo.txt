@@ -1,0 +1,24 @@
+libsocket To-dos
+~~~~~~~~~~~~~~~~
+
+This list is in no particular order:
+
+- DOS support using Watt-32 code;
+
+- socketpair() support for all interfaces, not just Unix domain sockets;
+
+- IPX support;
+
+- Finish/further developing of the test suite;
+
+- DXE support or other dynamic-linking mechanism;
+
+- Better Windows IP address discovery code (one that works for all links),
+  rather than the complex registry, RAS and VDHCP.VXD magic currently used;
+
+- Add routing table code.
+
+- Proper out-of-band (OOB) data support - currently this is very weak /
+  inconsistently supported.
+
+Richard Dawe <richdawe@bigfoot.com> 2000-03-03

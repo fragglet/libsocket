@@ -1,26 +1,43 @@
+
 /**********************************************************************/
 /**                        Microsoft Windows                         **/
 /**                Copyright(c) Microsoft Corp., 1993                **/
 /**********************************************************************/
 
 /*
-    wsock.h
+ * wsock.h
+ * 
+ * WSOCK.386 VxD service definitions.
+ * 
+ * 
+ * FILE HISTORY:
+ * DavidKa     ??-???-???? Created.
+ * KeithMo     30-Dec-1993 Cleaned up a bit, made H2INC-able.
+ * 
+ */
 
-    WSOCK.386 VxD service definitions.
-
-
-    FILE HISTORY:
-        DavidKa     ??-???-???? Created.
-        KeithMo     30-Dec-1993 Cleaned up a bit, made H2INC-able.
-
-*/
-
-/* IM: no comments */
-/* RD: 1998-5-3: Converted C++-style comments to C-style comments */
+/*
+ * Modfications for libsocket made by Richard Dawe (RD):
+ * 
+ * 1998-5-3    Converted C++-style comments to C-style comments.
+ * 
+ * 1998-10-11  Added packed attribute to all struct's. If you're going to
+ * use this file with a compiler other than gcc, please modify
+ * the define for 'pack' below.
+ * 
+ * 1999-05-16  Added comment to disable reformatting by GNU indent.
+ */
+/* *INDENT-OFF* */
 
 #ifndef __wsock_h__
 #define __wsock_h__
 
+/* RD: Define 'pack' here. */
+#ifdef __GNUC__
+#define pack __attribute__((packed))
+#else
+#define pack
+#endif
 
 /*
     Service table.
@@ -99,16 +116,15 @@ typedef VOID * LPSOCK_INFO;
 */
 
 typedef struct _WSNOTIFY {
-    LIST_ENTRY  PerSocketList;      /* per-socket list of notify objects     */
-    LIST_ENTRY  GlobalList;         /* global list of all notify objects     */
-    LPSOCK_INFO OwningSocket;       /* the socket that "owns" this object    */
-    DWORD       Flags;              /* private notification flags (see below)*/
-    DWORD       EventMask;          /* events the client is interested in    */
-    DWORD       Status;             /* the completion status                 */
-    DWORD       OwningThread;       /* either ring 0 thread id or VM handle  */
-    LPVOID      ApcRoutine;         /* the user-mode APC to schedule         */
-    DWORD       ApcContext;         /* a user-supplied context value         */
-
+    LIST_ENTRY  PerSocketList pack; /* per-socket list of notify objects     */
+    LIST_ENTRY  GlobalList    pack; /* global list of all notify objects     */
+    LPSOCK_INFO OwningSocket  pack; /* the socket that "owns" this object    */
+    DWORD       Flags         pack; /* private notification flags (see below)*/
+    DWORD       EventMask     pack; /* events the client is interested in    */
+    DWORD       Status        pack; /* the completion status                 */
+    DWORD       OwningThread  pack; /* either ring 0 thread id or VM handle  */
+    LPVOID      ApcRoutine    pack; /* the user-mode APC to schedule         */
+    DWORD       ApcContext    pack; /* a user-supplied context value         */
 } WSNOTIFY;
 
 /*
@@ -146,9 +162,9 @@ typedef struct _WSNOTIFY * LPWSNOTIFY;
 */
 
 typedef struct _SOCK_LIST {
-    LPSOCK_INFO Socket;             /* the target socket                    */
-    DWORD       EventMask;          /* events the client is interested in   */
-    DWORD       Context;            /* user-defined context value (handle?) */
+    LPSOCK_INFO Socket    pack;     /* the target socket                    */
+    DWORD       EventMask pack;     /* events the client is interested in   */
+    DWORD       Context   pack;     /* user-defined context value (handle?) */
 
 } SOCK_LIST;
 
@@ -168,12 +184,11 @@ typedef struct _SOCK_LIST * LPSOCK_LIST;
 */
 
 typedef struct _WSIOSTATUS {
-    DWORD   IoStatus;               /* completion status           */
-    char    IoCompleted;            /* i/o has completed           */
-    char    IoCancelled;            /* i/o has been cancelled      */
-    char    IoTimedOut;             /* i/o has timed out           */
-    char    IoSpare1;               /* spare (for dword alignment) */
-
+    DWORD   IoStatus    pack;       /* completion status           */
+    char    IoCompleted pack;       /* i/o has completed           */
+    char    IoCancelled pack;       /* i/o has been cancelled      */
+    char    IoTimedOut  pack;       /* i/o has timed out           */
+    char    IoSpare1    pack;       /* spare (for dword alignment) */
 } WSIOSTATUS;
 typedef struct _WSIOSTATUS * LPWSIOSTATUS;
 
@@ -264,205 +279,188 @@ typedef struct _WSIOSTATUS * LPWSIOSTATUS;
 */
 
 typedef struct _WSOCK_ACCEPT_PARAMS {
-    LPVOID      Address;
-    LPSOCK_INFO ListeningSocket;
-    LPSOCK_INFO ConnectedSocket;
-    DWORD       AddressLength;
-    DWORD       ConnectedSocketHandle;
-    LPVOID      ApcRoutine;
-    DWORD       ApcContext;
-
+    LPVOID      Address               pack;
+    LPSOCK_INFO ListeningSocket       pack;
+    LPSOCK_INFO ConnectedSocket       pack;
+    DWORD       AddressLength         pack;
+    DWORD       ConnectedSocketHandle pack;
+    LPVOID      ApcRoutine            pack;
+    DWORD       ApcContext            pack;
 } WSOCK_ACCEPT_PARAMS;
 typedef struct _WSOCK_ACCEPT_PARAMS  * LPWSOCK_ACCEPT_PARAMS;
 #define WSOCK_ACCEPT_MAPIN                  1
 
 
 typedef struct _WSOCK_BIND_PARAMS {
-    LPVOID      Address;
-    LPSOCK_INFO Socket;
-    DWORD       AddressLength;
-    LPVOID      ApcRoutine;
-    DWORD       ApcContext;
-
+    LPVOID      Address       pack;
+    LPSOCK_INFO Socket        pack;
+    DWORD       AddressLength pack;
+    LPVOID      ApcRoutine    pack;
+    DWORD       ApcContext    pack;
 } WSOCK_BIND_PARAMS;
 typedef struct _WSOCK_BIND_PARAMS  * LPWSOCK_BIND_PARAMS;
 #define WSOCK_BIND_MAPIN                    1
 
 
 typedef struct _WSOCK_CLOSESOCKET_PARAMS {
-    LPSOCK_INFO Socket;
-
+    LPSOCK_INFO Socket pack;
 } WSOCK_CLOSESOCKET_PARAMS;
 typedef struct _WSOCK_CLOSESOCKET_PARAMS  * LPWSOCK_CLOSESOCKET_PARAMS;
 #define WSOCK_CLOSESOCKET_MAPIN             0
 
 
 typedef struct _WSOCK_CONNECT_PARAMS {
-    LPVOID      Address;
-    LPSOCK_INFO Socket;
-    DWORD       AddressLength;
-    LPVOID      ApcRoutine;
-    DWORD       ApcContext;
-
+    LPVOID      Address       pack;
+    LPSOCK_INFO Socket        pack;
+    DWORD       AddressLength pack;
+    LPVOID      ApcRoutine    pack;
+    DWORD       ApcContext    pack;
 } WSOCK_CONNECT_PARAMS;
 typedef struct _WSOCK_CONNECT_PARAMS  * LPWSOCK_CONNECT_PARAMS;
 #define WSOCK_CONNECT_MAPIN                 1
 
 
 typedef struct _WSOCK_GETPEERNAME_PARAMS {
-    LPVOID      Address;
-    LPSOCK_INFO Socket;
-    DWORD       AddressLength;
-
+    LPVOID      Address       pack;
+    LPSOCK_INFO Socket        pack;
+    DWORD       AddressLength pack;
 } WSOCK_GETPEERNAME_PARAMS;
 typedef struct _WSOCK_GETPEERNAME_PARAMS  * LPWSOCK_GETPEERNAME_PARAMS;
 #define WSOCK_GETPEERNAME_MAPIN             1
 
 
 typedef struct _WSOCK_GETSOCKNAME_PARAMS {
-    LPVOID      Address;
-    LPSOCK_INFO Socket;
-    DWORD       AddressLength;
-
+    LPVOID      Address       pack;
+    LPSOCK_INFO Socket        pack;
+    DWORD       AddressLength pack;
 } WSOCK_GETSOCKNAME_PARAMS;
 typedef struct _WSOCK_GETSOCKNAME_PARAMS  * LPWSOCK_GETSOCKNAME_PARAMS;
 #define WSOCK_GETSOCKNAME_MAPIN             1
 
 
 typedef struct _WSOCK_GETSOCKOPT_PARAMS {
-    LPVOID      Value;
-    LPSOCK_INFO Socket;
-    DWORD       OptionLevel;
-    DWORD       OptionName;
-    DWORD       ValueLength;
-    DWORD       IntValue;
-
+    LPVOID      Value       pack;
+    LPSOCK_INFO Socket      pack;
+    DWORD       OptionLevel pack;
+    DWORD       OptionName  pack;
+    DWORD       ValueLength pack;
+    DWORD       IntValue    pack;
 } WSOCK_GETSOCKOPT_PARAMS;
 typedef struct _WSOCK_GETSOCKOPT_PARAMS  * LPWSOCK_GETSOCKOPT_PARAMS;
 #define WSOCK_GETSOCKOPT_MAPIN              1
 
 
 typedef struct _WSOCK_IOCTLSOCKET_PARAMS {
-    LPSOCK_INFO Socket;
-    DWORD       Command;
-    DWORD       Param;
-
+    LPSOCK_INFO Socket  pack;
+    DWORD       Command pack;
+    DWORD       Param   pack;
 } WSOCK_IOCTLSOCKET_PARAMS;
 typedef struct _WSOCK_IOCTLSOCKET_PARAMS  * LPWSOCK_IOCTLSOCKET_PARAMS;
 #define WSOCK_IOCTLSOCKET_MAPIN             0
 
 
 typedef struct _WSOCK_LISTEN_PARAMS {
-    LPSOCK_INFO Socket;
-    DWORD       Backlog;
-
+    LPSOCK_INFO Socket  pack;
+    DWORD       Backlog pack;
 } WSOCK_LISTEN_PARAMS;
 typedef struct _WSOCK_LISTEN_PARAMS  * LPWSOCK_LISTEN_PARAMS;
 #define WSOCK_LISTEN_MAPIN                  0
 
 
 typedef struct _WSOCK_RECV_PARAMS {
-    LPVOID      Buffer;
-    LPVOID      Address;
-    LPSOCK_INFO Socket;
-    DWORD       BufferLength;
-    DWORD       Flags;
-    DWORD       AddressLength;
-    DWORD       BytesReceived;
-    LPVOID      ApcRoutine;
-    DWORD       ApcContext;
-    DWORD       Timeout;
-
+    LPVOID      Buffer        pack;
+    LPVOID      Address       pack;
+    LPSOCK_INFO Socket        pack;
+    DWORD       BufferLength  pack;
+    DWORD       Flags         pack;
+    DWORD       AddressLength pack;
+    DWORD       BytesReceived pack;
+    LPVOID      ApcRoutine    pack;
+    DWORD       ApcContext    pack;
+    DWORD       Timeout       pack;
 } WSOCK_RECV_PARAMS;
 typedef struct _WSOCK_RECV_PARAMS  * LPWSOCK_RECV_PARAMS;
 #define WSOCK_RECV_MAPIN                    2
 
 
 typedef struct _WSOCK_SELECT_SETUP_PARAMS {
-    LPSOCK_LIST ReadList;
-    LPSOCK_LIST WriteList;
-    LPSOCK_LIST ExceptList;
-    DWORD       ReadCount;
-    DWORD       WriteCount;
-    DWORD       ExceptCount;
-    LPVOID      ApcRoutine;
-    DWORD       ApcContext;
-
+    LPSOCK_LIST ReadList    pack;
+    LPSOCK_LIST WriteList   pack;
+    LPSOCK_LIST ExceptList  pack;
+    DWORD       ReadCount   pack;
+    DWORD       WriteCount  pack;
+    DWORD       ExceptCount pack;
+    LPVOID      ApcRoutine  pack;
+    DWORD       ApcContext  pack;
 } WSOCK_SELECT_SETUP_PARAMS;
 typedef struct _WSOCK_SELECT_SETUP_PARAMS  * LPWSOCK_SELECT_SETUP_PARAMS;
 #define WSOCK_SELECT_SETUP_MAPIN            3
 
 
 typedef struct _WSOCK_SELECT_CLEANUP_PARAMS {
-    LPSOCK_LIST ReadList;
-    LPSOCK_LIST WriteList;
-    LPSOCK_LIST ExceptList;
-    DWORD       ReadCount;
-    DWORD       WriteCount;
-    DWORD       ExceptCount;
-
+    LPSOCK_LIST ReadList    pack;
+    LPSOCK_LIST WriteList   pack;
+    LPSOCK_LIST ExceptList  pack;
+    DWORD       ReadCount   pack;
+    DWORD       WriteCount  pack;
+    DWORD       ExceptCount pack;
 } WSOCK_SELECT_CLEANUP_PARAMS;
 typedef struct _WSOCK_SELECT_CLEANUP_PARAMS  * LPWSOCK_SELECT_CLEANUP_PARAMS;
 #define WSOCK_SELECT_CLEANUP_MAPIN          3
 
 
 typedef struct _WSOCK_ASYNC_SELECT_PARAMS {
-    LPSOCK_INFO Socket;
-    DWORD       Window;
-    DWORD       Message;
-    DWORD       Events;
-
+    LPSOCK_INFO Socket  pack;
+    DWORD       Window  pack;
+    DWORD       Message pack;
+    DWORD       Events  pack;
 } WSOCK_ASYNC_SELECT_PARAMS;
 typedef struct _WSOCK_ASYNC_SELECT_PARAMS  * LPWSOCK_ASYNC_SELECT_PARAMS;
 #define WSOCK_ASYNC_SELECT_MAPIN            0
 
 
 typedef struct _WSOCK_SEND_PARAMS {
-    LPVOID      Buffer;
-    LPVOID      Address;
-    LPSOCK_INFO Socket;
-    DWORD       BufferLength;
-    DWORD       Flags;
-    DWORD       AddressLength;
-    DWORD       BytesSent;
-    LPVOID      ApcRoutine;
-    DWORD       ApcContext;
-    DWORD       Timeout;
-
+    LPVOID      Buffer        pack;
+    LPVOID      Address       pack;
+    LPSOCK_INFO Socket        pack;
+    DWORD       BufferLength  pack;
+    DWORD       Flags         pack;
+    DWORD       AddressLength pack;
+    DWORD       BytesSent     pack;
+    LPVOID      ApcRoutine    pack;
+    DWORD       ApcContext    pack;
+    DWORD       Timeout       pack;
 } WSOCK_SEND_PARAMS;
 typedef struct _WSOCK_SEND_PARAMS  * LPWSOCK_SEND_PARAMS;
 #define WSOCK_SEND_MAPIN                    2
 
 
 typedef struct _WSOCK_SETSOCKOPT_PARAMS {
-    LPVOID      Value;
-    LPSOCK_INFO Socket;
-    DWORD       OptionLevel;
-    DWORD       OptionName;
-    DWORD       ValueLength;
-    DWORD       IntValue;
-
+    LPVOID      Value       pack;
+    LPSOCK_INFO Socket      pack;
+    DWORD       OptionLevel pack;
+    DWORD       OptionName  pack;
+    DWORD       ValueLength pack;
+    DWORD       IntValue    pack;
 } WSOCK_SETSOCKOPT_PARAMS;
 typedef struct _WSOCK_SETSOCKOPT_PARAMS  * LPWSOCK_SETSOCKOPT_PARAMS;
 #define WSOCK_SETSOCKOPT_MAPIN              1
 
 
 typedef struct _WSOCK_SOCKET_PARAMS {
-    DWORD       AddressFamily;
-    DWORD       SocketType;
-    DWORD       Protocol;
-    LPSOCK_INFO NewSocket;
-    DWORD       NewSocketHandle;
-
+    DWORD       AddressFamily   pack;
+    DWORD       SocketType      pack;
+    DWORD       Protocol        pack;
+    LPSOCK_INFO NewSocket       pack;
+    DWORD       NewSocketHandle pack;
 } WSOCK_SOCKET_PARAMS;
 typedef struct _WSOCK_SOCKET_PARAMS  * LPWSOCK_SOCKET_PARAMS;
 #define WSOCK_SOCKET_MAPIN                  0
 
 
 typedef struct _WSOCK_SHUTDOWN_PARAMS {
-    LPSOCK_INFO Socket;
-    DWORD       How;
-
+    LPSOCK_INFO Socket pack;
+    DWORD       How    pack;
 } WSOCK_SHUTDOWN_PARAMS;
 typedef struct _WSOCK_SHUTDOWN_PARAMS  * LPWSOCK_SHUTDOWN_PARAMS;
 #define WSOCK_SHUTDOWN_MAPIN                0
@@ -473,43 +471,39 @@ typedef struct _WSOCK_SHUTDOWN_PARAMS  * LPWSOCK_SHUTDOWN_PARAMS;
 */
 
 typedef struct _WSOCK_CREATE_PARAMS {
-    LPSOCK_INFO Socket;
-    DWORD       Event;
-    LPVOID      ApcRoutine;
-    DWORD       ApcContext;
-    LPWSNOTIFY  Notify;
-
+    LPSOCK_INFO Socket     pack;
+    DWORD       Event      pack;
+    LPVOID      ApcRoutine pack;
+    DWORD       ApcContext pack;
+    LPWSNOTIFY  Notify     pack;
 } WSOCK_CREATE_PARAMS;
 typedef struct _WSOCK_CREATE_PARAMS  * LPWSOCK_CREATE_PARAMS;
 #define WSOCK_CREATE_MAPIN                  0
 
 
 typedef struct _WSOCK_CREATE_MULTIPLE_PARAMS {
-    LPSOCK_LIST ReadList;
-    LPSOCK_LIST WriteList;
-    LPSOCK_LIST ExceptList;
-    DWORD       ReadCount;
-    DWORD       WriteCount;
-    DWORD       ExceptCount;
-    LPVOID      ApcRoutine;
-    DWORD       ApcContext;
-
+    LPSOCK_LIST ReadList    pack;
+    LPSOCK_LIST WriteList   pack;
+    LPSOCK_LIST ExceptList  pack;
+    DWORD       ReadCount   pack;
+    DWORD       WriteCount  pack;
+    DWORD       ExceptCount pack;
+    LPVOID      ApcRoutine  pack;
+    DWORD       ApcContext  pack;
 } WSOCK_CREATE_MULTIPLE_PARAMS;
 typedef struct _WSOCK_CREATE_MULTIPLE_PARAMS  * LPWSOCK_CREATE_MULTIPLE_PARAMS;
 #define WSOCK_CREATE_MULTIPLE_MAPIN         3
 
 
 typedef struct _WSOCK_DESTROY_PARAMS {
-    LPWSNOTIFY  Notify;
-
+    LPWSNOTIFY  Notify pack;
 } WSOCK_DESTROY_PARAMS;
 typedef struct _WSOCK_DESTROY_PARAMS  * LPWSOCK_DESTROY_PARAMS;
 #define WSOCK_DESTROY_MAPIN                 1
 
 
 typedef struct _WSOCK_DESTROY_BY_SOCKET_PARAMS {
-    LPSOCK_INFO Socket;
-
+    LPSOCK_INFO Socket pack;
 } WSOCK_DESTROY_BY_SOCKET_PARAMS;
 typedef struct _WSOCK_DESTROY_BY_SOCKET_PARAMS  * LPWSOCK_DESTROY_BY_SOCKET_PARAMS;
 #define WSOCK_DESTROY_BY_SOCKET_MAPIN       0
@@ -529,52 +523,47 @@ typedef struct _WSOCK_DESTROY_BY_THREAD_PARAMS  * LPWSOCK_DESTROY_BY_THREAD_PARA
 
 
 typedef struct _WSOCK_SIGNAL_PARAMS {
-    LPSOCK_INFO Socket;
-    DWORD       Event;
-    DWORD       Status;
-
+    LPSOCK_INFO Socket pack;
+    DWORD       Event  pack;
+    DWORD       Status pack;
 } WSOCK_SIGNAL_PARAMS;
 typedef struct _WSOCK_SIGNAL_PARAMS  * LPWSOCK_SIGNAL_PARAMS;
 #define WSOCK_SIGNAL_MAPIN                  0
 
 
 typedef struct _WSOCK_SIGNAL_ALL_PARAMS {
-    LPSOCK_INFO Socket;
-    DWORD       Status;
-
+    LPSOCK_INFO Socket pack;
+    DWORD       Status pack;
 } WSOCK_SIGNAL_ALL_PARAMS;
 typedef struct _WSOCK_SIGNAL_ALL_PARAMS  * LPWSOCK_SIGNAL_ALL_PARAMS;
 #define WSOCK_SIGNAL_ALL_MAPIN              0
 
 
 typedef struct _WSOCK_REGISTER_POSTMSG_PARAMS {
-    DWORD       PostMessageCallback;
-
+    DWORD       PostMessageCallback pack;
 } WSOCK_REGISTER_POSTMSG_PARAMS;
 typedef struct _WSOCK_REGISTER_POSTMSG_PARAMS  * LPWSOCK_REGISTER_POSTMSG_PARAMS;
 #define WSOCK_REGISTER_POSTMSG_MAPIN        0
 
 
 typedef struct _WSOCK_CONTROL_PARAMS {
-    LPVOID  InputBuffer;
-    LPVOID  OutputBuffer;
-    DWORD   InputBufferLength;
-    DWORD   OutputBufferLength;
-    DWORD   Protocol;
-    DWORD   Action;
-
+    LPVOID  InputBuffer        pack;
+    LPVOID  OutputBuffer       pack;
+    DWORD   InputBufferLength  pack;
+    DWORD   OutputBufferLength pack;
+    DWORD   Protocol           pack;
+    DWORD   Action             pack;
 } WSOCK_CONTROL_PARAMS;
 typedef struct _WSOCK_CONTROL_PARAMS  * LPWSOCK_CONTROL_PARAMS;
 #define WSOCK_CONTROL_MAPIN                 2
 
 
 typedef struct _WSOCK_ASYNCIO_PARAMS {
-    LPVOID      Buffer;
-    LPVOID      Address;
-    LPSOCK_INFO Socket;
-    DWORD       BufferLength;
-    LPVOID      Overlap;
-
+    LPVOID      Buffer       pack;
+    LPVOID      Address      pack;
+    LPSOCK_INFO Socket       pack;
+    DWORD       BufferLength pack;
+    LPVOID      Overlap      pack;
 } WSOCK_ASYNCIO_PARAMS;
 typedef struct _WSOCK_ASYNCIO_PARAMS  * LPWSOCK_ASYNCIO_PARAMS;
 #define WSOCK_ASYNCIO_MAPIN                 0

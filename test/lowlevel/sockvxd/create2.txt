@@ -1,0 +1,4 @@
+create2 notes
+~~~~~~~~~~~~~
+
+This program shows that DOS boxes do not share file descriptors between them.

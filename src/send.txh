@@ -1,0 +1,39 @@
+@c From: Alain Magloire <alainm@rcsm.ece.mcgill.ca>
+@c Some modifications by Richard Dawe <richdawe@bigfoot.com>
+
+@comment The start of a comment is indicated by the following comment. This
+@comment syntax is used by the script funcstxh.sh: @comment function <name>
+
+@comment function send
+
+@node send, socket
+@findex send
+
+@subheading Syntax
+
+@example
+#include <sys/types.h>
+#include <sys/socket.h>
+
+int send (int s, const void * msg, size_t len, int flags);
+@end example
+
+@subheading Description
+
+The @code{send()} function is used to transmit data to a peer via socket,
+@code{send()} is equivalent to @code{sendto()} (@pxref{sendto}) call with a
+NULL to parameter to and tolen.
+
+@subheading Return values
+
+The function return the number of octets accepted for transmission,
+Otherwise -1 with errno set.  See @xref{sendto}.
+
+@subheading Portability
+
+@portability posix, unix98
+
+@subheading Example
+
+@example
+@end example

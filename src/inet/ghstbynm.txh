@@ -1,0 +1,145 @@
+@comment The start of a comment is indicated by the following comment. This
+@comment syntax is used by the script funcstxh.sh: @comment function <name>
+
+@comment function gethostbyname
+
+@node gethostbyname, resolver
+@findex gethostbyname
+
+@c This file was originally a Linux man page - see the copyright below. It
+@c was modified for use in libsocket by Richard Dawe <richdawe@bigfoot.com>.
+
+@c Copyright 1993 David Metcalfe (david@prism.demon.co.uk)
+@c
+@c Permission is granted to make and distribute verbatim copies of this
+@c manual provided the copyright notice and this permission notice are
+@c preserved on all copies.
+@c
+@c Permission is granted to copy and distribute modified versions of this
+@c manual under the conditions for verbatim copying, provided that the
+@c entire resulting derived work is distributed under the terms of a
+@c permission notice identical to this one
+@c 
+@c Since the Linux kernel and libraries are constantly changing, this
+@c manual page may be incorrect or out-of-date.  The author(s) assume no
+@c responsibility for errors or omissions, or for damages resulting from
+@c the use of the information contained herein.  The author(s) may not
+@c have taken the same level of care in the production of this manual,
+@c which is licensed free of charge, as they might when working
+@c professionally.
+@c 
+@c Formatted or processed versions of this manual, if unaccompanied by
+@c the source, must acknowledge the copyright and authors of this work.
+@c
+@c References consulted:
+@c     Linux libc source code
+@c     Lewine's _POSIX Programmer's Guide_ (O'Reilly & Associates, 1991)
+@c     386BSD man pages
+@c Modified Sat May 22 18:43:54 1993, David Metcalfe
+@c Modified Sun Jul 25 10:42:30 1993, Rik Faith (faith@cs.unc.edu)
+@c Modified Sun Feb 16 13:23:10 1997, Andries Brouwer (aeb@cwi.nl)
+@c
+
+@subheading Syntax
+
+@example
+#include <netdb.h>
+
+extern int h_errno;
+
+struct hostent *gethostbyname (const char *name)
+@end example
+
+@subheading Description
+
+The @code{gethostbyname()} function returns a structure of type @samp{hostent}
+for the given host @var{name}.  Here @var{name} is either a host name, or
+an IPv4 address in standard dot notation, or an IPv6 address in colon
+(and possibly dot) notation.  (See RFC 1884 for the description of IPv6
+addresses.)  If @var{name} doesn't end in a dot 
+and the environment variable @var{HOSTALIASES} is set, the alias file
+pointed to by @var{HOSTALIASES} will first be searched for @var{name}.
+
+@c TODO: (See .BR hostname (7) for the file format.)
+The current domain and its parents are searched unless @var{name}
+ends in a dot.  
+
+The domain name queries carried out by @code{gethostbyname()} use
+a combination of any or all of:
+
+@itemize @bullet
+@item
+the name server @samp{named};
+@item
+a broken out line from @samp{hosts} (@pxref{hosts});
+@item
+the Network Information Service (NIS or
+YP)@footnote{libsocket does not support this.}.
+@end itemize
+
+depending upon the contents of the @samp{order} line in host.conf
+(@pxref{host.conf}).  The default action is to query @samp{hosts}
+(@pxref{hosts}).
+
+The @dfn{hostent} structure is defined in @code{<netdb.h>} as follows:
+
+@example
+struct hostent @{
+	char	*h_name;		/* official name of host */
+	char	**h_aliases;		/* alias list */
+	int	h_addrtype;		/* host address type */
+	int	h_length;		/* length of address */
+	char	**h_addr_list;		/* list of addresses */
+@}
+#define h_addr	h_addr_list[0]		/* for backward compatibility */
+@end example
+
+The members of the @samp{hostent} structure are:
+
+@vtable @samp
+@item h_name
+The official name of the host.
+@item h_aliases
+A zero-terminated array of alternative names for the host.
+@item h_addrtype
+The type of address; always AF_INET at present.
+@item h_length
+The length of the address in bytes.
+@item h_addr_list
+A zero-terminated array of network addresses for the host in network byte
+order.
+@item h_addr
+The first address in @code{h_addr_list} for backward compatibility.
+@end vtable
+
+@subheading Return Values
+
+The @code{gethostbyname()} function returns a @samp{hostent} structure or a
+NULL pointer if an error occurs.  On error, the @var{h_errno} variable holds
+an error number.
+
+The variable @var{h_errno} can have the following values:
+
+@table @samp
+@item HOST_NOT_FOUND
+The specified host is unknown.
+@item NO_ADDRESS
+The requested name is valid but does not have an IP address.
+@item NO_RECOVERY
+A non-recoverable name server error occurred.
+@item TRY_AGAIN
+A temporary error occurred on an authoritative name server.  Try again
+later.
+@end table
+
+The @code{herror()} function will print an error message, based on the value
+of @var{h_errno} (@pxref{herror}).
+
+@subheading Portability
+
+@portability unix98
+
+@subheading Example
+
+@example
+@end example

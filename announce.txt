@@ -1,0 +1,24 @@
+Hello.
+
+I'd like to announce the release of libsocket 0.8.0, a BSD-style
+socket library for DJGPP. A lot of work has been done since the release of
+libsocket 0.7.3. libsocket 0.8.0 is actually the final release of
+the 0.7.4 betas.
+
+There are too many changes to list here. If you use libsocket, you should
+upgrade to version 0.8.0.
+
+libsocket 0.8.0 is available from the Simtelnet archive in the v2tk directory:
+
+    ftp://ftp.simtel.net/pub/simtelnet/gnu/djgpp/v2tk/ls080b.zip
+    ftp://ftp.simtel.net/pub/simtelnet/gnu/djgpp/v2tk/ls080d.zip
+    ftp://ftp.simtel.net/pub/simtelnet/gnu/djgpp/v2tk/ls080s.zip
+
+Please join the mailing list, if you want to keep up with bug reports,
+developments, development snapshots, etc. If you have any questions relating
+to libsocket, please mail me and I'll be happy to help.
+
+Thanks, bye,
+
+Richard Dawe <richdawe@bigfoot.com> http://www.bigfoot.com/~richdawe/
+16th November 2000

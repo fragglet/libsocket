@@ -1,7 +1,12 @@
 /*
  *  libsocket - BSD socket like library for DJGPP
  *  Copyright 1997, 1998 by Indrek Mandre
- *  Copyright 1997, 1998 by Richard Dawe
+ *  Copyright 1997-2000 by Richard Dawe
+ *
+ *  Portions of libsocket Copyright 1985-1993 Regents of the University of 
+ *  California.
+ *  Portions of libsocket Copyright 1991, 1992 Free Software Foundation, Inc.
+ *  Portions of libsocket Copyright 1997, 1998 by the Regdos Group.
  *
  *  This library is free software; you can redistribute it and/or modify it
  *  under the terms of the GNU Library General Public License as published
@@ -21,10 +26,19 @@
 #ifndef __libsocket_vxd_h__
 #define __libsocket_vxd_h__
 
-/* RD: Moved from vxdldr.h */
-int VxdLdrLoadDevice (char *Device);
-int VxdLdrUnLoadDevice (char *Device);
+#ifdef __cplusplus
+extern "C"
+{
+#endif
 
-void VxdGetEntry (int *Entry, int ID);
+/* RD: Moved from vxdldr.h */
+extern int VxdLdrLoadDevice (char * /* Device */);
+extern int VxdLdrUnLoadDevice (char * /* Device */);
+
+extern void VxdGetEntry (int * /* Entry */, int /* ID */);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif  /* __libsocket_vxd_h__ */

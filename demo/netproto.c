@@ -1,8 +1,10 @@
 /*
  * netprototest <C> 1997 Indrek Mandre
- * This test programme finds protocols by name from file protocol in windows
- * root directory.
+ * This test programme finds protocols by name.
+
  */
+
+/* Richard Dawe: Tidied up for libsocket 0.7.4 */
 
 #include <stdio.h>
 #include <sys/socket.h>
@@ -11,27 +13,26 @@
 
 int main()
 {
- char x[100];
- struct protoent *s;
+    char x[100];
+    struct protoent *s;
 
- for (;;) {
+    for (;;) {
+        printf ("Enter protocol name: ");
+        gets (x);
 
-  printf ("Enter protocol name: ");
-  gets (x);
+        if ( ( s = getprotobyname ( x ) ) != NULL ) {
+            printf ("Aliases:[ ");
 
-  if ( ( s = getprotobyname ( x ) ) != NULL ) {
+            while ( *(s->p_aliases) ) {
+                printf ("%s ", *s->p_aliases );
+                s->p_aliases++;
+            }
 
- 	 printf ("Aliases:[ ");
+            printf ("] p_name: %s p_proto: %d\n", s->p_name, s->p_proto);
+        } else
+            printf ("NULL\n");
+    }
 
- 	 while ( *(s->p_aliases) ) {
- 	 	printf ("%s ", *s->p_aliases );
- 	 	s->p_aliases++;
- 	 }
-
- 	 printf ("] p_name: %s p_proto: %d\n", s->p_name, s->p_proto );
-
-  } else printf ("NULL\n");
- }
- return 0;
+    return 0;
 }
 

@@ -1,0 +1,79 @@
+@comment The start of a comment is indicated by the following comment. This
+@comment syntax is used by the script funcstxh.sh: @comment function <name>
+
+@comment function socket
+
+@node socket, socket
+@findex socket
+
+@subheading Syntax
+
+@example
+#include <sys/socket.h>
+
+int socket (int domain, int type, int protocol);
+@end example
+
+@subheading Description
+
+@code{socket()} creates a communication end-point and returns its file
+descriptor.
+
+@var{domain} refers to a communication domain, e.g. Internet domain, Unix
+domain.  These are specified by the @samp{AF_*} constants, e.g. @samp{AF_INET},
+@samp{AF_UNIX}, as defined in @samp{sys/socket.h}.
+
+@var{type} specifies how the communication takes place, e.g. streams,
+datagrams.  These are specified by the @samp{SOCK_} constants, e.g.
+@samp{SOCK_STREAM}, @samp{SOCK_DGRAM}, as defined in @samp{sys/socket.h}.
+@samp{SOCK_STREAM} supports reliable, sequenced, bidirectional streams of
+binary data.  @samp{SOCK_DGRAM} supports unreliable connectionless packets.
+These packets may have a maximum size.
+
+@var{protocol} specifies the communications protocol to use, e.g. TCP, UDP.
+For the Internet domain (i.e. IP), these are defined by the @samp{IPPROTO_}
+constants in @samp{netinet/in.h}, e.g. @samp{IPPROTO_TCP}, @samp{IPPROTO_UDP}.
+If @var{protocol} is zero, the default protocol for the socket's domain &
+type is used, e.g.
+
+@samp{fd = socket(AF_INET, SOCK_STREAM, 0);} would create a TCP/IP socket.
+@samp{fd = socket(AF_INET, SOCK_DGRAM, 0);} would create a UDP/IP socket.
+
+libsocket supports the following triplets:
+
+@itemize @w
+@item AF_INET, SOCK_STREAM, IPPROTO_TCP
+@item AF_INET, SOCK_DGRAM, IPPROTO_UDP
+@item AF_UNIX, SOCK_STREAM, 0
+@item AF_UNIX, SOCK_DGRAM, 0
+@end itemize
+
+@subheading Return Values
+
+-1 is returned and @var{errno} set on error.  Otherwise, a positive non-zero
+integer number is returned, a file descriptor.
+
+Possible errors are:
+
+@table @samp
+@item EMFILE
+There is no space left in the per-process file descriptor table. 
+@item ENFILE
+There is no space left in the system file descriptor table. 
+@item ENODEV
+No socket transports were found.
+@item ENOAFSUPPORT
+The implementation does not support the specified address family.
+@item EPROTONOSUPPORT
+The protocol is not supported by the address family or the protocol is not
+supported by the implementation.
+@end table
+
+@subheading Portability
+
+@portability posix, unix98
+
+@subheading Example
+
+@example
+@end example

@@ -1,0 +1,164 @@
+File: lsck.inf,  Node: Installation,  Next: Getting Started,  Prev: Unimplemented,  Up: Top
+
+Installation
+************
+
+Installing the Binary Distribution
+==================================
+
+Installing the binary distribution (ready-to-run) version of libsocket
+is fairly straightforward.  Firstly, back up the DJGPP header file
+`include/netinet/in.h', because this is overwritten by one of
+libsocket's header files.  Then extract the ZIP file into the DJGPP
+directory (e.g. `c:\djgpp'), preserving directory names - e.g. use
+PKUNZIP's `-d' option.  The distribution documentation files (e.g.
+readme files) can then be found off the `c:\djgpp\contrib' directory.
+
+To install the info files properly, you will need GNU texinfo 4.0(1).
+Run the following commands:
+
+     install-info --info-file=c:/djgpp/info/lsck.inf --info-dir=c:/djgpp/info
+     install-info --info-file=c:/djgpp/info/netsetup.inf --info-dir=c:/djgpp/info
+
+Now install the Winsock 2 support virtual device driver (see the section
+below). libsocket should now be installed correctly and ready to use
+(*note Getting Started::).
+
+libsocket's binary distribution is built with debugging information,
+because it is still in development.  Programs built with libsocket may
+be larger than expected, because of the debugging information.
+Debugging information can be removed using strip (*note strip:
+(binutils)strip.).
+
+Installing the Documentation Distribution
+=========================================
+
+Installing the documentation distribution (ready-to-run) version of
+libsocket is fairly straightforward.  Extract the ZIP file into the
+DJGPP directory (e.g. `c:\djgpp'), preserving directory names - e.g.
+use PKUNZIP's `-d' option.  The distribution documentation files (e.g.
+readme files) can then be found off the `c:\djgpp\contrib' directory.
+
+Installing the Source Distribution
+==================================
+
+Extract the ZIP into the DJGPP directory (e.g. `c:\djgpp'), preserving
+directory names - e.g. use PKUNZIP's `-d' option.  The sources can then
+be found off the `c:\djgpp\contrib' directory.
+
+Required and Optional Packages
+------------------------------
+
+To build libsocket requires the following packages:
+
+   * DJGPP development environment, version 2.02 or later
+
+   * GNU bash
+
+   * GNU C compiler (gcc)
+
+   * GNU C++ compiler (g++, also known as gxx)
+
+   * GNU binutils
+
+   * GNU make
+
+   * GNU fileutils
+
+   * GNU shellutils
+
+   * GNU texinfo, version 4.0
+
+   * GNU autoconf, version 2.13 or later
+
+   * GNU awk
+
+   * GNU m4
+
+   * GNU sed, verson 3.02 or later
+
+Optional packages are as follows:
+
+   * GNU textutils
+
+Configuration and Compilation
+-----------------------------
+
+In the following instructions, I have assumed that bash is the shell.
+If not, type `bash' and then follow the instructions.
+
+  1. Regenerate the configure script:
+
+          autoconf config.in | sed -e 's/config\.guess/config.gue/' > config
+
+     It may be necessary to regenerate the configure script, because
+     the DJGPP port of autoconf has some extra m4 macros that make it
+     work on DOS.  If a Linux (or other Unix) configure script is used
+     under DOS, it will not work properly.
+
+     The usage of `sed' above is necessary to convert the filename
+     `config.guess' to the short filename `config.gue' that is used in
+     the libsocket distribution (so that libsocket can be compiled on
+     plain ol' DOS).
+
+     [ Note that source distributions of libsocket should be set up for
+     compilation   with DJGPP, so this step shouldn't be necessary.  If
+     it doesn't work, try   running `autoconf'. ]
+
+  2. Run `./config' to detect programs and the default prefix (the DJGPP
+     directory, `$DJDIR').  If you wish to enable debugging
+     information, use the `--enable-debug' switch, like so:
+
+          ./config --enable-debug
+
+     The `--prefix' option can be used to specify the prefix used when
+     installing the built package.  This should probably be the DJGPP
+     directory, but you can install it elsewhere if you want.  The
+     default is the DJGPP directory. As an example:
+
+          ./config --prefix=c:/somedir/ls080
+
+  3. Build the dependency information:
+
+          make dep
+
+  4. Then build everything (library, documentation, demo programs,
+     tests):
+
+          make all
+
+  5. (_Optional_) Run `make install' to install libsocket.  If you want
+     to see what would be installed, use `make -n install' instead.
+     This will install the headers, library and info documentation
+     (including adding an entry to the info directory) into the prefix
+     specified above.
+
+
+Now install the Winsock 2 support virtual device driver (see the section
+below).
+
+libsocket should now be installed correctly and ready to use (*note
+Getting Started::).
+
+Installing the Winsock 2 Support Virtual Device Driver
+======================================================
+
+To work with Winsock 2, libsocket needs a virtual device driver (VxD)
+to be installed.  This VxD is called SOCK.VXD and was written as part
+of the port of the Coda Network File System
+(http://www.coda.cs.cmu.edu/) to Windows '95.
+
+SOCK.VXD is included in the `redist' directory of the libsocket binary
+and source distributions.  The program `sockvxd.exe' is a
+self-extracting installer.  To run this program, use the `installvxd'
+Makefile target:
+
+     make installvxd
+
+When prompted, select the option to dynamically load SOCK.VXD - then it
+will only be loaded when used by libsocket programs.
+
+---------- Footnotes ----------
+
+(1) This is available from the DJGPP archive as v2gnu/txi40b.zip
+

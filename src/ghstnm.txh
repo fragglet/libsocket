@@ -1,0 +1,96 @@
+@comment The start of a comment is indicated by the following comment. This
+@comment syntax is used by the script funcstxh.sh: @comment function <name>
+
+@comment function gethostname
+
+@node gethostname, resolver
+@findex gethostname
+
+@c This file was originally a Linux man page - see the copyright below. It
+@c was modified for use in libsocket by Richard Dawe <richdawe@bigfoot.com>.
+
+@c Hey Emacs! This file is -*- nroff -*- source.
+@c
+@c Copyright 1993 Rickard E. Faith (faith@cs.unc.edu)
+@c
+@c Permission is granted to make and distribute verbatim copies of this
+@c manual provided the copyright notice and this permission notice are
+@c preserved on all copies.
+@c
+@c Permission is granted to copy and distribute modified versions of this
+@c manual under the conditions for verbatim copying, provided that the
+@c entire resulting derived work is distributed under the terms of a
+@c permission notice identical to this one
+@c 
+@c Since the Linux kernel and libraries are constantly changing, this
+@c manual page may be incorrect or out-of-date.  The author(s) assume no
+@c responsibility for errors or omissions, or for damages resulting from
+@c the use of the information contained herein.  The author(s) may not
+@c have taken the same level of care in the production of this manual,
+@c which is licensed free of charge, as they might when working
+@c professionally.
+@c 
+@c Formatted or processed versions of this manual, if unaccompanied by
+@c the source, must acknowledge the copyright and authors of this work.
+@c
+@c Modified 22 July 1995 by Michael Chastain <mec@duracef.shout.net>:
+@c   'gethostname' is real system call on Linux/Alpha.
+@c Modified Fri Jan 31 16:30:53 1997 by Eric S. Raymond <esr@thyrsus.com>
+
+@subheading Syntax
+
+@example
+#include <unistd.h>
+
+int gethostname (char *name, size_t len);
+@end example
+
+@subheading Description
+
+This function is used to access the host name of the current processor.  The
+host name is set using @code{sethostname()} (@pxref{sethostname}).  The
+domain name component can be retrieved and set using @code{getdomainname()}
+and @code{setdomainname()} respectively (@pxref{getdomainname},
+@pxref{setdomainname}).
+
+libsocket's implementation of @code{gethostname()} overrides DJGPP's
+implementation (@pxref{gethostname, , gethostname, libc}).  libsocket will fall
+back the DJGPP's implementation when it cannot find the host name from its
+additional sources.
+
+If a host name has not been set using @code{sethostname()}, then it is
+determined in the following order:
+
+@enumerate 1
+@item
+from the environment variable @code{HOSTNAME};
+@item
+from libsocket's configuration file;
+@item
+from any automatic configuration;
+@item
+from DJGPP's original @code{gethostname()} implementation.
+@end enumerate
+
+@subheading Return value
+
+On success, zero is returned.  On error, -1 is returned, and @samp{errno}
+is set appropriately.
+
+@subheading Errors
+
+@table @samp
+@item EINVAL
+@var{len} is negative or smaller than the actual size.
+@item EFAULT
+@var{name} is an invalid address.
+@end table
+
+@subheading Portability
+
+@portability !posix, !unix98
+
+@subheading Example
+
+@example
+@end example

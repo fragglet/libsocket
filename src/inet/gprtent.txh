@@ -1,0 +1,40 @@
+@comment The start of a function description is indicated by the following
+@comment comment. This syntax is used by the script functxh.sh:
+@comment @comment function <name>
+
+@comment function getprotoent
+
+@node getprotoent, resolver
+@findex getprotoent
+
+@subheading Syntax
+
+@example
+#include <netdb.h>
+
+struct protoent *getprotoent (void);
+@end example
+
+@subheading Description
+
+The @code{getprotoent()} function reads the next line from the file
+@samp{protocols} (@pxref{protocols}) and returns a structure
+@samp{protoent} containing the broken out fields from the line.
+The @samp{protocols} file is opened if necessary.
+
+The @samp{protoent} structure is defined in the description of
+@code{getprotobyname()} (@pxref{getprotobyname}).
+
+@subheading Return Values
+
+On successful completion the function returns a @samp{protoent} structure, or
+a NULL pointer if an error occurs or the end of the file is reached.
+
+@subheading Portability
+
+@portability unix98
+
+@subheading Example
+
+@example
+@end example

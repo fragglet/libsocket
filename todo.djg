@@ -1,0 +1,20 @@
+libsocket To-dos Relating to the DJGPP libraries
+================================================
+
+- S_IFSOCK, etc. for stat() calls?
+. Requires patching of DJGPP header => nasty
+. Maybe this can be in DJGPP 2.04?
+. Later: Actually, they're fstat() calls.
+
+- Ask for the following constants to be added to future DJGPP version, even if
+  there is no socket support:
+. F_GETOWN, F_SETOWN in fcntl.h
+. S_IFSOCK in sys/stat.h, isfdtype() - maybe isfdtype() can stat the file
+  descriptor & return appropriate code if S_IFSOCK is not defined?
+. Later: See above comment on S_IFSOCK.
+
+- Fix uname() too!
+. Seems OK actually, just need a slight patch.
+. Need to req domainname member though for DJGPP 2.04
+
+Richard Dawe <richdawe@bigfoot.com> 2000-05-13

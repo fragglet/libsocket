@@ -1,0 +1,734 @@
+File: lsck.inf,  Node: Configuration,  Next: Miscellaneous Information,  Prev: Getting Started,  Up: Top
+
+Configuration
+*************
+
+libsocket's configuration can be controlled by a number of files.
+These files have the same purpose and are in the same format as the
+ones on Linux, and hence many Unices.  Some of these files are also
+present on Windows - these can be used libsocket.  libsocket can run
+without configuration files, but only in certain circumstances.
+
+libsocket comes with a program called "netsetup", which generates the
+necessary configuration files (*note Introduction:
+(netsetup)Introduction.).
+
+libsocket's main configuration file is `lsck.cfg'.
+
+* Menu:
+
+* libsocket and environment variables::
+* lsck.cfg::
+
+* host.conf::
+* resolv.conf::
+* hostname::
+
+* hosts::
+* networks::
+* services::
+* protocols::
+
+* netrc::
+
+File: lsck.inf,  Node: libsocket and environment variables,  Next: lsck.cfg,  Up: Configuration
+
+libsocket and environment variables
+===================================
+
+libsocket's main configuration file is `lsck.cfg'.  Its location is
+specified by the environment variable `LSCK'. If you use the normal DOS
+shell, `command.com', you would use:
+
+     SET LSCK=c:\lsck
+
+You may want to add this to your `autoexec.bat'.
+
+In bash (*note Top: (bash)Top.) you would use:
+
+     export LSCK=c:/lsck
+
+You could also add a line to `DJGPP.ENV' (*note DJGPP.ENV:
+(kb)DJGPP.ENV.) somewhere near the start, e.g. just after the line like:
+
+     +LFN=Y
+
+add a line like:
+
+     +LSCK=c:/lsck
+
+libsocket and bash
+------------------
+
+If you are using bash, you should be aware that it sets the environment
+variable `HOSTNAME' automatically (*note Bash Variables: (bash)Bash
+Variables.).  This interferes with libsocket's automatic configuration;
+it may cause problems, when trying to resolve DNS names.
+
+To avoid this problem, please add the following line to your _bashrc
+file (*note Bash Startup Files: (bash)Bash Startup Files.):
+
+     unset HOSTNAME
+
+File: lsck.inf,  Node: lsck.cfg,  Next: host.conf,  Prev: libsocket and environment variables,  Up: Configuration
+
+lsck.cfg
+========
+
+`lsck.cfg' is written in a similar way to Windows .INI files - the file
+is split into different sections.  There are four sections:
+
+   * `main', for libsocket global settings, e.g. resolver files, host
+     name;
+
+   * `wsock', for the wsock (Winsock 1) interface;
+
+   * `csock', for the csock (Winsock 2) interface;
+
+   * `unix', for the unix (Unix domain sockets) interface.
+
+The main Section
+----------------
+
+Key           Possible Values                      Default Value
+hostname      Host name with domain                (Via
+                                                   auto-configuration)
+debug         on, off, verbose, yes, no, 0, 1, 2   off
+hosts         'hosts' file location                'hosts', Windows
+                                                   directory
+networks      'networks' file location             'networks', Windows
+                                                   directory
+services      'services' file location             'services', Windows
+                                                   directory
+protocols     'protocols' file location            'protocol', Windows
+                                                   directory
+host.conf     'host.conf' file location            
+resolv.conf   'resolv.conf' file location          
+hosts.equiv   'hosts.equiv' file location          
+.rhosts       '.rhosts' file location              User's home directory
+.netrc        '.netrc' file location               User's home directory
+
+The host name could be, for example, myhost.mycompany.com.  It is
+usually a good idea to set hosts, networks, services and protocols to
+point to your Windows directory, e.g.:
+
+     hosts=c:\windows\hosts
+     networks=c:\windows\networks
+     services=c:\windows\services
+     protocols=c:\windows\protocol
+
+`hosts.equiv', `.rhosts' and `.netrc' are for remote command execution
+- *Note netrc::.  libsocket will look for `.rhosts' and `.netrc' in the
+current user's home directory with the names `.rhosts', `rhosts',
+`rhosts' and `.netrc', `netrc' and `_netrc' respectively.  The files
+specified in `lsck.cfg' are global and are only used if none were found
+in the user's home directory.
+
+The home directory is specified by the environment variable `HOME'.
+
+The wsock and csock Sections
+----------------------------
+
+Key           Possible Values              Default Value
+Enabled       true, yes, 1, false, no, 0   true
+IPAddress     Computer's IP address        (Via auto-configuration)
+IPMask        Computer's IP network mask   (Via auto-configuration)
+Gateway       Gateway's IP address         (Via auto-configuration)
+DNS1Address   DNS server 1's IP address    (Via auto-configuration)
+DNS2Address   DNS server 2's IP address    (Via auto-configuration)
+DNS3Address   DNS server 3's IP address    (Via auto-configuration)
+DNS4Address   DNS server 4's IP address    (Via auto-configuration)
+
+The loopback network is always present and should not be included in
+the list above. The "loopback network" is an internal IP network with
+the address range 127.x.x.x (also written as 127.0.0.0/8). The
+"localhost" is the host's IP address on this network - 127.0.0.1.
+
+The unix Section
+----------------
+
+Key       Possible Values              Default Value
+Enabled   true, yes, 1, false, no, 0   true
+
+File: lsck.inf,  Node: host.conf,  Next: resolv.conf,  Prev: lsck.cfg,  Up: Configuration
+
+host.conf
+=========
+
+host.conf configures the order of name resolving.  This file tells the
+networking libraries which name resolving resources to use, and in what
+order.
+
+Valid sources are `hosts', `bind' and `nis'.  `hosts' refers to the
+file *Note hosts::, which contains name to IP address mappings.  `bind'
+refers to DNS servers, which are configured elsewhere - *Note
+resolv.conf::.  `nis' refers to Network Information Services (NIS) aka
+Yellow Pages (YP), which probably won't be very common in a Windows
+environment, but might be present if Unix hosts are used.
+
+[ NIS support is not present in libsocket. ]
+
+Basic Configuration
+-------------------
+
+If you have DNS servers, the recommended order is `bind' then `hosts':
+
+     order bind, hosts
+
+If you don't have a DNS server, then only `hosts' is required, like so:
+
+     order hosts
+
+If you specify `bind' as well as `hosts' without a DNS server, then
+programs are likely to stall when resolving names.
+
+host.conf Options
+-----------------
+
+`order'
+          order SERVICE-1 ... SERVICE-N
+
+     This specifies the order in which name resolving services should
+     be used.  Valid SERVICE options are `bind', `hosts' and NIS.
+
+`trim'
+          trim DOMAINS
+
+     ?
+
+`multi'
+          multi (on|off)
+
+     This makes the resolver return multiple matches from `hosts'
+     (*note hosts::), which can be slow.
+
+`nospoof'
+          nospoof (on|off|warn|warn off)
+
+     ?
+
+`alert'
+          alert (on|off)
+
+     ?
+
+`reorder'
+          reorder (on|off)
+
+     ?
+
+Files
+-----
+
+   * /etc/host.conf (Linux)
+
+   * e.g. c:\lsck\host.cfg (libsocket)
+
+File: lsck.inf,  Node: resolv.conf,  Next: hostname,  Prev: host.conf,  Up: Configuration
+
+resolv.conf
+===========
+
+The resolver is a set of routines in the C library (in this case
+libsocket) that provide access to the Internet Domain Name System
+(DNS).  The resolver configuration file contains information that is
+read by the resolver routines the first time they are invoked by a
+process.  The file is designed to be human readable and contains a list
+of keywords with values that provide various types of resolver
+information.
+
+On a normally configured system this file should not be necessary.  The
+only name server to be queried will be on the local machine, the domain
+name is determined from the host name, and the domain search path is
+constructed from the domain name.
+
+The different configuration options are:
+
+`nameserver'
+          nameserver ADDRESS
+
+     ADDRESS specifies the Internet address (in dot notation) of a name
+     server that the resolver should query.  Up to MAXNS (currently 3)
+     name servers may be listed, one per keyword.  If there are
+     multiple servers, the resolver library queries them in the order
+     listed.  If no `nameserver' entries are present, the default is to
+     use the name server on the local machine.  (The algorithm used is
+     to try a name server, and if the query times out, try the next,
+     until out of name servers, then repeat trying all the name servers
+     until a maximum number of retries are made).
+
+`domain'
+          domain DOMAIN
+
+     DOMAIN specifies the local domain name.  Most queries for names
+     within this domain can use short names relative to the local
+     domain.  If no `domain' entry is present, the domain is determined
+     from the local host name returned by *Note gethostname:
+     (libc)gethostname.  The domain part is taken to be everything
+     after the first `.'.  Finally, if the host name does not contain a
+     domain part, the root domain is assumed.
+
+`search'
+          search DOMAIN-1 ... DOMAIN-N
+
+     This specifies the search list for host-name lookup.  The search
+     list is normally determined from the local domain name; by
+     default, it contains only the local domain name.  This may be
+     changed by listing the desired domain search path following the
+     `search' keyword with spaces or tabs separating the names.
+
+     Most resolver queries will be attempted using each component of
+     the search path in turn until a match is found.  Note that this
+     process may be slow and will generate a lot of network traffic if
+     the servers for the listed domains are not local, and that queries
+     will time out if no server is available for one of the domains.
+
+     The search list is currently limited to six domains with a total
+     of 256 characters.
+
+`sortlist'
+          sortlist ADDRESS-1[/NETMASK-1] ... ADDRESS-N[/NETMASK-N]
+
+     Sortlist allows addresses returned by gethostbyname to be sorted
+     (*note gethostbyname::).  A sortlist is specified by IP ADDRESS and
+     NETMASK pairs.  The netmask is optional and defaults to the natural
+     netmask of the net.  The IP address and optional network pairs are
+     separated by slashes.  Up to 10 pairs may be specified. Here is an
+     example:
+
+          sortlist 130.155.160.0/255.255.240.0 130.155.0.0
+
+`options'
+          options OPTION-1 ... OPTION-N
+
+     Options allows certain internal resolver variables to be modified.
+     OPTION can be one of the following:
+
+    `debug'
+          `debug' sets RES_DEBUG in _res.options.
+
+    `ndots'
+               ndots:N
+
+          `ndots' sets a threshold, N, for the number of dots which
+          must appear in a name given to `res_query()' (*note
+          res_query::) before an _initial absolute query_ will be made.
+          The default for N is 1, meaning that if there are any dots
+          in a name, the name will be tried first as an absolute name
+          before any _search list_ elements are appended to it.
+
+The `domain' and `search' keywords are mutually exclusive.  If more
+than one instance of these keywords is present, the last instance wins.
+
+The `search' keyword of a system's `resolv.conf' file can be overridden
+on a per-process basis by setting the environment variable
+`LOCALDOMAIN' to a space-separated list of search domains.
+
+The `options' keyword of a system's `resolv.conf' file can be amended
+on a per-process basis by setting the environment variable
+`RES_OPTIONS' to a space-separated list of resolver options as
+explained above under `options'.
+
+The keyword and value must appear on a single line, and the keyword
+(e.g. `nameserver') must start the line.  The value follows the
+keyword, separated by white space.
+
+Files
+-----
+
+   * /etc/resolv.conf (Linux)
+
+   * e.g. c:\lsck\resolv.cfg
+
+File: lsck.inf,  Node: hostname,  Next: hosts,  Prev: resolv.conf,  Up: Configuration
+
+hostname
+========
+
+This section describes host name resolution.  Hostnames are domains.  A
+domain is a hierarchical, dot-separated list of subdomains.  For
+example, the machine `monet', in the `Berkeley' subdomain of the `EDU'
+subdomain of the Internet Domain Name System would be represented as:
+
+     monet.Berkeley.EDU
+
+(with no trailing dot).
+
+Hostnames are often used with network client and server programs, which
+must generally translate the name to an address for use.  (This task is
+usually performed by the library routine *Note gethostbyname::.)  The
+default method for resolving hostnames by the Internet name resolver is
+to follow RFC 1535's security recommendations.  Actions can be taken by
+the administrator to override these recommendations and to have the
+resolver behave the same as earlier, non-RFC 1535 resolvers.
+
+The default method (using RFC 1535 guidelines) follows:
+
+If the name consists of a single component, i.e. contains no dot, and
+if the environment variable `HOSTALIASES' is set to the name of a file,
+that file is searched for a string matching the input hostname.  The
+file should consist of lines made up of two strings separated by
+white-space, the first of which is the hostname alias, and the second
+of which is the complete hostname to be substituted for that alias.  If
+a case-insensitive match is found between the hostname to be resolved
+and the first field of a line in the file, the substituted name is
+looked up with no further processing.
+
+If there is at least one dot in the name, then the name is first tried
+as is.  The number of dots to cause this action is configurable by
+setting the threshold using the `ndots' option in `resolv.conf' (*note
+resolv.conf::) (default: `1').  If the name ends with a dot, the
+trailing dot is removed, and the remaining name is looked up
+(regardless of the setting of the 'ndots' option) and no further
+processing is done.
+
+If the input name does not end with a trailing dot, it is looked up by
+searching through a list of domains until a match is found.  If neither
+the search option in the `resolv.conf' (*note resolv.conf::) file or
+the `LOCALDOMAIN' environment variable is used, then the search list of
+domains contains only the full domain specified by the domain option
+(in `resolv.conf') or the domain used in the local hostname (*note
+resolv.conf::).
+
+For example, if the `domain' option is set to `CS.Berkeley.EDU', then
+only CS.Berkeley.EDU will be in the search list and will be the only
+domain appended to the partial hostname, for example, `lithium', making
+`lithium.CS.Berkeley.EDU' the only name to be tried using the search
+list.
+
+If the search option is used in `resolv.conf' or the environment
+variable, `LOCALDOMAIN' is set by the user, then the search list will
+include what is set by these methods. For example, if the `search'
+option contained
+
+     ICS.Berkeley.EDU CChem.Berkeley.EDU Berkeley.EDU
+
+then the partial hostname (e.g., `lithium') will be tried with each
+domainname appended (in the same order specified).  The resulting
+hostnames that would be tried are:
+
+     lithium.CS.Berkeley.EDU
+     lithium.CChem.Berkeley.EDU
+     lithium.Berkeley.EDU
+
+The environment variable `LOCALDOMAIN' overrides the `search' and
+`domain' options, and if both search and domain options are present in
+the resolver configuration file, then only the last one listed is used
+(*note resolv.conf::).
+
+If the name was not previously tried as-is (i.e., it fell below the
+`ndots' threshold or did not contain a dot), then the name as
+originally provided is attempted.
+
+File: lsck.inf,  Node: hosts,  Next: networks,  Prev: hostname,  Up: Configuration
+
+hosts
+=====
+
+`hosts' is the host name to IP address mapping file.  This file tells
+the host name resolver the IP address corresponding to each host name.
+This is useful if there is no DNS server on the network.  It can also
+be used if the DNS server does not have a record for a particular host
+name, but its IP address is known.  A similar mapping for networks is
+performed by *Note networks::.
+
+The file is a plain ASCII file.  Comments are denoted by a hash at the
+start of a line.  Each line has the following format:
+
+     IP-ADDRESS HOST-NAME [ALIAS]
+
+e.g.
+
+     # hosts - host name to IP address translation file
+     127.0.0.1   localhost
+     192.168.0.2 gertrude
+     192.168.0.3 herbert
+     192.168.0.4 norman
+     192.168.0.5 jonathon jon
+
+There should always be a line refering to `localhost'.  This is the
+local computer, and is always accessible.
+
+Note: Windows doesn't use the aliases, so you will need multiple lines
+for the same IP address to fake aliasing.
+
+Files
+-----
+
+   * /etc/hosts (Linux)
+
+   * c:\windows\hosts (Windows)
+
+File: lsck.inf,  Node: networks,  Next: services,  Prev: hosts,  Up: Configuration
+
+networks
+========
+
+`networks' is the network name to network IP address mapping file.
+This file tells the host name resolver the network component of an IP
+address corresponding to each network name.  This is useful if there is
+no DNS server on the network.  It can also be used if the DNS server
+does not have a record for a particular network name, but its IP
+address is known.  A similar mapping for hosts is performed by *Note
+hosts::.
+
+The file is a plain ASCII file.  Comments are denoted by a hash at the
+start of a line.  Each line has the following format:
+
+     IP-ADDRESS NETWORK-NAME [ALIAS]
+
+e.g.
+
+     # networks - network name to IP address translation file
+     127       loopback
+     192.168.0 mynet intranet
+
+There should always be a line refering to `loopback'.  This is the
+loopback device, and is always accessible.
+
+Note 1: Windows doesn't use the aliases, so you will need multiple
+lines for the same network IP address to fake aliasing.
+
+Note 2: The network IP address can be constructed from an IP address and
+network mask, e.g. if you have an IP address of 1.2.3.4 and a netmask of
+255.255.0.0, then AND'ing them gives a network IP address of 1.2.
+
+Files
+-----
+
+   * /etc/networks (Linux)
+
+   * c:\windows\networks (Windows, libsocket)
+
+File: lsck.inf,  Node: services,  Next: protocols,  Prev: networks,  Up: Configuration
+
+services
+========
+
+`services' is the Internet network services list file.  `services' is a
+plain ASCII file providing a mapping between friendly textual names for
+internet services, and their underlying assigned port numbers and
+protocol types.  Every networking program should look into this file to
+get the port number (and protocol) for its service.
+
+The following C library routines support querying `services' from
+programs:
+
+   * *Note getservent::
+
+   * *Note getservbyname::
+
+   * *Note getservbyport::
+
+   * *Note setservent::
+
+   * *Note endservent::
+
+Port numbers are assigned by the IANA (Internet Assigned Numbers
+Authority), and their current policy is to assign both TCP and UDP
+protocols when assigning a port number.  Therefore, most entries will
+have two entries, even for TCP only services.
+
+Port numbers below 1024 (so-called 'low numbered' ports) can only be
+bound to by root (*note bind::).  This is so that clients connecting to
+low numbered ports can trust that the service running on the port is the
+standard implementation, and not a rogue service run by a user of the
+machine.  Well-known port numbers specified by the IANA are normally
+located in this root only space.
+
+The presence of an entry for a service in the `services' file does not
+necessarily mean that the service is currently running on the machine.
+
+The location of the `services' file is defined by `_PATH_SERVICES' in
+`/usr/include/netdb.h'.  This is usually set to `/etc/services'.
+
+Each line describes one service, and is of the form:
+
+     SERVICE-NAME PORT PROTOCOL [ALIAS-1 ... ALIAS-N]
+
+where:
+
+SERVICE-NAME
+     This is the friendly name the service is known by and looked up
+     under.  It is case sensitive.  Often, the client program is named
+     after the SERVICE-NAME.
+
+PORT
+     This is the port number (in decimal) to use for this service.
+
+PROTOCOL
+     This is the type of protocol to be used. This field should match
+     an entry in the protocols file - *Note protocols::. Typical values
+     include `tcp' and `udp'.
+
+ALIAS-N
+     These are optional space or tab separated names for this service
+     Again, the names are case sensitive.
+
+Either spaces or tabs may be used to separate the fields.
+
+Comments are started by the hash sign (#) and continue until the end of
+the line.  Blank lines are skipped.
+
+The SERVICE-NAME should begin in the first column of the file, since
+leading spaces are not stripped.  A SERVICE-NAME can be any printable
+characters excluding space and tab, however, a conservative choice of
+characters should be used to minimise inter-operability problems. Eg:
+a-z, 0-9, and hyphen (`-') would seem a sensible choice.
+
+Lines not matching this format should not be present in the file.
+
+(Currently, they are silently skipped by `getservent()',
+`getservbyname()' and `getservbyport()'. However, this behaviour should
+not be relied on.)
+
+As a backwards compatibility feature, the slash (/) between the PORT
+number and PROTOCOL name can in fact be either a slash or a comma
+(`,').  Use of the comma in modern installations is depreciated.
+
+This file might be distributed over a network using a network-wide
+naming service like Yellow Pages/NIS or BIND/Hesiod.
+
+A sample `services' file might look like this:
+
+     netstat         15/tcp
+     qotd            17/tcp          quote
+     msp             18/tcp          # message send protocol
+     msp             18/udp          # message send protocol
+     chargen         19/tcp          ttytst source
+     chargen         19/udp          ttytst source
+     ftp             21/tcp
+     # 22 - unassigned
+     telnet          23/tcp
+
+Files
+-----
+
+   * /etc/services (Linux)
+
+   * c:\windows\services (Windows, libsocket)
+
+File: lsck.inf,  Node: protocols,  Next: netrc,  Prev: services,  Up: Configuration
+
+protocols
+=========
+
+`protocols' is the protocols definition file.  This file is a plain
+ASCII file, describing the various DARPA internet protocols that are
+available from the TCP/IP subsystem.  It should be consulted instead of
+using the numbers in the ARPA include files, or, even worse, just
+guessing them.  These numbers will occur in the protocol field of any
+IP header.
+
+Keep this file untouched since changes would result in incorrect IP
+packages.  Protocol numbers and names are specified by the DDN Network
+Information Center.
+
+Each line is of the following format:
+
+     PROTOCOL-NAME PROTOCOL-NUMBER [ALIAS-1 ... ALIAS-N]
+
+where the fields are delimited by spaces or tabs.  Empty lines and
+lines starting with a hash mark (#) are ignored. Remainder of lines are
+also ignored from the occurrence of a hash mark.
+
+The field descriptions are:
+
+PROTOCOL-NAME
+     The native name for the protocol. For example IP, TCP or UDP.
+
+PROTOCOL-NUMBER
+     The official number for this protocol as it will appear within the
+     IP header.
+
+ALIAS
+     Optional aliases for the protocol.
+
+This file might be distributed over a network using a networkwide
+naming service like Yellow Pages/NIS or BIND/Hesoid.
+
+Files
+-----
+
+   * /etc/protocols (Linux)
+
+   * c:\windows\protocol (Windows, libsocket)
+
+File: lsck.inf,  Node: netrc,  Prev: protocols,  Up: Configuration
+
+netrc
+=====
+
+netrc configures auto-logins for remote hosts.  [ This was taken from
+the man page ftp(1) from GNU inetutils. ]
+
+The `.netrc' file contains login and initialization information used by
+the auto-login process.  It resides in the user's home directory.  The
+following tokens are recognized; they may be separated by spaces, tabs,
+or new-lines:
+
+`machine'
+          machine NAME
+
+     This identifies a remote machine NAME.  The auto-login process
+     searches the `.netrc' file for a `machine' token that matches the
+     remote machine specified on the ftp(1) command line or as an
+     `open' command argument.  Once a match is made, the subsequent
+     `.netrc' tokens are processed, stopping when the end of file is
+     reached or another `machine' or a `default' token is encountered.
+
+`default'
+          default NAME
+
+     This is the same as `machine' except that `default' matches any
+     name.  There can be only one `default' token, and it must be after
+     all `machine' tokens.  This is normally used as:
+
+          default
+          login anonymous password USER@SITE
+
+     thereby giving the user automatic anonymous ftp login to machines
+     not specified in `.netrc'.  This can be overridden by using the
+     `-n' flag to disable auto-login.
+
+`login'
+          login NAME password PASSWORD
+
+     If this token is present, the auto-login process will initiate a
+     login using the specified NAME.
+
+     If the PASSWORD token is present, the auto-login process will
+     supply the specified string if the remote server requires a
+     password as part of the login process.  Note that if this token is
+     present in the `.netrc' file for any user other than anonymous,
+     ftp(1) will abort the auto-login process if the `.netrc' is
+     readable by anyone besides the user.
+
+`account'
+          account STRING
+
+     This supplies an additional account password.  If this token is
+     present, the auto-login process will supply the specified string
+     if the remote server requires an additional account password, or
+     the auto-login process will initiate an `ACCT' command if it does
+     not.
+
+`macdef'
+          macdef NAME
+
+     This defines a macro.  This token functions like the ftp(1)
+     `macdef' command functions.  A macro is defined with the specified
+     name; its contents begin with the next `.netrc' line and continue
+     until a null line (consecutive new-line characters) is
+     encountered.  If a macro named `init' is defined, it is
+     automatically executed as the last step in the auto-login process.
+
+Files
+-----
+
+   * $HOME/.netrc
+
+   * $HOME/netrc
+
+   * As specified in libsocket configuration file
+

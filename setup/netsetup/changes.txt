@@ -1,0 +1,62 @@
+netsetup Changelog
+==================
+
+2000-10-22 Version 1.2.1
+------------------------
+
+- Better input parsing.
+
+2000-08-02 Version 1.2
+----------------------
+
+- Fixed a bug in the DNS server IP address entry - the user was forced to
+  enter 3 IP addresses after the changes in version 1.13.
+
+- If Windows directory is not present (if the windir environment variable is
+  not defined), then netsetup will put all configuration files in the
+  libsocket configuration directory.
+
+- Tidied up filename handling - forward slashes are always used now.
+
+2000-06-04 Version 1.13
+-----------------------
+
+- Now supports up to MAXNS DNS servers - MAXNS = 3 usually. The user will be
+  prompted for their IP addresses. Previously only one DNS server could be
+  configured for use.
+
+1999-08-29 Version 1.12
+-----------------------
+
+- netsetup is now distributed under the terms of the GNU General Public
+  License.
+
+1999-02-12 Version 1.11
+-----------------------
+
+- Uses 'protocols' in [main] instead of the incorrect 'protocol'.
+
+1999-01-14 Version 1.1
+----------------------
+
+- Rewrote netsetup to work with libsocket 0.7.4's new configuration system.
+
+1998-08-18 ?
+------------
+
+- Added support for networks file. Fixed errors in file creation messages.
+
+1998-01-11 ?
+------------
+
+- Fixed bug in creation of 'hosts.eg' where the order of the host name and IP
+  address was wrong (thanks to Reuben Collver for noticing). Also corrected
+  formatting error in message about 'hosts.eg'.
+
+1998-05-12 ?
+------------
+
+- Fixed bug in order output - When no DNS server is present it should *not*
+  output "order hosts, bind"; it should output "order hosts".
+
+Rich Dawe <richdawe@bigfoot.com> 2000-06-04

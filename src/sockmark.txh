@@ -1,0 +1,48 @@
+@comment Written by Alain Magloire, modified by Richard Dawe.
+
+@comment The start of a comment is indicated by the following comment. This
+@comment syntax is used by the script funcstxh.sh: @comment function <name>
+
+@comment function sockatmark
+
+@node sockatmark, socket
+@findex sockatmark
+
+@subheading Syntax
+
+@example
+#include <sys/socket.h>
+
+int sockatmark (int s);
+@end example
+
+@subheading Description
+
+The @code{sockatmark()} function determines whether the socket descriptor
+@var{s} is at the out-of-band data mark.  If the libsocket interface supports
+it, @code{sockatmark()} will return 1 when all data preceding the mark have
+been read and the out-of-band data mark is the first element in the receive
+queue.  @code{sockatmark()} does not remove the mark from the stream.
+
+@subheading Return Values
+
+On successful initialization the function returns 1, if the protocol
+has marked the data stream and all data preceeding the mark have been read.
+It returns 0, if there is no mark, or if data preceeds the mark in the receive
+queue.  Otherwise, -1 is return and errno is set:
+
+@table @samp
+@item EBADF
+The parameter is not a valid file descriptor.
+@item ENOSYS
+The inteface does not support the @code{sockatmark()} operation.
+@end table
+
+@subheading Portability
+
+@portability !ansi, posix
+
+@subheading Example
+
+@example
+@end example

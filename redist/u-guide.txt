@@ -1,0 +1,401 @@
+libsocket End-Users' Installation and Configuration Guide
+=========================================================
+
+Version 1.1.1, Copyright (C) 1999, 2000 by Richard Dawe <richdawe@bigfoot.com>
+Last updated on 2000-10-20
+
+libsocket Home Page:
+
+    http://libsocket.tsx.org/
+
+This guide explains how to configure programs that use libsocket. This may
+require the installation of supporting programs or device drivers.
+
+This is a long document - for those who don't wish to read the whole document,
+please read at least the sections 'Introduction', 'Before You Start',
+'Why libsocket Needs Configuration', 'libsocket Interfaces',
+'csock Interface' and 'How to Configure libsocket'.
+
+Please note that this document does try to explain how to set up a TCP/IP
+network - it assumes you already have a working one.
+
+Introduction
+------------
+
+libsocket is a networking library for programs compiled with DJGPP. libsocket
+uses a few backdoors in Windows's low-level code to use Winsock, so that
+libsocket programs can communicate via TCP/IP. Programs using these backdoors
+can run on Windows 3.x, Windows '95 and Windows '98. DOS and Windows NT are
+not supported (yet).
+
+Before You Start
+----------------
+
+libsocket needs a TCP/IP stack to be installed. This varies, depending on
+the operating system. There are several guides available on the Internet:
+
+Windows 3.x:
+. http://www.uga.edu/~ucns/lans/docs/mstcpip.html
+. http://www.city.ac.uk/csd/network/resnet/netdiy/winn.htm
+
+Windows '95, '98:
+. http://www.kellogg.nwu.edu/kis/docs/howto/kis0019/
+
+Windows NT:
+. http://helpdesk.uvic.ca/hownote/1999/ht99011.html
+
+[ If you know of any good guides, please e-mail me. ]
+
+Why libsocket Needs Configuration
+---------------------------------
+
+To function, a TCP/IP "stack" requires some information. libsocket needs this
+information from the Windows TCP/IP, so that it can pass it on to libsocket
+programs. The most important information is (are) the DNS IP address(es) for
+translating names like 'foo.bar.com' to '132.123.100.22'.
+
+Here is the problem: libsocket can obtain much of the TCP/IP stack's settings
+automatically from the Windows registry (or .ini files on Windows 3.x), but
+sometimes the information is not available from the registry.
+
+When libsocket can obtain its information from the registry/settings files,
+it is called "auto-configuration". libsocket can do this in the following
+circumstances:
+
+- Windows 3.x with .ini files
+- Windows '95 & '98, Ethernet card, static IP address(es)
+- Windows '95 & '98, Ethernet card, dynamic IP address(es) assigned by DHCP
+- Windows '95 & '98, dial-up networking, static IP address(es)
+
+Auto-configuration cannot be carried out in the following situations:
+
+- Windows '95 & '98, dial-up networking, dynamic IP address(es)
+
+[ There may be more combinations that don't work. None have yet been reported ]
+[ to me.                                                                      ]
+
+libsocket Interfaces
+--------------------
+
+libsocket is a complex beastie. It has to use two different backdoors,
+depending on the Winsock version. To do this, it has what are called
+"interfaces". Currently libsocket has the following interfaces:
+
+- the Winsock 1.x interface "wsock"
+- the Winsock 1.x, 2.x interface "csock"
+- the Unix domain sockets interface "unix" (in development/alpha testing)
+
+The unix interface will not be discussed here. The wsock and csock interfaces
+are configured identically. The csock interface is less advanced than the
+wsock interface, but will work with all versions of Winsock.
+
+On start-up (the first call to libsocket), the interfaces detect whether they
+will work, e.g.: if Winsock 2.x is present then the wsock interface will fail,
+but the csock interface will succeed. This ensures that only the correct
+interface is installed.
+
+Windows 3.x comes with Winsock 1.x (maybe Winsock 1.0?). Windows '95 comes
+with Winsock 1.1, but can be upgraded to Winsock 2.x - some software does
+this on installation. Windows '98 comes with Winsock 2.x (Winsock 2.2?). If
+Winsock 2.x is present, there will be files called 'wsock2.vxd' and
+'ws2_32.dll' in the Windows system directory.
+
+csock Interface
+---------------
+
+The csock interface requires a virtual device driver to be installed, sock.vxd.
+This can be installed using 'sockvxd.exe', a self-extracting installer. This
+can be freely distributed with libsocket programs.
+
+The virtual device driver was written as part of the Coda network filesystem
+project's porting effort to Windows '95, '98. It is distributed under the
+GNU General Public License. It can be downloaded in binary and source form
+from here:
+
+    ftp://www.coda.cs.cmu.edu/pub/tools/95/windows-socket-extension.exe
+    ftp://www.coda.cs.cmu.edu/pub/tools/95/windows-socket-extension-src.zip
+
+sockvxd.exe is simply a renamed version of the executable file. To install the
+VxD, run sockvxd.exe and select 'dynamic loading'. libsocket can load the VxD
+when it needs to use it.
+
+Configuration Files
+-------------------
+
+libsocket has a number of configuration files. By default libsocket will look
+in your Windows directory for some of them. It can share some of them with
+Windows. However, the libsocket-specific configuration files should be placed
+somewhere else, just to keep things tidy.
+
+The environment variable LSCK specifies where libsocket should look for
+its main configuration file 'lsck.cfg'. If you use the normal DOS shell,
+this would be set like so:
+
+    set LSCK=C:\LSCK
+
+If you use bash, you would use:
+
+    export LSCK=c:/lsck
+
+bash sets some environment variables automatically. One of these is HOSTNAME;
+unfortunately this interferes with libsocket's automatic configuration
+and may cause problems with the DNS resolving code. Please add the following
+line to your _bashrc file:
+
+    unset HOSTNAME
+
+The path can contain long filenames, but it is recommended that you use the
+short form instead, e.g. C:\PROGRA~1\LSCK instead of C:\Program Files\LSCK.
+
+The configuration files are:
+
+- lsck.cfg, the main configuration file - it also specifies where the other
+  configuration files are;
+
+- hosts, the DNS name to IP address mapping table
+  ('foo.bar.com' -> '132.123.100.22');
+
+- networks, the DNS domain name to network IP address mapping table
+  ('bar.com' -> '132.123.100');
+
+- services, the service name to port number mapping table
+  ('http' -> '80');
+
+- protocols, the protocol name to protocol number mapping table
+  ('tcp' -> 6);
+
+- host.conf, the name-lookup (resolver) order configuration file;
+
+- resolv.conf, the resolver configuration file.
+
+Please note that the names above are historic due to some Linux code in
+libsocket. To fit in the 8+3 filename convention of DOS, these should be
+called/mapped as follows:
+
+protocols   -> protocol
+host.conf   -> host.cfg
+resolv.conf -> resolv.cfg
+
+IMPORTANT: When this document talks about resolv.conf, it really means
+resolv.cfg, and so on. If you get the names mixed up, it won't work.
+
+Fortunately, libsocket can use Windows's hosts, networks, services and
+protocols files without any changes.
+
+lsck.cfg
+--------
+
+lsck.cfg has a syntax similar to Windows 3.x's .ini files:
+
+    ; This is a comment.
+    [section]
+    key=value
+
+libsocket also allows '#' (hash) to be a comment character, e.g.
+
+    # This is a comment too!
+
+Most of the settings are in the section 'main'. There are sections for each
+of the interfaces: 'wsock', 'csock', 'unix'.
+
+* main Section *
+
+Key          Description                      Default
+
+hostname     Full host name (*)               Via auto-config., if possible
+debug        Enable debugging messages? (**)  off
+hosts        'hosts' file location            'hosts' in Windows directory
+networks     'networks' file location         'networks' in Windows directory
+protocols    'protocols' file location        'protocol' in Windows directory
+services     'services' file location         'services' in Windows directory
+host.conf    'host.conf' file location        (None)
+resolv.conf  'resolv.conf' file location      (None)
+
+(*)  e.g. 'foo.bar.com'
+
+(**) Valid debug flags:
+
+    off, on,
+    no,  yes, verbose,
+    0,   1,   2
+
+* Interface Section Common Keys *
+
+All interface sections support the key 'Enabled', which can take the values:
+
+    off,   on
+    no,    yes,
+    false, true,
+    0,     1
+
+Interfaces are enabled by default.
+
+* wsock & csock Sections *
+
+Key          Description                 Default
+
+IPAddress    Computer's IP address       Via auto-configuration, if possible
+IPMask       Computer's IP network mask  Via auto-configuration, if possible
+Gateway      Gateway's IP address        Via auto-configuration, if possible
+DNS1Address  DNS server 1's IP address   Via auto-configuration, if possible
+DNS2Address  DNS server 2's IP address   Via auto-configuration, if possible
+DNS3Address  DNS server 3's IP address   Via auto-configuration, if possible
+DNS4Address  DNS server 4's IP address   Via auto-configuration, if possible
+
+The IPAddress, IPMask and Gateway are not required. Some libsocket function
+calls may return the IP address, network mask or gateway. If these fields are
+not set, then the program may return incorrect information for the IP
+address, network mask or gateway.
+
+The DNS addresses are required, but they can also be configured globally,
+rather than for one interface, in 'resolv.conf'.
+
+host.conf
+---------
+
+host.conf controls the name of name lookup, i.e. name to IP mapping,
+e.g. 'foo.bar.com' -> '132.123.100.22'. The file has a simple format:
+
+    order <method 1>, ..., <method n>
+
+where <method 1> & <method n> are different name lookup mechanisms. There are
+two possibilities: 'hosts' for using the hosts file and 'bind' for using a
+DNS server. So one can have one of the following lines:
+
+    order hosts
+    order hosts, bind
+    order bind, hosts
+    order bind
+
+The first line is used when there is no DNS server available. The second line
+is used when there is a DNS server available, but you would still like to use
+the hosts file first. The last two lines are possible, but probably less
+useful.
+
+resolv.conf
+-----------
+
+This file configures the name lookup (resolving) component of libsocket. One
+can specify the DNS server to use:
+
+    nameserver <DNS server 1>, <DNS server 2>, <DNS server 3>
+
+where <DNS server 1> is the IP address of the first DNS server. e.g.
+
+    nameserver 132.123.100.1, 132.123.100.2, 132.123.100.3
+
+The resolver also some configurable options, the most useful being debug
+information. If the name resolving seems to fail, try placing the following
+line in resolv.conf to see what the problem is:
+
+    options debug
+
+How to Configure libsocket
+--------------------------
+
+Now we reach the crux of this document. To configure libsocket you may not
+need to do anything - it may be able to auto-configure itself (see
+'Introduction').
+
+If libsocket needs configuring, then you will need the computer's IP address
+details. Under Windows '95 and '98 these can be found by running 'winipcfg'.
+This isn't on the Start Menu by default, so it will need to be run from
+the Start Menu's 'Run' menu option or from a DOS box by typing its name.
+
+Once winipcfg has loaded, click on the 'More Info' button. You will then need
+to select the correct network connection.
+
+If you are connected to the network/Internet via a dial-up link, select
+'PPP adapter' or similar in the drop-down box. It should have been assigned an
+IP address field - see the 'IP Address' item, halfway down. If not, then you
+probably aren't connected to the network/Internet.
+
+If you are connected to the network/Internet via a network card, then you will
+need to select the network card from the drop-down box. It should have an IP
+address, as discussed above.
+
+Note the following details:
+
+- DNS Servers
+- IP Address
+- Subnet Mask
+- Default Gateway
+
+If you are using a dial-up link, then the IP Address will probably be
+different every time you connect. If you don't mind the hassle, you should
+update the configuration information each time by finding the new IP address
+from winipcfg. The DNS servers and default gateway probably won't change. If
+they do change, you will find out quickly, because your libsocket programs
+will fail.
+
+Now you can configure libsocket. This can be done with the program 'netsetup'
+from the libsocket distribution, which may have been distributed with this
+program. If you wish to use netsetup, please read the following anyhow, to
+understand what netsetup does.
+
+Create a directory 'C:\LSCK', e.g. type the following:
+
+    c:
+    mkdir lsck
+
+Now add the following line to the start of 'autoexec.bat':
+
+    set LSCK=C:\LSCK
+
+This tells libsocket where to find its configuration files. If you want to run
+a libsocket program without a reboot, type the set command in at the MS-DOS
+promtp too.
+
+Create the file C:\LSCK\LSCK.CFG and put the following lines in it:
+
+    [main]
+    hosts=c:\windows\hosts
+    networks=c:\windows\networks
+    services=c:\windows\services
+    protocols=c:\windows\protocol
+    host.conf=c:\lsck\host.cfg
+    resolv.conf=c:\lsck\resolv.cfg
+
+    [wsock]
+    IPAddress=<IP address>
+    IPMask=<IP network mask>
+    Gateway=<Default gateway>
+
+    [csock]
+    IPAddress=<IP address>
+    IPMask=<IP network mask>
+    Gateway=<Default gateway>
+
+Clearly, the windows directory 'c:\windows' should be replaced with the
+appropriate directory name. <IP address> should be replaced with the IP
+address found from winipcfg. Similar replacements should be performed for
+<IP network mask> and <Default gateway>.
+
+Create the file C:\LSCK\HOST.CFG and put the following line in it:
+
+    order hosts, bind
+
+If there is no DNS server, use this instead:
+
+    order hosts
+
+Create the file C:\LSCK\RESOLV.CFG and put the following line in it:
+
+    nameserver <DNS server 1>, <DNS server 2>, <DNS server 3>
+
+Replace <DNS server 'n'> with the DNS server's IP address. If there are no
+DNS servers, you don't need to create this file.
+
+[ If adding DNS servers to resolv.conf doesn't work, trying adding DNS   ]
+[ entries to the wsock and csock sections as described in 'wsock & csock ]
+[ Sections'.                                                             ]
+
+libsocket is now configured & ready to run!
+
+Closing Comments
+----------------
+
+If you have any queries or suggestions, please e-mail me. I hope this guide is
+useful.
+
+Richard Dawe <richdawe@bigfoot.com> 2000-10-20

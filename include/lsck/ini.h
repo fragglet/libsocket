@@ -1,7 +1,12 @@
 /*
  *  libsocket - BSD socket like library for DJGPP
  *  Copyright 1997, 1998 by Indrek Mandre
- *  Copyright 1997, 1998 by Richard Dawe
+ *  Copyright 1997-2000 by Richard Dawe
+ *
+ *  Portions of libsocket Copyright 1985-1993 Regents of the University of 
+ *  California.
+ *  Portions of libsocket Copyright 1991, 1992 Free Software Foundation, Inc.
+ *  Portions of libsocket Copyright 1997, 1998 by the Regdos Group.
  *
  *  This library is free software; you can redistribute it and/or modify it
  *  under the terms of the GNU Library General Public License as published
@@ -26,9 +31,20 @@
 #ifndef __libsocket_ini_h__
 #define __libsocket_ini_h__
 
-int GetPrivateProfileString (char *appname, char *keyname, char *deflt,
-                             char *dest, size_t destsize, char *filename);
+#ifdef __cplusplus
+extern "C"
+{
+#endif
 
-char **systemini_getdnsaddrs (void);
+extern int GetPrivateProfileString (char * /* appname */,
+				    char * /* keyname */,
+				    char * /* deflt */,
+                                    char * /* dest */,
+				    size_t /* destsize */,
+				    char * /* filename */);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif  /* __libsocket_ini_h__ */

@@ -1,0 +1,43 @@
+#
+# Makefile for libsocket test programs
+#
+# libsocket Copyright (C) 1997, 1998 by Indrek Mandre
+# libsocket Copyright (C) 1997-2000 by Richard Dawe
+#
+# Originally written by Indrek Mandre, modified by Richard Dawe
+#
+
+# GNU compiler & tools' flags
+CC      = @CC@
+CFLAGS  = @CFLAGS@ @DEBUGFLAGS@ @FEATUREFLAGS@
+LDFLAGS = @LDFLAGS@
+STRIP   = @STRIP@
+
+# Strip all symbols by default?
+LSCK_STRIPALL = @LSCK_STRIPALL@
+
+CFLAGS  += -I../include
+LDFLAGS += -L../lib
+LIBS     = -lsocket
+
+TARGETS     = netserv netproto server client httpget resit select diag \
+              netnet ioctl httpgetn servern clientn unixserv unixcli solist
+
+TARGETS_EXE = $(patsubst %,%.exe,$(TARGETS))
+
+.PHONY:	all clean distclean
+
+all: $(TARGETS_EXE)
+
+%.exe:	%.c
+	$(CC) -o $@ $(CFLAGS) $< $(LDFLAGS) $(LIBS)
+ifeq ($(LSCK_STRIPALL),y)
+	$(STRIP) $@
+endif
+
+clean:
+
+distclean: clean
+	rm -f *.\$$\$$\$$
+	rm -f *~
+	rm -f $(TARGETS) $(TARGETS_EXE)

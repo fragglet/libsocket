@@ -1,7 +1,12 @@
 /*
  *  libsocket - BSD socket like library for DJGPP
  *  Copyright 1997, 1998 by Indrek Mandre
- *  Copyright 1997, 1998 by Richard Dawe
+ *  Copyright 1997-2000 by Richard Dawe
+ *
+ *  Portions of libsocket Copyright 1985-1993 Regents of the University of 
+ *  California.
+ *  Portions of libsocket Copyright 1991, 1992 Free Software Foundation, Inc.
+ *  Portions of libsocket Copyright 1997, 1998 by the Regdos Group.
  *
  *  This library is free software; you can redistribute it and/or modify it
  *  under the terms of the GNU Library General Public License as published
@@ -22,80 +27,95 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
+
+#include <dpmi.h>
 #include <sys/farptr.h>
 #include <sys/segments.h>
-#include <dpmi.h>
-#include <pc.h>
-#include <sys/fsext.h>
+
+#include <sys/socket.h>
 
 #include <lsck/if.h>
-#include <lsck/ws.h>
-#include <winsock.h>
-
-#include "lsckglob.h"
-#include "wsockvxd.h"
+#include "wsock.h"
 #include "farptrx.h"
+#include "wsockvxd.h"
 
-int wsock_send (LSCK_SOCKET *lsd, void *msg, int len, unsigned int flags)
+/* ----------------
+ * - __wsock_send -
+ * ---------------- */
+
+ssize_t __wsock_send (LSCK_SOCKET * lsd, void *msg, size_t len,
+                      unsigned int flags)
 {
-    WSOCK_SEND_PARAMS params;
+	LSCK_SOCKET_WSOCK *wsock = (LSCK_SOCKET_WSOCK *) lsd->idata;
+	WSOCK_SEND_PARAMS params;
 
-    /* RD: Check the length of the data - only transmit up to the size of the
-       buffer */
-    if (len > _SocketD.size) len = _SocketD.size;
+	/* RD: Check the length of the data - only transmit up to the size of
+	 * the buffer */
+	if (len > _SocketD.size) len = _SocketD.size;
 
-    params.Buffer = (void *) (SocketD << 16);
-    params.Address = NULL;
-    params.Socket = (void *) lsd->wsock._Socket;
-    params.BufferLength = len;
-    params.Flags = flags;
-    params.AddressLength = 0;
-    params.BytesSent = 0;
-    params.ApcRoutine = NULL;
-    params.ApcContext = 0;
-    params.Timeout = 0;
+	bzero (&params, sizeof (params));
 
-    _farpokex ( SocketP, 0, &params, sizeof ( WSOCK_SEND_PARAMS ) );
-    _farpokex ( SocketD, 0, msg, len );
+	params.Buffer = (void *) (SocketD << 16);
+	params.Address = NULL;
+	params.Socket = (void *) wsock->_Socket;
+	params.BufferLength = len;
+	params.Flags = flags;
+	params.AddressLength = 0;
+	params.BytesSent = 0;
+	params.ApcRoutine = NULL;
+	params.ApcContext = 0;
+	params.Timeout = 0;
 
-    CallVxD ( WSOCK_SEND_CMD );
+	_farpokex (SocketP, 0, &params, sizeof (WSOCK_SEND_PARAMS));
+	_farpokex (SocketD, 0, msg, len);
 
-    if ( _VXDError && _VXDError != 0xffff ) return -1;
+	__wsock_callvxd (WSOCK_SEND_CMD);
 
-    _farpeekx ( SocketP, 0, &params, sizeof ( WSOCK_SEND_PARAMS ) );
+	if (_VXDError && _VXDError != 0xffff) return -1;
 
-    return params.BytesSent;
+	_farpeekx (SocketP, 0, &params, sizeof (WSOCK_SEND_PARAMS));
+
+	return params.BytesSent;
 }
 
-int wsock_sendto (LSCK_SOCKET *lsd, void *msg, int  len, unsigned int flags,
-                  struct sockaddr *to, int tolen)
+/* ------------------
+ * - __wsock_sendto -
+ * ------------------ */
+
+ssize_t __wsock_sendto (LSCK_SOCKET * lsd, void *msg, size_t len,
+                        unsigned int flags,
+		        struct sockaddr *to, size_t tolen)
 {
-    WSOCK_SEND_PARAMS params;
+	LSCK_SOCKET_WSOCK *wsock = (LSCK_SOCKET_WSOCK *) lsd->idata;
+	WSOCK_SEND_PARAMS params;
 
-    /* RD: Check the length of the data - only transmit up to the size of the
-       buffer */
-    if (len > _SocketD.size) len = _SocketD.size;
+	/* RD: Check the length of the data - only transmit up to the size of
+	 * the buffer */
+	if (len > _SocketD.size) len = _SocketD.size;
 
-    params.Buffer = (void *) (SocketD << 16);
-    params.Address = (void *) (SocketP << 16) + (10 * 4);
-    params.Socket = (void *) lsd->wsock._Socket;
-    params.BufferLength = len;
-    params.Flags = flags;
-    params.AddressLength = tolen;
-    params.BytesSent = 0;
-    params.ApcRoutine = NULL;
-    params.ApcContext = 0;
-    params.Timeout = 0;
+	bzero (&params, sizeof (params));
 
-    _farpokex ( SocketP, 0, &params, sizeof ( WSOCK_SEND_PARAMS ) );
-    _farpokex ( SocketP, 10 * 4, to, tolen );
-    _farpokex ( SocketD, 0, msg, len );
+	params.Buffer = (void *) (SocketD << 16);
+	params.Address = (void *) (SocketP << 16) + (10 * 4);
+	params.Socket = (void *) wsock->_Socket;
+	params.BufferLength = len;
+	params.Flags = flags;
+	params.AddressLength = tolen;
+	params.BytesSent = 0;
+	params.ApcRoutine = NULL;
+	params.ApcContext = 0;
+	params.Timeout = 0;
 
-    CallVxD ( WSOCK_SEND_CMD );
+	_farpokex (SocketP, 0, &params, sizeof (WSOCK_SEND_PARAMS));
+	_farpokex (SocketP, 10 * 4, to, tolen);
+	_farpokex (SocketD, 0, msg, len);
 
-    if ( _VXDError && _VXDError != 0xffff ) return -1;
+	__wsock_callvxd (WSOCK_SEND_CMD);
 
-    _farpeekx ( SocketP, 0, &params, sizeof ( WSOCK_SEND_PARAMS ) );
+	if (_VXDError && _VXDError != 0xffff) return -1;
 
-    return params.BytesSent;
+	_farpeekx (SocketP, 0, &params, sizeof (WSOCK_SEND_PARAMS));
+
+	return params.BytesSent;
 }

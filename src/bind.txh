@@ -1,0 +1,65 @@
+@c This document was written by Alain Magloire. Some minimal changes were
+@c made by Richard Dawe <richdawe@bigfoot.com>.
+
+@comment The start of a comment is indicated by the following comment. This
+@comment syntax is used by the script funcstxh.sh: @comment function <name>
+
+@comment function bind
+
+@node bind, socket
+@findex bind
+
+@subheading Syntax
+
+@example
+#include <sys/types.h>
+#include <sys/socket.h>
+
+int bind (int s, const struct sockaddr *address, size_t addresslen);
+@end example
+
+@subheading Description
+
+The @code{bind()} function assigns a local socket-address to socket @var{s}
+that has no local socket-address assigned.  When a socket is created with 
+@code{socket()} it is associated with a specific protocol from the protocol
+and in the case of libsocket also an interface, but has no local socket-address
+assigned.  This function requests that the local socket-address
+@var{address} be assigned to it.  The format of the socket-address
+dpends on the address family, for example @samp{AF_INET},
+@samp{AF_UNIX} (also known as @samp{AF_LOCAL}). 
+
+@subheading Return Value
+
+On successful completion the function returns 0.  Otherwise, a value of -1,
+and @var{errno} is set.
+
+@table @samp
+@item EACCESS
+The requested socket-address is reserved, and the calling 
+process does not have the appropriate privileges.
+@item EADDRINUSE
+The specified socket-address is already in use.
+@item EADDRNOTAVAIL
+THe specifeid socket-address is not available from the
+local machine.
+@item EBADF
+The parameter s is not valid.
+@item EINVAL
+The socket is already associated with a local socket-address
+or the parameter is not the size of a valid socket-address for the
+specified address family.
+@item ENOBUFS
+Insufficient resources.
+@item ENOTSOCK
+The descriptor is not a socket.
+@end table
+
+@subheading Portability
+
+@portability posix, unix98
+
+@subheading Example
+
+@example
+@end example

@@ -1,0 +1,31 @@
+@comment function rexec
+
+@node rexec, rexec
+@findex rexec
+
+@subheading Syntax
+
+@example
+#include <netdb.h>
+
+int rexec (char **ahost, int rport, const char *name, const char *pass,
+           const char *cmd, int *fd2p);
+@end example
+
+@subheading Description
+
+@c TODO: Write a description? OK, so what does it do?
+
+Under construction - if you have a good description, please inform the
+libsocket maintainer.
+
+@subheading Return Value
+
+@subheading Portability
+
+@c TODO
+
+@subheading Example
+
+@example
+@end example

@@ -1,0 +1,49 @@
+@comment The start of a comment is indicated by the following comment. This
+@comment syntax is used by the script funcstxh.sh: @comment function <name>
+
+@comment function isfdtype
+
+@node isfdtype, io
+@findex isfdtype
+
+@subheading Syntax
+
+@example
+#include <sys/socket.h>
+
+int isfdtype (int fd, int fd_type);
+@end example
+
+@subheading Description
+
+The @code{isfdtype()} function determines whether the file descriptor @var{fd}
+has the properties specified by @var{fd_type}.
+
+Valid values of @var{fd_type} include:
+
+@table @samp
+@item S_IFSOCK
+Tests whether @var{fd} is a socket
+@end table
+
+@subheading Return Value
+
+1 if the type matches, 0 otherwise.  If an error occurs, -1 is returned and
+@var{errno} is set to:
+
+@table @samp
+@item EBADF
+@var{fd} is not a valid file descriptor.
+@end table
+
+@subheading Portability
+
+@portability posix, !unix98
+
+@code{isfdtype()} is usually declared in @samp{sys/stat.h} rather than
+@samp{sys/socket.h}.
+
+@subheading Example
+
+@example
+@end example

@@ -1,62 +1,120 @@
 #
 # Makefile for libsocket for DJGPP
 #
-# libsocket Copyright 1997, 1998 by Indrek Mandre
-# libsocket Copyright 1997, 1998 by Richard Dawe
+# libsocket (C) Copyright 1997, 1998 by Indrek Mandre
+# libsocket (C) Copyright 1997-2000 by Richard Dawe
 #
 # This was written by Indrek Mandre and modified heavily by Richard Dawe.
+#
 
 include ../Makefile.cfg
 
-CFLAGS += -I../include -I./include
+CFLAGS += -I../include
 
-LOBJS =	init_net.o fsext.o socket.o bind.o listen.o accept.o recv.o	\
-	send.o connect.o gsocknm.o gpeernm.o close.o sockopt.o 		\
-	shutdown.o ioctl.o select.o fcntl.o newerror.o
+MKDOC = ../tools/mkdoc/mkdoc
 
-all: library
+LOBJS =	initnt.o fsext.o socket.o sockpr.o bind.o listen.o accept.o	\
+	recv.o	send.o connct.o gscknm.o gprnm.o close.o sckopt.o 	\
+	shtdwn.o ioctl.o select.o fcntl.o newerror.o			\
+	dnsaddr.o ini.o hstnm.o config.o addr.o if.o			\
+	sockmark.o uname.o windows.o readv.o writev.o
 
-# comp_* are the different components of the library
-library: 	$(LOBJS) comp_resolve comp_registry comp_config		\
-		comp_wsock comp_pktdrv
+DOCS =	lsck.inf lsck.htm						\
+	../bugs.txt ../credits.txt ../changes.txt ../install.txt	\
+	../config.txt ../redist/config.txt
+
+default:	library
+
+all: library doc
+
+.PHONY:	all library dep clean distclean					\
+	oldlibc inet netgroup posix wsock csock win9x win3x unix	\
+	doc
+
+library: 	$(LOBJS) oldlibc inet netgroup posix			\
+		wsock csock win9x win3x unix
+	-mkdir ../lib
 	rm -rf ../lib/libsocket.a
-	$(AR) rcs ../lib/libsocket.a	$(LOBJS) resolve/*.o 		\
-					registry/*.o config/*.o		\
-					wsock/*.o
+	$(AR) rcs ../lib/libsocket.a	$(LOBJS)			\
+					oldlibc/*.o			\
+					inet/*.o netgroup/*.o posix/*.o	\
+					wsock/*.o csock/*.o		\
+					win9x/*.o win9x/regdos/*.o	\
+					win3x/*.o unix/*.o
+	$(RANLIB) ../lib/libsocket.a
 
-comp_resolve:	resolve
-	@cd resolve;make all;cd ..
+doc:	$(DOCS)
 
-comp_registry:	registry
-	@cd registry;make all;cd ..
-
-comp_config:	config
-	@cd config;make all;cd ..
-
-comp_wsock:	wsock
-	@cd wsock;make all;cd ..
-
-comp_pktdrv:	pktdrv
-	@cd pktdrv;make all;cd ..
+oldlibc inet netgroup posix wsock csock win9x win3x unix:
+	$(MAKE) -C $@ all
 
 dep:
-	$(CC) $(CFLAGS) -MM *.c > depend.dep
-	@cd resolve;make dep;cd ..
-	@cd registry;make dep;cd ..
-	@cd config;make dep;cd ..
-	@cd wsock;make dep;cd ..
-	@cd pktdrv;make dep;cd ..
+	$(CC) $(CFLAGS) -M *.c > depend.dep
+# Do dependencies for the other modules
+	$(MAKE) -C oldlibc	dep
+	$(MAKE) -C inet		dep
+	$(MAKE) -C netgroup	dep
+	$(MAKE) -C posix	dep
+	$(MAKE) -C wsock	dep
+	$(MAKE) -C csock	dep
+	$(MAKE) -C win9x	dep
+	$(MAKE) -C win3x	dep
+	$(MAKE) -C unix		dep
 
 clean:
 	rm -f $(LOBJS)
-	@cd resolve;make clean;cd ..
-	@cd registry;make clean;cd ..
-	@cd config;make clean;cd ..
-	@cd wsock;make clean;cd ..
-	@cd pktdrv;make clean;cd ..
+	$(MAKE) -C oldlibc	clean
+	$(MAKE) -C inet		clean
+	$(MAKE) -C netgroup	clean
+	$(MAKE) -C posix	clean
+	$(MAKE) -C wsock	clean
+	$(MAKE) -C csock	clean
+	$(MAKE) -C win9x	clean
+	$(MAKE) -C win3x	clean
+	$(MAKE) -C unix		clean
 
-distclean: clean	
-	rm -f ../lib/libsocket.a
+distclean:	clean
+	$(MAKE) -C oldlibc	distclean
+	$(MAKE) -C inet		distclean
+	$(MAKE) -C netgroup	distclean
+	$(MAKE) -C posix	distclean
+	$(MAKE) -C wsock	distclean
+	$(MAKE) -C csock	distclean
+	$(MAKE) -C win9x	distclean
+	$(MAKE) -C win3x	distclean
+	$(MAKE) -C unix		distclean
+	-rm $(DOCS) funcs.txi
+	rm -f *.\$$\$$\$$
+	rm -f *~
+
+# Make info files
+lsck.inf:	lsck.txi *.txh */*.txh
+	-mkdir ../info
+	$(MKDOC) . ./funcs.txi
+	$(MAKEINFO) --verbose --no-split $< -o $@
+	cp -u $@ ../info
+
+# Make HTML docs from info files
+%.htm:	%.txi
+	-mkdir ../doc
+	$(MAKEINFO) --verbose --html $< -o $@
+	cp -u $@ ../doc
+
+# Make text docs from info file
+../bugs.txt:	lsck.inf
+	$(INFO) --subnodes -f $< 'Known Bugs' -o $@
+
+../credits.txt:	lsck.inf
+	$(INFO) --subnodes -f $< Credits -o $@
+
+../changes.txt:	lsck.inf
+	$(INFO) --subnodes -f $< Changelog -o $@
+
+../install.txt:	lsck.inf
+	$(INFO) --subnodes -f $< Installation -o $@
+
+../config.txt ../redist/config.txt:	lsck.inf
+	$(INFO) --subnodes -f $< Configuration -o $@
 
 $(OBJS) $(LOBJS):
 include depend.dep

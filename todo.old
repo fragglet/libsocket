@@ -1,0 +1,197 @@
+libsocket 0.7.4 Beta 4 Old To-dos
+=================================
+
+- select() with fileno(stdin) + socket doesn't complete on key-press?
+. This seems to work for me now I'm using select() properly!
++++WEIRD
+
+- Need to add detection for Windows 'NT to __wsock_init().
+. Use INT 0x2F, AX=0x1600 in addition to AX=0x160A.
+. Could look at Allegro code too.
+. 0x160A returns with AX != 0 => call not supported, should tell libsocket
+  that it needs to put more effort in to finding a solution.
+. Later: Actually, DOS version call _get_dos_version() == 0x532 => Windows NT.
+  This needs checking. Does it work with Win2K?
+. WinNT/2k indistinguishable via this method.
++++DONE - code tested & works.
+
+- Windows version check - EliZ, __dpmi_int() rather than int86() - see
+  DJGPP FAQ.
++++DONE
+
+- Winsock code should also handle Win3.x address override - just has code for
+  Win95 at mo!
++++SORTED
+
+- Some network cards have their details under PCI not Root key? Aaargh, ugly
+  hack.
+. Discovered while using VMware.
++++SORTED
+
+- Update list of req'd packages.
+. For using the binaries:
+  + DJGPP development environment, djdev201.zip or later
+  + GNU C compiler, gcc2721b.zip or later
+  + GNU make, mak375b.zip or later
+  + GNU binutils, bnu27b.zip or later
+  + GNU fileutils, fil316b.zip or later
+. To view documentation:
+  + GNU texinfo, txi390b.zip or later
+  + man, man12b.zip or later
+  + GNU groff, gro110b.zip or later
+. To build from sources, require additional packages to above:
+  + GNU sed, sed118b.zip or later
+  + GNU shellutils, shl112b.zip or later
+  + GNU textutils, txt122b.zip or later
+  + Perl - Only ActivePerl has been tested, see http://www.activeware.com/
+  + GNU awk (for autoconf?)
+  + GNU autoconf (")
+  + GNU m4 (")
++++DONE
+
+- Cross-compiling notes:
+	CC=/usr/local/bin/i586-pc-msdosdjgpp-gcc		\
+	AR=/usr/local/bin/i586-pc-msdosdjgpp-ar			\
+	./config	 --target=i586-pc-msdosdjgpp		\
+			--enable-debug				\
+			--prefix=/usr/local/i586-pc-msdosdjgpp
+
+- Install guide for SOCK.VXD - should be installed as "dynamically loaded"!
+. It's already described - need to mention SOCK.VXD installation in install
+  guide.
++++DONE
+
+- Write changelog for 0.7.4b4.
++++DONE
+
+- Switch to @portability from portability section.
++++DONE
+
+- 'bindist' & 'srcdist' targets for make'ing binary and source dists?
+. Put both targets in Makefile.src
+. Nope, obseleted, do by hand, by new install makes it a lot easier.
++++SORTED
+
+- Doc autoconf script
++++DONE
+
+- Doc SIGPIPE, EPIPE on sendto() page.
+. Fix ref's to select() too.
+. Doc gethostname(), sethostname(). +++DONE
++++DONE
+
+- Doc loopback network.
++++DONE
+
+- Update docs with new install (sockvxd.exe) & compile instructions.
++++DONE
+
+- Win98 - ENODEV error on sending data (Marcin Laszewski)
+. Hmm, can't see anything in code that looks weird.
++++SORTED, he made a mistake.
+
+- Return codes on socketpair().
++++OK, actually did properly 1st time.
+
+- Two spaces after period ending sentence - typesetting depends on it.
++++DONE
+
+- Bug in parsing configs due to JW?
+. Fixed, but needs testing. Check whether putting spaces before & after =
+  breaks parsing.
++++DONE, works
+
+- Update config docs with auto-config changes?
+. Include standard configure doc? - Later: Couldn't find it!
+. Need to doc configure script anyhow.
++++DONE
+
+- Update netsetup to allow upto MAXNS DNS IP addresses.
+. Done, needs testing.
++++DONE
+
+- Do we need shellutils to build?
++++YES, documented
+
+- Fix copyright message problem at the start of the netsetup manual, like
+  in the libsocket manual.
++++DONE
+
+- End-user guide should say that Windows '95, etc. TCP/IP stack should be
+  installed!
+. Good guides to installing TCP/IP?
++++DONE
+
+- demo/solist.c needs to include errno.h - also sys/time.h, sys/types.h? (for
+  Linux)
++++DONE
+
+- Add to buglist problem with IAMDRV.
++++DONE
+
+- Sort out copyright message in libsocket docs for info, HTML.
++++DONE
+
+- Update compliance info on functions.
++++DONE, I think.
+
+- Y2k probs in web pages?
+. Nope
++++OK
+
+- Generate include/lsck/copyrite.h automatically?
++++NAAH
+
+- SOCK.VXD bug? sys_send() returns length sent in EAX & ECX. The EAX return
+  makes main SOCK.VXD code think that an error has occurred. Clearly the
+  length only needs to be returned in ECX & EAX can only be used for errors.
+. Fixed? Doc'd certainly. Ask JW.
+. Also problem with speed of send()s, recv()s.
+. Problem only seems to be with recv() now!
++++FORGOTTEN what the hell I was on about.
+
+- Doc comp's taken from DJGPP's libc & their licence.
++++DONE
+
+- Debugging tips for libsocket - USE HARDWARE-ASSISTED BREAKPOINTS! It's a
+  nightmare to try and debug __wsock_*() otherwise.
+. Maybe have to resort to actual offsets? *0x....
++++DONE
+
+- UPDATE THE DOCUMENTATION!
+. Add compliance info.
+. Started
++++DONE
+
+- Document how to use libsocket without actually installing it.
++++NAAAH - who cares?
+
+- diag.exe crashes under NT?
+. Is this true of all libsocket programs under Windows NT?
+. Seems to be, on exit.
++++DOC'D, both in docs & bugzilla.
+
+- Doc fact you need to have /bin/sh set up on the drive you have libsocket
+  installed on, in order for the shell scripts to work.
+. Still true? Maybe this is why tools/mkconfig.sh doesn't work?
++++NO, bash should handle this.
+
+- Add required packages for building binary distribution (add depends-on reqs
+  in DSM).
++++DONE
+
+- Document copyright information provided
++++DONE
+
+- bash 2.03 sets $HOSTNAME -> setting in config file is ignored?
+. Bogus, my _bashrc had a line.
++++OK, documented how the host name is learnt in gethostname().
++++Sorted, added another note to the docs.
+
+Release Notes
+-------------
+
+- Assembler warnings with binutils 2.9.5.1 OK.
++++DONE
+
+Rich Dawe <richdawe@bigfoot.com> 2000-08-20

@@ -1,0 +1,225 @@
+@comment The start of a comment is indicated by the following comment. This
+@comment syntax is used by the script funcstxh.sh: @comment function <name>
+
+@comment function setsockopt
+
+@node setsockopt, socket
+@findex setsockopt
+
+@c This file was originally a Linux man page - see the copyright below. It
+@c was modified for use in libsocket by Richard Dawe <richdawe@bigfoot.com>.
+
+@c Copyright (c) 1983, 1991 The Regents of the University of California.
+@c All rights reserved.
+@c
+@c Redistribution and use in source and binary forms, with or without
+@c modification, are permitted provided that the following conditions
+@c are met:
+@c 1. Redistributions of source code must retain the above copyright
+@c    notice, this list of conditions and the following disclaimer.
+@c 2. Redistributions in binary form must reproduce the above copyright
+@c    notice, this list of conditions and the following disclaimer in the
+@c    documentation and/or other materials provided with the distribution.
+@c 3. All advertising materials mentioning features or use of this software
+@c    must display the following acknowledgement:
+@c	This product includes software developed by the University of
+@c	California, Berkeley and its contributors.
+@c 4. Neither the name of the University nor the names of its contributors
+@c    may be used to endorse or promote products derived from this software
+@c    without specific prior written permission.
+@c
+@c THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND
+@c ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+@c IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+@c ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE
+@c FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+@c DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS
+@c OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+@c HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+@c LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
+@c OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
+@c SUCH DAMAGE.
+@c
+@c     @(#)getsockopt.2	6.9 (Berkeley) 5/1/91
+@c
+@c Modified Sat Jul 24 16:19:32 1993 by Rik Faith (faith@cs.unc.edu)
+@c Modified Mon Apr 22 02:29:06 1996 by Martin Schulze (joey@infodrom.north.de)
+@c Modified Tue Aug 27 10:52:51 1996 by Andries Brouwer (aeb@cwi.nl)
+@c Modified Thu Jan 23 13:29:34 1997 by Andries Brouwer (aeb@cwi.nl)
+@c
+
+@subheading Syntax
+
+@example
+#include <sys/types.h>
+#include <sys/socket.h>
+
+int setsockopt (int s, int level, int optname,
+                const void *optval, int optlen);
+@end example
+
+@subheading Description
+
+@code{setsockopt()} manipulates the options associated with a socket.
+Options may exist at multiple protocol levels; they are always present at the
+uppermost socket level.
+
+When manipulating socket options the level at which the option resides and the
+name of the option must be specified.  To manipulate options at the socket
+level, @var{level} is specified as @samp{SOL_SOCKET}.  To manipulate options at
+any other level the protocol number of the appropriate protocol controlling
+the option is supplied.  For example, to indicate that an option is to be
+interpreted by the TCP protocol, @var{level} should be set to the protocol
+number of TCP (@pxref{getprotoent}).
+
+The parameters @var{optval} and @var{optlen} are used to access option values
+for @code{setsockopt()}.
+
+@var{optname} and any specified options are passed uninterpreted to the
+appropriate protocol module for interpretation.  The include file
+@samp{<sys/socket.h>} contains definitions for socket level options, described
+below.  Options at other protocol levels vary in format and name.
+
+Most socket-level options utilize an @samp{int} parameter for @var{optval}.
+The parameter should be non-zero to enable a boolean option, or zero if the
+option is to be disabled.
+
+@samp{SO_LINGER} uses a @samp{struct linger} parameter, defined in
+@samp{<sys/socket.h>}, which specifies the desired state of the option and
+the linger interval (see below).
+
+@samp{SO_SNDTIMEO} and @samp{SO_RCVTIMEO} use a @samp{struct timeval}
+parameter, defined in @code{<sys/time.h>}.
+
+The following options are recognized at the socket level.
+
+@table @samp
+@item SO_DEBUG
+enables recording of debugging information
+@item SO_REUSEADDR
+enables local address reuse
+@item SO_KEEPALIVE
+enables keep connections alive
+@item SO_DONTROUTE
+enables routing bypass for outgoing messages
+@item SO_LINGER
+linger on close if data present
+@item SO_BROADCAST
+enables permission to transmit broadcast messages
+@item SO_OOBINLINE
+enables reception of out-of-band data in band
+@item SO_SNDBUF
+set buffer size for output
+@item SO_RCVBUF
+set buffer size for input
+@item SO_SNDLOWAT
+set minimum count for output
+@item SO_RCVLOWAT
+set minimum count for input
+@end table
+
+@samp{SO_DEBUG} enables debugging in the underlying protocol modules.
+
+@samp{SO_REUSEADDR} indicates that the rules used in validating addresses
+supplied in @code{bind()} (@pxref{bind}) call should allow reuse of local
+addresses.
+
+@samp{SO_KEEPALIVE} enables the periodic transmission of messages on a
+connected socket.  Should the connected party fail to respond to these
+messages, the connection is considered broken and processes using the socket
+are notified via a @samp{SIGPIPE} signal when attempting to send data.
+
+@samp{SO_DONTROUTE} indicates that outgoing messages should bypass the standard
+routing facilities.  Instead, messages are directed to the appropriate network
+interface according to the network portion of the destination address.
+
+@samp{SO_LINGER} controls the action taken when unsent messages are queued on
+socket and a @code{close()} is performed (@pxref{close, , close, libc}).
+If the socket promises reliable delivery of data and @samp{SO_LINGER} is set,
+the system will block the process on the @code{close()} attempt until it is
+able to transmit the data or until it decides it is unable to deliver the
+information (a timeout period, termed the linger interval, is specified in the
+@code{setsockopt()} call when @samp{SO_LINGER} is requested).
+If @samp{SO_LINGER} is disabled and a @code{close()} is issued, the system will
+process the close in a manner that allows the process to continue as quickly
+as possible.
+
+The @samp{linger} structure is defined in @samp{<sys/socket.h>} as follows:
+
+@example
+struct linger @{
+        int  l_onoff;   /* Linger active */
+        int  l_linger;  /* How long to linger for */
+@};
+@end example
+
+@samp{l_onoff} indicates whether to linger or not.  If it is set to 1 then
+@samp{l_linger} contains the time in hundredths of seconds how long the
+process should linger to complete the @code{close()}.  If @samp{l_onoff}
+is set to zero the process returns immediately.
+
+The option @samp{SO_BROADCAST} requests permission to send broadcast datagrams
+on the socket.  Broadcast was a privileged operation in earlier versions of the
+system.
+
+With protocols that support out-of-band data, the @samp{SO_OOBINLINE}
+option requests that out-of-band data be placed in the normal data input
+queue as received; it will then be accessible with @samp{recv} or
+@samp{read} calls without the @samp{MSG_OOB} flag.  Some protocols always
+behave as if this option is set.
+
+@samp{SO_SNDBUF} and @samp{SO_RCVBUF} are options to adjust the normal buffer
+sizes allocated for output and input buffers, respectively.  The buffer size
+may be increased for high-volume connections, or may be decreased to limit the
+possible backlog of incoming data.  The system places an absolute limit on
+these values.
+
+@samp{SO_SNDLOWAT} is an option to set the minimum count for output
+operations.  Most output operations process all of the data supplied by the
+call, delivering data to the protocol for transmission and blocking as
+necessary for flow control.  Nonblocking output operations will process as
+much data as permitted subject to flow control without blocking, but will
+process no data if flow control does not allow the smaller of the low water
+mark value or the entire request to be processed.  A @code{select()}
+(@pxref{select, , select, libc}) operation testing the ability to write to a
+socket will return true only if the low water mark amount could be processed.
+The default value for @samp{SO_SNDLOWAT} is set to a convenient size for
+network efficiency, often 1024.
+
+@samp{SO_RCVLOWAT} is an option to set the minimum count for input operations.
+In general, receive calls will block until any (non-zero) amount of data is
+received, then return with smaller of the amount available or the amount
+requested.  The default value for @samp{SO_RCVLOWAT} is 1.  If
+@samp{SO_RCVLOWAT} is set to a larger value, blocking receive calls normally
+wait until they have received the smaller of the low water mark value or the
+requested amount.  Receive calls may still return less than the low water mark
+if an error occurs, a signal is caught, or the type of data next in the
+receive queue is different than that returned.
+
+@subheading Return value
+
+On success, zero is returned.  On error, -1 is returned, and
+@var{errno} is set appropriately.
+
+Possible errors from this function are:
+
+@table @samp
+@item EBADF
+The argument @var{s} is not a valid descriptor.
+@item ENOTSOCK
+The argument @var{s} is a file, not a socket.
+@item ENOPROTOOPT
+The option is unknown at the @var{level} indicated.
+@item EFAULT
+The address pointed to by @var{optval} is not in a valid part of the process
+address space.
+@end table
+
+@subheading Portability
+
+@portability unix98
+
+@subheading Example
+
+@example
+@end example

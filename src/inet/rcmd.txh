@@ -1,0 +1,107 @@
+@comment The start of a comment is indicated by the following comment. This
+@comment syntax is used by the script funcstxh.sh: @comment function <name>
+
+@comment function rcmd
+
+@node rcmd, rexec
+@findex rcmd
+
+@c This file was originally a Linux man page - see the copyright below. It
+@c was modified for use in libsocket by Richard Dawe <richdawe@bigfoot.com>.
+
+@c	$NetBSD: rcmd.3,v 1.9 1996/05/28 02:07:39 mrg Exp $
+@c
+@c Copyright (c) 1983, 1991, 1993
+@c	The Regents of the University of California.  All rights reserved.
+@c
+@c Redistribution and use in source and binary forms, with or without
+@c modification, are permitted provided that the following conditions
+@c are met:
+@c 1. Redistributions of source code must retain the above copyright
+@c    notice, this list of conditions and the following disclaimer.
+@c 2. Redistributions in binary form must reproduce the above copyright
+@c    notice, this list of conditions and the following disclaimer in the
+@c    documentation and/or other materials provided with the distribution.
+@c 3. All advertising materials mentioning features or use of this software
+@c    must display the following acknowledgement:
+@c	This product includes software developed by the University of
+@c	California, Berkeley and its contributors.
+@c 4. Neither the name of the University nor the names of its contributors
+@c    may be used to endorse or promote products derived from this software
+@c    without specific prior written permission.
+@c
+@c THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND
+@c ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+@c IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+@c ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE
+@c FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+@c DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS
+@c OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+@c HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+@c LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
+@c OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
+@c SUCH DAMAGE.
+@c
+@c     @(#)rcmd.3	8.1 (Berkeley) 6/4/93
+@c
+@c Contributed as Linux man page by David A. Holland, 970908
+@c I have not checked whether the Linux situation is exactly the same.
+@c
+@c Modified by Richard Dawe <richdawe@bigfoot.com> for incorporation into
+@c libsocket 0.7.4.
+@c
+
+@subheading Syntax
+
+@example
+#include <sys/socket.h>
+#include <unistd.h>
+
+int rcmd (char **ahost, int inport,
+          const char *locuser, const char *remuser,
+          const char *cmd, int *fd2p);
+@end example
+
+@subheading Description
+
+The @code{rcmd()} function is used by the super-user to execute a command on
+a remote machine using an authentication scheme based on reserved port numbers.
+
+The @code{rcmd()} function looks up the host @var{*ahost} using
+@code{gethostbyname()} (@pxref{gethostbyname}), returning -1 if the host
+does not exist.  Otherwise @var{*ahost} is set to the standard name of the host
+and a connection is established to a server residing at the well-known
+Internet port @var{inport}.
+
+If the connection succeeds, a socket in the Internet domain of type
+@samp{SOCK_STREAM} is returned to the caller, and given to the remote command
+as stdin and stdout.
+
+If @var{fd2p} is non-zero, then an auxiliary channel to
+a control process will be set up, and a descriptor for it will be placed
+in @var{*fd2p}.  The control process will return diagnostic output from the
+command (unit 2) on this channel, and will also accept bytes on this channel
+as being UNIX signal numbers, to be forwarded to the process group of the
+command.
+
+If @var{fd2p} is 0, then the stderr (unit 2 of the remote command) will be
+made the same as the stdout and no provision is made for sending arbitrary
+signals to the remote process, although you may be able to get its attention
+by using out-of-band data.
+
+The protocol is described in detail in the rshd documentation.
+
+@subheading Return Value
+
+The @code{rcmd()} function returns a valid socket descriptor on success.
+It returns -1 on error and prints a diagnostic message on the standard error.
+
+@subheading Portability
+
+libsocket declares this function in @samp{sys/socket.h}, but it's usually
+defined in @samp{unistd.h}.
+
+@subheading Example
+
+@example
+@end example

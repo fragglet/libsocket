@@ -1,0 +1,103 @@
+@comment The start of a comment is indicated by the following comment. This
+@comment syntax is used by the script funcstxh.sh: @comment function <name>
+
+@comment function ruserok
+
+@node ruserok, rexec
+@findex ruserok
+
+@c This file was originally a Linux man page - see the copyright below. It
+@c was modified for use in libsocket by Richard Dawe <richdawe@bigfoot.com>.
+
+@c	$NetBSD: rcmd.3,v 1.9 1996/05/28 02:07:39 mrg Exp $
+@c
+@c Copyright (c) 1983, 1991, 1993
+@c	The Regents of the University of California.  All rights reserved.
+@c
+@c Redistribution and use in source and binary forms, with or without
+@c modification, are permitted provided that the following conditions
+@c are met:
+@c 1. Redistributions of source code must retain the above copyright
+@c    notice, this list of conditions and the following disclaimer.
+@c 2. Redistributions in binary form must reproduce the above copyright
+@c    notice, this list of conditions and the following disclaimer in the
+@c    documentation and/or other materials provided with the distribution.
+@c 3. All advertising materials mentioning features or use of this software
+@c    must display the following acknowledgement:
+@c	This product includes software developed by the University of
+@c	California, Berkeley and its contributors.
+@c 4. Neither the name of the University nor the names of its contributors
+@c    may be used to endorse or promote products derived from this software
+@c    without specific prior written permission.
+@c
+@c THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND
+@c ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+@c IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+@c ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE
+@c FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+@c DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS
+@c OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+@c HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+@c LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
+@c OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
+@c SUCH DAMAGE.
+@c
+@c     @(#)rcmd.3	8.1 (Berkeley) 6/4/93
+@c
+@c Contributed as Linux man page by David A. Holland, 970908
+@c I have not checked whether the Linux situation is exactly the same.
+@c
+@c Modified by Richard Dawe <richdawe@bigfoot.com> for incorporation into
+@c libsocket 0.7.4.
+@c
+
+@subheading Syntax
+
+@example
+#include <sys/socket.h>
+#include <unistd.h>
+
+int ruserok (const char *rhost, int superuser,
+             const char *ruser, const char *luser);
+@end example
+
+@subheading Description
+
+The @code{ruserok()} function is used by servers to authenticate clients
+requesting service with @code{rcmd()} (@pxref{rcmd}).
+
+@c TODO: Doc /etc/hosts.equiv
+@c TODO: Doc .rhosts
+
+The @code{ruserok()} function takes a remote host's name, two user names
+and a flag indicating whether the local user's name is that of the
+super-user.  Then, if the user is *NOT* the super-user, it checks the
+@samp{/etc/hosts.equiv} file.  If that lookup is not done, or is unsuccessful,
+the @samp{.rhosts} in the local user's home directory is checked to see if
+the request for service is allowed.
+
+If this file does not exist, is not a regular file, is owned by anyone
+other than the user or the super-user, or is writeable by anyone other
+than the owner, the check automatically fails.
+
+If the local domain (as obtained from @code{gethostname()}
+(@pxref{gethostname}) is the same as the remote domain, only the machine name
+need be specified.
+
+@subheading Return Value
+
+Zero is returned if the machine name is listed in the @samp{hosts.equiv}
+file, or the host and remote user name are found in the @samp{.rhosts}
+file; otherwise -1 is returned.
+
+@subheading Portability
+
+@c TODO
+
+libsocket declares this function in @samp{sys/socket.h}, whereas it's usually
+defined in @samp{unistd.h}.
+
+@subheading Example
+
+@example
+@end example

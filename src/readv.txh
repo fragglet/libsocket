@@ -1,0 +1,54 @@
+@comment The start of a function description is indicated by the following
+@comment comment. This syntax is used by the script functxh.sh:
+@comment @comment function <name>
+
+@comment function readv
+
+@node readv, io
+@findex readv
+
+@subheading Syntax
+
+@example
+#include <sys/uio.h>
+
+ssize_t readv (int fd, const struct iovec *iov, int iovcnt);
+@end example
+
+@subheading Description
+
+@code{readv()} performs a scatter-gather read from the specified file
+descriptor @var{fd}.  The data is written into a group of buffers described
+by the array @var{iov} with @var{iovcnt} entries in a similar way to
+@code{read()} (@pxref{read, , read, libc}).
+
+@code{struct iovec} is described in the section on @code{writev()}
+(@pxref{writev}).
+
+@subheading Return Value
+
+On successful completion the function returns the number of bytes read.
+Otherwise, a value of -1 is returned and @var{errno} is set appropriately.
+
+@table @samp
+
+@item EINVAL
+One of the following conditions is true:
+
+@itemize @bullet
+@item
+The total length to read could overflow a @samp{ssize_t}.
+@item
+@var{iovcnt} was negative, zero or larger than @code{IOV_MAX}.
+@end itemize
+
+@end table
+
+@subheading Portability
+
+@portability posix, unix98
+
+@subheading Example
+
+@example
+@end example

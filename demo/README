@@ -2,27 +2,92 @@ libsocket Demos Readme
 ======================
 
 libsocket Copyright 1997, 1998 by Indrek Mandre
-libsocket Copyright 1997, 1998 by Richard Dawe
+libsocket Copyright 1997-2000 by Richard Dawe
 
-netprototest.c
-  How to find protocols by name. It's also possible by numbers and
- to look all protocol one by one. From file ~window/protocol
+diag.c
+------
 
-netservtest.c
-  Find services by name. Same story as previous but only from file
- ~windows/services.
+This program prints out the following diagnostic information about libsocket's
+configuration:
 
-client.c
-server.c
-  Client and server show basic socket programming.
+- Host name
+- Domain name
+- Configuration directory
+- DNS servers
+- Supported interfaces - Winsock 1 (wsock), Winsock 2 (csock), Unix domain
+  sockets (unix), etc.
+- Support protocols - TCP/IP streams, UDP/IP datagrams, etc.
 
-httpget.c
-  Sample programme that gets files from www servers.
-  Now name resolving added by Rich Dawe.
+This can be useful, if libsocket is not working. If you encounter a problem
+with libsocket, please mail the author the output of this program - see
+the contact details below.
+
+netproto.c
+----------
+
+This program looks up protocols by name, e.g. "tcp", "udp".
+
+netserv.c
+---------
+
+This program looks up services by name, e.g. "smtp", "ftp".
+
+netnet.c
+--------
+
+This program looks up networks by name.
+
+client.c & server.c, clientn.c & servern.c
+------------------------------------------
+
+These client and server demos show basic socket programming. The 'n' versions
+use non-blocking I/O. These non-blocking versions can do work while waiting
+for data.
+
+httpget.c, httpgetn.c
+---------------------
+
+These programs get a web page from a server, given the URL, e.g.
+
+    httpget http://www.yahoo.com/
+
+The (unprocessed) contents of the web page are printed. httpgetn is a
+non-blocking version. They are only suitable for retrieving text files -
+don't use it to retrieve binary files, because they will be truncated.
 
 resit.c
-  Simple name resolver.
+-------
+
+This is a simple name resolver, which maps names like 'www.yahoo.com' to an
+IP address. This can be used to check that the DNS servers are set up
+correctly. Try:
+
+    resit www.yahoo.com
 
 select.c
-  Demonstrates the basic use of select.
+--------
 
+This program demonstrates the basic use of select with files, but not sockets.
+However, the principle is the same with sockets.
+
+ioctl.c
+-------
+
+This program demonstrates libsocket's limited support of some BSD-ish and
+Linux ioctls. If you don't know what this means, don't worry. The program
+will dump low-level details about libsocket's supported interfaces.
+
+solist.c
+--------
+
+This program lists the socket options supported for TCP/IP and UDP/IP sockets,
+along with their value. This may be useful if you're trying to port a program
+and you need to know if you can use a certain socket option.
+
+unixcli.c, unixserv.c
+---------------------
+
+These client and server programs test libsocket's support of Unix domain
+sockets over Windows mailslots.
+
+Richard Dawe <richdawe@bigfoot.com> 2000-03-03

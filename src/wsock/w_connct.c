@@ -1,7 +1,12 @@
 /*
  *  libsocket - BSD socket like library for DJGPP
  *  Copyright 1997, 1998 by Indrek Mandre
- *  Copyright 1997, 1998 by Richard Dawe
+ *  Copyright 1997-2000 by Richard Dawe
+ *
+ *  Portions of libsocket Copyright 1985-1993 Regents of the University of 
+ *  California.
+ *  Portions of libsocket Copyright 1991, 1992 Free Software Foundation, Inc.
+ *  Portions of libsocket Copyright 1997, 1998 by the Regdos Group.
  *
  *  This library is free software; you can redistribute it and/or modify it
  *  under the terms of the GNU Library General Public License as published
@@ -20,47 +25,91 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
+#include <io.h>
+#include <unistd.h>
+
+#include <dpmi.h>
 #include <sys/farptr.h>
 #include <sys/segments.h>
-#include <dpmi.h>
-#include <pc.h>
-#include <sys/fsext.h>
-#include <io.h>
-#include <string.h>
+
+#include <sys/socket.h>
 
 #include <lsck/if.h>
-#include <lsck/ws.h>
-#include <winsock.h>
-
-#include "lsckglob.h"
+#include "wsock.h"
 #include "wsockvxd.h"
 #include "farptrx.h"
 
-int wsock_connect (LSCK_SOCKET *lsd, struct sockaddr *serv_addr, int addrlen)
+/* -------------------
+ * - __wsock_connect -
+ * ------------------- */
+
+int __wsock_connect (LSCK_SOCKET *lsd,
+                     struct sockaddr *serv_addr, size_t addrlen)
 {
-    WSOCK_CONNECT_PARAMS params;
+	LSCK_SOCKET_WSOCK *wsock = (LSCK_SOCKET_WSOCK *) lsd->idata;
+	WSOCK_CONNECT_PARAMS params;
+	int blocking = lsd->blocking;
+	int flag = lsd->blocking;
+	int rv;
 
-    params.Address = (void *)(SocketP << 16) + (5 * 4);
-    params.Socket = (void *) lsd->wsock._Socket;
-    params.AddressLength = addrlen;
-    params.ApcRoutine = 0;
-    params.ApcContext = 0;
+	bzero (&params, sizeof (params));
 
-    /*if ((lsd->flags & LSCK_FLAG_BLOCKING) == LSCK_FLAG_BLOCKING)
-        if (wsock_selectsocket_wait (lsd, FD_CONNECT) == -1) return(-1);*/
+	params.Address = (void *) (SocketP << 16) + (5 * 4);
+	params.Socket = (void *) wsock->_Socket;
+	params.AddressLength = addrlen;
+	params.ApcRoutine = 0;
+	params.ApcContext = 0;
 
-    _farpokex ( SocketP, 0, &params, sizeof ( WSOCK_CONNECT_PARAMS ) );
-    _farpokex ( SocketP, 5 * 4, serv_addr, addrlen);
+	/* RD: This shouldn't be used this way! */
+	/*if (lsd->blocking)
+	 * if (__wsock_select_wait (lsd, FD_CONNECT) == -1) return(-1); */
 
-    CallVxD ( WSOCK_CONNECT_CMD );
+	/* RD: Flip to non-blocking mode if connecting, so that Ctrl+C can
+	 * break out of the program. BTW __wsock_ioctl stamps on
+	 * lsd->blocking, hence the use of blocking rather than
+	 * lsd->blocking. */
+	if (blocking)
+		__wsock_ioctl (lsd, &rv, FIONBIO, &flag);
 
-    if ( _VXDError && _VXDError != 0xffff ) return -1;
+	_farpokex (SocketP, 0, &params, sizeof (WSOCK_CONNECT_PARAMS));
+	_farpokex (SocketP, 5 * 4, serv_addr, addrlen);
 
-    _farpeekx ( SocketP, 5 * 4, serv_addr, addrlen );
-    memcpy (&lsd->wsock.inetaddr, serv_addr, addrlen);
+	__wsock_callvxd (WSOCK_CONNECT_CMD);
 
- 	/* Now new attitude, it seems to work.. */
-    if (wsock_selectsocket_wait(lsd, FD_WRITE ) == -1) return -1;
+	/* RD: If the socket was in blocking mode, then we need to catch the
+	 * failure of the non-blocking connect, wait for a connection and then
+	 * flip back to blocking mode. */
+	if (blocking) {
+		/* For some reason WSOCK.VXD returns WSAEWOULDBLOCK rather than
+		 * WSAEINPROGRESS, so we have to detect both mapped errors from
+		 * errno here. */
+		if (_VXDError
+		    && (errno != EWOULDBLOCK)
+		    && (errno != EINPROGRESS)) {
+			/* Flip back to blocking mode */
+			flag = !flag;
+			__wsock_ioctl (lsd, &rv, FIONBIO, &flag);
+			return (-1);
+		}
+		
+		/* Wait for writability */
+		__wsock_select_wait (lsd, FD_WRITE);
 
-    return 0;
+		/* Flip back to blocking mode */
+		flag = !flag;
+		__wsock_ioctl (lsd, &rv, FIONBIO, &flag);
+	} else {
+		if (_VXDError && _VXDError != 0xffff) return -1;
+	}
+
+	_farpeekx (SocketP, 5 * 4, serv_addr, addrlen);
+	memcpy (&wsock->inetaddr, serv_addr, addrlen);
+
+	/* RD: This is no longer needed */
+	/* Now new attitude, it seems to work.. */
+	/*if (lsd->blocking)
+	 * if (__wsock_select_wait(lsd, FD_WRITE ) == -1) return -1; */
+
+	return 0;
 }

@@ -1,6 +1,0 @@
-/* _packn.xcc, Revert to default packing of structure members.
- * For all DOS compilers that I'm aware of.
- *
- * By Alfons Hoogervorst / Alliterated Software Development, 1998. */
-
-#pragma pack()

@@ -1,0 +1,58 @@
+@comment The start of a function description is indicated by the following
+@comment comment. This syntax is used by the script functxh.sh:
+@comment @comment function <name>
+
+@comment function inet_ntop
+
+@node inet_ntop, socket
+@findex inet_ntop
+
+@subheading Syntax
+
+@example
+#include <sys/socket.h>
+#include <arpa/inet.h>
+
+const char *inet_ntop (int af, const void *src, char *dst, size_t size);
+@end example
+
+@subheading Description
+
+This function converts network addresses from numeric format (i.e. binary)
+into presentation format (i.e. strings).  This is a replacement for
+@code{inet_ntoa} (@pxref{inet_ntoa}), which cannot cope with IPv6 addresses.
+
+@var{af} specifies the address family of the numeric format, e.g.
+@samp{AF_INET} or @samp{AF_INET6}.  The numeric data in @var{src} will be
+converted in presentation format and stored in @var{dst}.
+
+@var{size} specifies the size of the buffer pointed to by @var{dst} - it must
+be large enough to store the presentation format address.  The constants
+@samp{INET_ADDRSTRLEN} and @samp{INET6_ADDRSTRLEN} are defined in
+@samp{netinet/in.h} as the maximum presentation string lengths, including
+terminating nuls.
+
+@subheading Return Values
+
+On successful completion the function returns a pointer to the presentation
+format string.  Otherwise, a value of NULL is returned and @var{errno} is set
+appropriately.
+
+@table @samp
+@item EFAULT
+@var{dst} did not point to a valid buffer.
+@item ENOSPC
+The size of @var{dst} specified by @var{size} was not large enough to store
+the presentation format string.
+@item EAFNOSUPPORT
+The address family @var{af} is not known or supported.
+@end table
+
+@subheading Portability
+
+@portability posix
+
+@subheading Example
+
+@example
+@end example

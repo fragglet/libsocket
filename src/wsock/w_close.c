@@ -1,7 +1,12 @@
 /*
  *  libsocket - BSD socket like library for DJGPP
  *  Copyright 1997, 1998 by Indrek Mandre
- *  Copyright 1997, 1998 by Richard Dawe
+ *  Copyright 1997-2000 by Richard Dawe
+ *
+ *  Portions of libsocket Copyright 1985-1993 Regents of the University of 
+ *  California.
+ *  Portions of libsocket Copyright 1991, 1992 Free Software Foundation, Inc.
+ *  Portions of libsocket Copyright 1997, 1998 by the Regdos Group.
  *
  *  This library is free software; you can redistribute it and/or modify it
  *  under the terms of the GNU Library General Public License as published
@@ -22,31 +27,40 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
+
+#include <dpmi.h>
 #include <sys/farptr.h>
 #include <sys/segments.h>
-#include <dpmi.h>
-#include <pc.h>
+
+#include <sys/socket.h>
 
 #include <lsck/if.h>
-#include <lsck/ws.h>
-#include <winsock.h>
-
-#include "lsckglob.h"
-#include "wsockvxd.h"
+#include "wsock.h"
 #include "farptrx.h"
+#include "wsockvxd.h"
 
-int wsock_closesocket (LSCK_SOCKET *lsd)
+/* -----------------
+ * - __wsock_close -
+ * ----------------- */
+
+int __wsock_close (LSCK_SOCKET * lsd)
 {
-    WSOCK_CLOSESOCKET_PARAMS params;
+	LSCK_SOCKET_WSOCK *wsock = (LSCK_SOCKET_WSOCK *) lsd->idata;
+	WSOCK_CLOSESOCKET_PARAMS params;
 
-    params.Socket = (void *) lsd->wsock._Socket;
+	bzero (&params, sizeof (params));
 
-    _farpokex (SocketP, 0, &params, sizeof(WSOCK_CLOSESOCKET_PARAMS));
+	params.Socket = (void *) wsock->_Socket;
 
-    CallVxD (WSOCK_CLOSESOCKET_CMD);
+	_farpokex (SocketP, 0, &params, sizeof (WSOCK_CLOSESOCKET_PARAMS));
 
-    if (_VXDError && (_VXDError != 0xFFFF)) return(-1);
+	__wsock_callvxd (WSOCK_CLOSESOCKET_CMD);
 
-    return(0);
+	if (_VXDError && (_VXDError != 0xFFFF)) return (-1);
+
+	/* RD: Set these to zero now the socket's closed. */
+	wsock->_Socket = wsock->_SocketHandle = 0;
+
+	return (0);
 }
-

@@ -1,0 +1,45 @@
+@comment The start of a comment is indicated by the following comment. This
+@comment syntax is used by the script funcstxh.sh: @comment function <name>
+
+@comment function if_indextoname
+
+@node if_indextoname, socket
+@findex if_indextoname
+
+@subheading Syntax
+
+@example
+#include <net/if.h>
+
+char *if_nametoindex (unsigned int ifindex, char *ifname);
+@end example
+
+@subheading Description
+
+This returns the interface name corresponding to @var{ifindex} in the buffer
+@var{ifname}.  The buffer pointed to @var{ifname} must be at least
+@samp{IFNAMESIZE} bytes in size.
+
+@subheading Return Value
+
+The interface name will be placed into @var{ifname}, if @var{ifindex} is a
+valid interface index.  Otherwise @samp{NULL} is returned and @var{errno}
+contains the error code.
+
+Possible errors for this function are:
+
+@table @samp
+@item EFAULT
+The name pointed to by @var{ifname} cannot be accessed.
+@item ENXIO
+There is no interface referred to by @var{ifindex}.
+@end table
+
+@subheading Portability
+
+Open Group XNS 5.2 Draft 1.0
+
+@subheading Example
+
+@example
+@end example

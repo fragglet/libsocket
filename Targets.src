@@ -1,0 +1,14 @@
+Welcome to libsocket 0.8.0 source distribution! To make libsocket type:
+
+	make all		- Make library and test programs
+	make library		- Make only library
+	make demos		- Make test programs
+	make setup		- Make setup script and run it
+
+	make install		- Install library and header files
+	make installvxd		- Install Coda SOCK.VXD for Winsock 2 support
+	make uninstall		- Uninstall library and header files
+
+	make clean		- Remove .o files
+	make distclean		- Remove ready binaries and .o files
+	make dep		- Make dependences

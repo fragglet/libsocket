@@ -12,27 +12,25 @@
 
 int main()
 {
- char x[100];
- struct netent *s;
+    char x[100];
+    struct netent *s;
 
- for (;;) {
+    for (;;) {
+        printf ("Enter network name: ");
+        gets (x);
 
-  printf ("Enter network name: ");
-  gets (x);
+        if ( ( s = getnetbyname ( x ) ) != NULL ) {
+            printf ("Aliases:[ ");
 
-  if ( ( s = getnetbyname ( x ) ) != NULL ) {
+            while ( *(s->n_aliases) ) {
+                printf ("%s ", *s->n_aliases );
+                s->n_aliases++;
+            }
 
- 	 printf ("Aliases:[ ");
+            printf ("] n_name: %s n_net: %lx\n", s->n_name, s->n_net );
+        } else
+            printf ("NULL\n");
+    }
 
-     while ( *(s->n_aliases) ) {
-        printf ("%s ", *s->n_aliases );
-        s->n_aliases++;
- 	 }
-
-     printf ("] n_name: %s n_net: %lx\n", s->n_name, s->n_net );
-
-  } else printf ("NULL\n");
- }
- return 0;
+    return 0;
 }
-

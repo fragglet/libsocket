@@ -1,111 +1,198 @@
 /*
-    internal.c
-    Copyright 1998 by Richard Dawe
+    diag.c
+    Copyright 1998, 1999 by Richard Dawe
 
     This file illustrates some of the internal functions of libsocket. These
     should not be used in normal programs. They may give some insight into
     whether libsocket is detecting all the DNS servers configured and where
     it is looking for its configuration files. It should be useful in finding
     out whether libsocket is configured properly.
+
+    This program is particularly lax at free'ing the memory allocated by the
+    internal functions. In general, all the memory used in NULL-terminated
+    lists must be freed (i.e. all the char * strings, and then the char ** of
+    the list).
 */
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
+#include <sys/param.h>
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <netinet/in.h>
+#include <arpa/inet.h>
 
 #include <lsck/lsck.h>
-#include <lsck/config.h>
-#include <lsck/dnsaddr.h>
-#include <lsck/mstcp.h>
-#include <lsck/ras.h>
-#include <lsck/vdhcp.h>
-#include <lsck/ini.h>
+#include <lsck/copyrite.h>
+#include <lsck/if.h>
+#include <lsck/domname.h>
+#include <lsck/hostname.h>
 
 /* Constant to name mappings for tests */
-int   proto_num[]  = {IPPROTO_ICMP, IPPROTO_TCP, IPPROTO_UDP, IPPROTO_RAW, 0};
-char *proto_name[] = {"ICMP",       "TCP",       "UDP",       "raw", NULL   };
+typedef struct _PROTO_MAP {
+    int   num;
+    char *name;
+} PROTO_MAP;
 
-int type_num[]    = { SOCK_STREAM, SOCK_DGRAM, SOCK_RAW, SOCK_SEQPACKET, 0  };
-char *type_name[] = { "stream",    "datagram", "raw",    "sequential", NULL };
+PROTO_MAP proto_map[] = {
+	{ 0,            "default (0)" },
+	{ IPPROTO_ICMP, "ICMP"        },
+	{ IPPROTO_TCP,  "TCP"         },
+	{ IPPROTO_UDP,  "UDP"         },
+	{ IPPROTO_RAW,  "raw"         },
+	{ 0,            NULL          }
+};
 
-extern int vdhcp_init (void);
-extern char *vdhcp_getdata (void);
+typedef PROTO_MAP TYPE_MAP;
+
+TYPE_MAP type_map[] = {
+	{ SOCK_STREAM,    "stream"     },
+	{ SOCK_DGRAM,     "datagram"   },
+	{ SOCK_RAW,       "raw"        },
+	{ SOCK_SEQPACKET, "sequential" },
+	{ 0,              NULL         }
+};
+
+typedef PROTO_MAP AF_MAP;
+
+AF_MAP af_map[] = {
+	{ AF_INET, "Internet domain (AF_INET)" },
+	{ AF_UNIX, "Unix domain (AF_UNIX)" },
+	{ 0,       NULL }
+};
+
+LSCK_IF *__lsck_interface[LSCK_MAX_IF + 1];
 
 int main (void)
 {
-    char **p = NULL, *q = NULL;
-    int i, j, sock;
+	LSCK_IF *interface = NULL;
+	char hostbuf[MAXGETHOSTNAME], dombuf[MAXGETDOMAINNAME];
+	char **q = NULL;
+	int i, j, k, sock;
 
-    /* Banner */
-    printf("libsocket Diagnostic Program\n\n");
+	/* Banner */
+	printf("libsocket Diagnostic Program\n\n");
 
-    /* Configuration information */
-    printf("Configuration directory: %s\n\n", lsck_config_getdir());
+	/* --- Configuration --- */
+	__lsck_init();
 
-    printf("---All DNS Servers obtained via auto-configuration---\n");
-    p = lsck_getdnsaddrs();
-    if (p != NULL) while (*p != NULL) { printf("DNS address: %s\n", *p), p++; }
-    printf("---End DNS Servers---\n\n");
+	printf("%s\n%s\n\n", __lsck_get_copyright(), __lsck_get_version());
+	
+	__lsck_gethostname(hostbuf, sizeof(hostbuf));
+	__lsck_getdomainname(dombuf, sizeof(dombuf));
+	q = __lsck_getdnsaddrs();
 
-    printf("MSTCP (Microsoft TCP/IP stack) DNS enabled: %s\n\n",
-           mstcp_dnsenabled() ? "Yes":"No");
+	printf("Host name: '%s'\n", hostbuf);
+	printf("Domain name: '%s'\n", dombuf);
+	printf("Configuration directory: '%s'\n\n", __lsck_config_getdir());
 
-    printf("---MSTCP DNS Servers---\n");
-    p = mstcp_getdnsaddrs();
-    if (p != NULL) while (*p != NULL) { printf("MSTCP DNS address: %s\n", *p), p++; }
-    printf("---End MSTCP DNS servers---\n\n");
+	printf("DNS servers:");
+	if ((q == NULL) || (*q == NULL)) {
+		printf(" None found\n\n");
+	} else {
+		for (i = 0; q[i] != NULL; i++) { printf(" %s", q[i]); }
+		printf("\n\n");
+		for (i = 0; q[i] != NULL; i++) { free(q[i]); }
+		free(q);
+	}
 
-    printf("RAS (dial-up) active : %s\n", ras_active() ? "Yes":"No");
-    printf("Default RAS phonebook: %s\n\n", ras_getdefaultphonebook());
+	/* --- Available interfaces --- */
+	for (i = 0; (interface = __lsck_interface[i]) != NULL; i++) {
+		printf("Interface %s\n", interface->name);
 
-    printf("---RAS DNS Servers---\n");
-    p = ras_getdnsaddrs();
-    if (p != NULL) while (*p != NULL) { printf("RAS DNS address: %s\n", *p), p++; }
-    printf("---End RAS DNS servers---\n\n");
+		/* Only do this for Internet family interfaces */
+		if (interface->addr == NULL) {
+			printf("\n");
+			continue;
+		}
+		
+		if (interface->addr->family != AF_INET) {
+			printf("\n");
+			continue;
+		}
 
-    printf("VDHCP.VXD initialised OK: %s\n", vdhcp_init() ? "Yes":"No");
-    q = vdhcp_getdata();
-    printf("VDHCP.VXD returns data  : %s\n\n", (q != NULL) ? "Yes":"No");
-    free(q);
+		for (j = 0; interface->addr->table.inet[j] != NULL; j++) {
+			/* Address details */
+			printf("\tAddress %s ",
+			       inet_ntoa(interface->addr->table.inet[j]->addr));
+			printf("netmask %s ",
+			       inet_ntoa(interface->addr->table.inet[j]->netmask));
 
-    printf("---DHCP DNS Servers---\n");
-    p = vdhcp_getdnsaddrs();
-    if (p != NULL) while (*p != NULL) { printf("VDHCP DNS address: %s\n", *p), p++; }
-    printf("---End DHCP DNS servers---\n\n");
+			if (interface->addr->table.inet[j]->gw_present)
+				printf("gateway %s ",
+				       inet_ntoa(interface->addr->table.inet[j]->gw));
+			printf("\n");
 
-    printf("---System.ini DNS Servers---\n");
-    p = systemini_getdnsaddrs();
-    if (p != NULL) while (*p != NULL) { printf("System.ini DNS address: %s\n", *p), p++; }
-    printf("---End System.ini DNS servers---\n\n");
+			/* DNS servers */
+			for (k = 0;
+			     (k < LSCK_IF_ADDR_INET_DNS_MAX)
+			     && (interface->addr->table.inet[j]->dns[k].s_addr != 0);
+			     k++) {
+				printf("\tDNS %i %s\n", k + 1,
+				       inet_ntoa(interface->addr->table.inet[j]->dns[k]));
+			}
 
-    /* Check support for socket types protocols */
-    printf("Testing sockets with INET adapter family (AF_INET)...\n");
+			/* Host name, domain name */
+			if (strlen(interface->addr->table.inet[j]->hostname)
+			    != 0)
+				printf("\tHost name '%s'\n",
+				       interface->addr->table.inet[j]->hostname);
 
-    for (i = 0; type_name[i] != NULL; i++) {
-        for (j = 0; proto_name[j] != NULL; j++) {
-            sock = socket(AF_INET, type_num[i], proto_num[j]);
-            if (sock > -1) {
-                printf("+ Created %s type socket with %s protocol\n",
-                       type_name[i], proto_name[j]);
-                close(sock);
-            } else
-                printf("- Failed to create %s type socket with %s protocol\n",
-                       type_name[i], proto_name[j]);
-        }
-    }
+			if (strlen(interface->addr->table.inet[j]->domainname)
+			    != 0)
+				printf("\tDomain name '%s'\n",
+				       interface->addr->table.inet[j]->domainname);
 
-    printf("\n");
+			printf("\t---\n");
+		}
 
-    /* Test error messages */
-    errno = EAFNOSUPPORT;
-    printf("These should be meaningful error messages:\n");
-    printf("lsck_sterror(): %s\n", lsck_strerror(errno));
-    lsck_perror("lsck_perror() ");
+		printf("\n");
+	}
 
-    /* OK */
-    return(0);
+	/* --- Sockets --- */
+
+	/* Check support for socket types protocols */	
+	for (i = 0; af_map[i].name != NULL; i++) {
+		printf("Testing %s sockets...\n", af_map[i].name);
+		
+		for (j = 0; type_map[j].name != NULL; j++) {
+			for (k = 0; proto_map[k].name != NULL; k++) {
+				sock = socket(af_map[i].num,
+					      type_map[j].num,
+					      proto_map[k].num);
+			    
+				if (sock > -1) {
+					printf("+ SUPPORTED: %s type socket "
+					       "with %s protocol\n",
+					       type_map[j].name,
+					       proto_map[k].name);
+					close(sock);
+				} else if (errno == EPROTONOSUPPORT) {
+					printf(". Unsupported: %s type socket "
+					       "with %s protocol\n",
+					       type_map[j].name,
+					       proto_map[k].name);
+				} else {
+					printf("- Error creating %s type "
+					       "socket with %s protocol\n",
+					       type_map[j].name,
+					       proto_map[k].name);
+				}
+			}
+		}
+
+		printf("\n");
+	}	
+
+	/* Test error messages. */
+	errno = EAFNOSUPPORT;
+
+	printf("These should be meaningful error messages:\n");
+	printf("strerror(): %s\n", strerror(errno));
+	perror("perror()");
+
+	/* OK */
+	return(0);
 }

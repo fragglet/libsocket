@@ -1,0 +1,78 @@
+@c From: Alain Magloire <alainm@rcsm.ece.mcgill.ca>
+@c Some modifications by Richard Dawe <richdawe@bigfoot.com>
+
+@comment The start of a comment is indicated by the following comment. This
+@comment syntax is used by the script funcstxh.sh: @comment function <name>
+
+@comment function recvfrom
+
+@node recvfrom, socket
+@findex recvfrom
+
+@subheading Syntax
+
+@example
+#include <sys/types.h>
+#include <sys/socket.h>
+
+ssize_t recvfrom (int s, void * buf, size_t len, unsigned int flags,
+                  struct sockaddr *from, size_t *fromlen);
+@end example	   
+
+@subheading Description
+
+@code{recvfrom()} is used to receive messages from a socket.
+If @var{from} is non-NULL, the source address of the message is stored in it.
+@var{fromlen} is a value-result parameter, it indicates the size of @var{from}
+on entry and the size of @var{from} stored.  If @var{fromlen} was too small,
+it is truncated to the initial size. @var{flags} may have the value zero or
+be the bitwise OR of any combination of one or more of the values:
+
+@table @samp
+@item MSG_OOB
+Receipt of out-of-band data that would not be received in the normal data
+stream.  Application should use MSG_OOB flag after catching a SIGURG
+or if @code{select()} (@pxref{select, , select, libc}) indicates
+an exception condition.
+@item MSG_PEEK
+The receive operation data from the beginning of the receive queue without
+removing that data from the queue.  Thus, a subsequent receive call will
+return the same data.
+@item MSG_WAITALL
+Requests that the operation block until the full request is
+satisfied.  However, the call may still return less data than requested if
+a signal is caught, an error or disconnect occurs, or the next data to be
+received is of a different type than that returned.
+@end table
+
+@subheading Return Values
+
+On success the number of octets received is return, or -1 and
+@var{errno} is set:
+
+@table @samp
+@item EWOULDBLOCK.
+The socket is marked non-blocking and the receive operation would block.
+@item EBADF
+The paramater is not a valid descriptor.
+@item ENOTCONN
+The socket is associated with a connection-oriented protocol
+and has not been connected.
+@item ENOTSOCK
+The argument does not refer to a socket.
+@item EINTR 
+The receive was interrupted by delivery of a signal before
+any data were available.
+@item EFAULT
+The receive buffer pointer(s) point outside the process's
+address space.
+@end table
+
+@subheading Portability
+
+@portability posix, unix98
+
+@subheading Example
+
+@example
+@end example

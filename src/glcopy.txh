@@ -1,0 +1,36 @@
+@comment function __lsck_get_copyright
+
+@node __lsck_get_copyright, libsocket
+@findex __lsck_get_copyright
+
+@subheading Syntax
+
+@example
+#include <lsck/copyrite.h>
+
+char *__lsck_get_copyright (void);
+@end example
+
+@subheading Description
+
+This function returns a string containing the copyright information for
+libsocket.  If this is longer than one line, it will be formatted to fit on
+an 80-column terminal.
+
+@subheading Return Values
+
+A pointer to the string is returned on success; on failure, @samp{NULL} is
+returned.
+
+@subheading Portability
+
+@portability !ansi, !posix, !unix98
+
+This function is specific to libsocket.
+
+@subheading Example
+
+@example
+char *p = __lsck_get_copyright();
+puts(p);
+@end example

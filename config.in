@@ -1,0 +1,50 @@
+dnl config.in, autoconf script for libsocket
+dnl libsocket Copyright (C) 1997,1998 by Indrek Mandre
+dnl libsocket Copyright (C) 1997-2000 by Richard Dawe
+dnl
+
+AC_INIT(include/lsck/copyrite.h)
+
+dnl --- Optional features ---
+
+AC_ARG_ENABLE(debug,
+[debug       - Compile with debugging support],
+DEBUGFLAGS='-Wall -g -DDEBUG'; LSCK_STRIPALL=n)
+
+AC_ARG_ENABLE(debugging,
+[debugging   - Compile with debugging support],
+DEBUGFLAGS='-Wall -g -DDEBUG'; LSCK_STRIPALL=n)
+
+dnl --- Host details ---
+
+AC_CANONICAL_SYSTEM
+
+dnl --- Prefixes ---
+
+AC_PREFIX_PROGRAM(djasm)
+
+dnl --- Program checks ---
+
+AC_PROG_CC
+AC_PROG_CXX
+AC_PROG_INSTALL
+AC_PROG_RANLIB
+
+AC_CHECK_PROG(AS, as, as, as)
+AC_CHECK_PROG(AR, ar, ar, ar)
+AC_CHECK_PROG(STRIP, strip, strip, strip)
+
+dnl Don't require textutils just to print the menu
+AC_PATH_PROG(CAT, cat, 'command /c type')
+
+AC_PATH_PROG(INSTALL_INFO, install-info, install-info)
+AC_PATH_PROG(MAKEINFO, makeinfo, makeinfo)
+AC_PATH_PROG(INFO, info, info)
+
+dnl --- Output ---
+
+AC_SUBST(FEATUREFLAGS)
+AC_SUBST(DEBUGFLAGS)
+AC_SUBST(LSCK_STRIPALL)
+
+AC_OUTPUT(Makefile.cfg:Make-cfg.in demo/Makefile)

@@ -1,7 +1,0 @@
-/* _pack1.xcc, structure member packing / alignment set to 1
- * For all DOS compilers I'm aware of.
- *
- * By Alfons Hoogervorst / Alliterated Software Development, 1998. */
-
-#pragma pack(1)
-

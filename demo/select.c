@@ -1,4 +1,3 @@
-
 /*
  * Demo programme for libsocket for DJGPP <C> 1998 Indrek Mandre.
  * Sample programme shows how to use select. This is C language specific.
@@ -44,8 +43,8 @@ int main()
 
      if ( FD_ISSET ( fileno ( stdin ), &fd ) )
      {
-     	gets ( str );
-     	printf ( "Got it: [%s]\n", str );
+        gets ( str );
+        printf ( "Got it: [%s]\n", str );
      }
 
      printf (".");

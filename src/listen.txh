@@ -1,0 +1,52 @@
+@comment The start of a comment is indicated by the following comment. This
+@comment syntax is used by the script functxh.sh: @comment function <name>
+
+@comment function listen
+
+@node listen, socket
+@findex listen
+
+@subheading Syntax
+
+@example
+#include <sys/socket.h>
+
+int listen (int s, int backlog);
+@end example
+
+@subheading Description
+
+To create a passive/listening (server) socket, a socket is created with
+@code{socket()} (@pxref{socket}), bound to a local address with @code{bind()}
+(@pxref{bind}) and then given a connection queue with @code{listen()}.
+Connections can then be accepted with @code{accept()} (@pxref{accept}).
+
+@code{listen()} sets the maximum number of connections, @var{backlog}, that
+can be waiting for handling by @code{accept()}.  Any further waiting
+connections will be refused.
+
+@code{listen()} is only a valid operation for sockets of type
+@code{SOCK_STREAM} or @code{SOCK_SEQPACKET}.
+
+@subheading Return Value
+
+On successful completion the function returns 0.  Otherwise, a value of -1 is
+returned and @var{errno} is set appropriately.
+
+@table @samp
+@item EBADF
+@var{s} is not a valid file descriptor.
+@item ENOTSOCK
+@var{s} is not a socket.
+@item EOPNOTSUPP
+@code{listen()} is not a valid operation on this type of socket.
+@end table
+
+@subheading Portability
+
+@portability posix, unix98
+
+@subheading Example
+
+@example
+@end example

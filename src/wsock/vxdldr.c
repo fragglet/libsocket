@@ -1,7 +1,12 @@
 /*
  *  libsocket - BSD socket like library for DJGPP
  *  Copyright 1997, 1998 by Indrek Mandre
- *  Copyright 1997, 1998 by Richard Dawe
+ *  Copyright 1997-2000 by Richard Dawe
+ *
+ *  Portions of libsocket Copyright 1985-1993 Regents of the University of 
+ *  California.
+ *  Portions of libsocket Copyright 1991, 1992 Free Software Foundation, Inc.
+ *  Portions of libsocket Copyright 1997, 1998 by the Regdos Group.
  *
  *  This library is free software; you can redistribute it and/or modify it
  *  under the terms of the GNU Library General Public License as published
@@ -22,91 +27,131 @@
  * Original code from Dan Hedlund's wsock library.
  */
 
-#include <dpmi.h>
 #include <string.h>
+#include <errno.h>
 
-#include "winsock.h"
-#include "lsckglob.h"
-#include "farptrx.h"
+#include <dpmi.h>
+
 #include <lsck/vxd.h>
+#include "farptrx.h"
 
 #define VxdLdr_DeviceID     0x0027
 #define VxdLdr_LoadDevice   1
 #define VxdLdr_UnLoadDevice 2
 
-int VxdLdrEntry [2] = {0, 0};
+static int VxdLdrEntry[2] = {0, 0};
+
+/* --------------
+ * - VxdLdrInit -
+ * -------------- */
 
 void VxdLdrInit (void)
 {
-  VxdGetEntry (VxdLdrEntry, VxdLdr_DeviceID);
+    VxdGetEntry(VxdLdrEntry, VxdLdr_DeviceID);
 }
 
-int VxdLdrLoadDevice (char Device [])
+/* --------------------
+ * - VxdLdrLoadDevice -
+ * -------------------- */
+
+int VxdLdrLoadDevice (char Device[])
 {
-  int Error;
+    int Error;
 
-  __dpmi_meminfo _dev;
-  int dev;
+    __dpmi_meminfo _dev;
+    int dev;
 
-  if (VxdLdrEntry [1] == 0) VxdLdrInit ();
-  if (VxdLdrEntry [1] == 0) return -1;
+    if (VxdLdrEntry[1] == 0)
+	VxdLdrInit();
 
-  _dev.handle = 0;
-  _dev.size = strlen (Device) + 1;
-  _dev.address = 0;
+    if (VxdLdrEntry[1] == 0) {
+        errno = ENODEV;
+	return -1;
+    }
 
-  __dpmi_allocate_memory (&_dev);
-  dev = __dpmi_allocate_ldt_descriptors (1);
-  __dpmi_set_segment_base_address (dev, _dev.address);
-  __dpmi_set_segment_limit (dev, _dev.size);
+    _dev.handle = 0;
+    _dev.size = strlen (Device) + 1;
+    _dev.address = 0;
 
-  _farpokex (dev, 0, Device, _dev.size);
+    __dpmi_allocate_memory (&_dev);
+    dev = __dpmi_allocate_ldt_descriptors (1);
+    __dpmi_set_segment_base_address (dev, _dev.address);
+    __dpmi_set_segment_limit (dev, _dev.size);
 
-  asm ("pushl   %%ds            \n\
-        movw    %%cx, %%ds      \n\
-        lcall   %%cs:_VxdLdrEntry \n\
-        setc    %%al            \n\
-        movzbl  %%al, %%eax     \n\
-        popl    %%ds"
-        : "=a" (Error)
-        : "a" (VxdLdr_LoadDevice), "c" (dev), "d" (0));
+    _farpokex (dev, 0, Device, _dev.size);
 
-  __dpmi_free_ldt_descriptor (dev);
-  __dpmi_free_memory (_dev.handle);
+    __asm__ __volatile__ ("pushl   %%ds            \n\
+                           movw    %%cx, %%ds      \n\
+                          "
+#if    (GAS_MAJOR == 2) \
+    && ((GAS_MINOR < 9) || ((GAS_MINOR == 9) && (GAS_MINORMINOR < 5)))
+                          "lcall   %%cs:_VxdLdrEntry \n\
+                          "
+#else
+			  "lcall   *%%cs:_VxdLdrEntry \n\
+                          "
+#endif			  
+                          "setc    %%al            \n\
+                           movzbl  %%al, %%eax     \n\
+                           popl    %%ds"
+			  :"=a" (Error)
+			  :"a" (VxdLdr_LoadDevice), "c" (dev), "d" (0)
+    );
 
-  return Error;
+    __dpmi_free_ldt_descriptor (dev);
+    __dpmi_free_memory (_dev.handle);
+
+    return Error;
 }
 
-int VxdLdrUnLoadDevice (char Device [])
+/* ----------------------
+ * - VxdLdrUnLoadDevice -
+ * ---------------------- */
+
+int VxdLdrUnLoadDevice (char Device[])
 {
-  int Error;
+    int Error;
 
-  __dpmi_meminfo _dev;
-  int dev;
+    __dpmi_meminfo _dev;
+    int dev;
 
-  if (VxdLdrEntry [1] == 0) VxdLdrInit ();
-  if (VxdLdrEntry [1] == 0) return -1;
+    if (VxdLdrEntry[1] == 0)
+	VxdLdrInit();
 
-  _dev.handle = 0;
-  _dev.size = strlen (Device) + 1;
-  _dev.address = 0;
+    if (VxdLdrEntry[1] == 0) {
+        errno = ENODEV;
+	return -1;
+    }
 
-  __dpmi_allocate_memory (&_dev);
-  dev = __dpmi_allocate_ldt_descriptors (1);
-  __dpmi_set_segment_base_address (dev, _dev.address);
-  __dpmi_set_segment_limit (dev, _dev.size);
+    _dev.handle = 0;
+    _dev.size = strlen (Device) + 1;
+    _dev.address = 0;
 
-  asm ("pushl   %%ds            \n\
-        movw    %%cx, %%ds      \n\
-        lcall   %%cs:_VxdLdrEntry \n\
-        setc    %%al            \n\
-        movzbl  %%al, %%eax     \n\
-        popl    %%ds"
-        : "=a" (Error)
-        : "a" (VxdLdr_UnLoadDevice), "c" (dev), "d" (0));
+    __dpmi_allocate_memory (&_dev);
+    dev = __dpmi_allocate_ldt_descriptors (1);
+    __dpmi_set_segment_base_address (dev, _dev.address);
+    __dpmi_set_segment_limit (dev, _dev.size);
 
-  __dpmi_free_ldt_descriptor (dev);
-  __dpmi_free_memory (_dev.handle);
+    __asm__ __volatile__ ("pushl   %%ds            \n\
+                           movw    %%cx, %%ds      \n\
+                          "
+#if    (GAS_MAJOR == 2) \
+    && ((GAS_MINOR < 9) || ((GAS_MINOR == 9) && (GAS_MINORMINOR < 5)))
+                          "lcall   %%cs:_VxdLdrEntry \n\
+                          "
+#else
+			  "lcall   *%%cs:_VxdLdrEntry \n\
+                          "
+#endif
+                          "setc    %%al            \n\
+                           movzbl  %%al, %%eax     \n\
+                           popl    %%ds"
+			  :"=a" (Error)
+			  :"a" (VxdLdr_UnLoadDevice), "c" (dev), "d" (0)
+    );
 
-  return Error;
+    __dpmi_free_ldt_descriptor (dev);
+    __dpmi_free_memory (_dev.handle);
+
+    return Error;
 }

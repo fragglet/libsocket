@@ -1,0 +1,88 @@
+File: lsck.inf,  Node: Known Bugs,  Next: Credits,  Prev: Miscellaneous Information,  Up: Top
+
+Known Bugs
+**********
+
+Winsock 1.x Interface - wsock
+=============================
+
+   * Broadcasts do not seem to work.  It does not appear to be possible
+     to enable them via the `setsockopt()' call.
+
+   * Support for out-of-band (OOB) data is incomplete. For instance,
+     there is no support for `SO_OOBINLINE' or a `SIGURG' handler.
+
+Winsock 2.x Interface - csock
+=============================
+
+The Winsock 2.x support is provided by SOCK.VXD from the Windows '95
+port of the Coda Network File System.  The following are bugs in
+SOCK.VXD:
+
+   * SOCK.VXD's sockets always behave as though the socket option
+     `SO_REUSEADDR' is set, so local addresses are reused on the
+     `bind()' call.
+
+   * SOCK.VXD always closes stream sockets by sending a RST. This
+     causes protocols that require graceful closures to fail, e.g. FTP
+     data transfers.
+
+   * SOCK.VXD seems to have problems receiving/sending more than 32K
+     through a stream socket.  The symptoms are that the DOS box blocks
+     in SOCK.VXD (i.e.  Ctrl+C will not kill the program and the DOS
+     box has to be forcefully closed).
+
+   * SOCK.VXD's `getsockname()' call does not seem to work.  libsocket
+     attempts to circumvent this by using a table of IP addresses to
+     determine the local IP address, but this can easily fail.
+
+   * SOCK.VXD has no out-of-band (OOB) support.
+
+   * SOCK.VXD has a limit of the number of connections that can be
+     `accept()''d. The number of connections is that specified by the
+     earlier `listen()' call.
+
+   * There are problems using firewall software:
+
+        * AtGuard causes libsocket programs to crash, because of an
+          interaction with its virtual device driver, `IAMDRV.VXD'.
+
+        * ZoneAlarm will block any traffic that doesn't go to ports it
+          considers to be safe, e.g. DNS (UDP, port 23).  The solution
+          is to disable ZoneAlarm.  This is far from ideal.
+
+     There may be problems with other firewall software, but no other
+     programs have been reported yet.
+
+
+There are a number of bugs in the csock inteface within libsocket:
+
+   * SOCK.VXD's `recv()' function is for stream sockets only; its
+     `recvfrom()' function is for datagrams only.  The csock interface
+     does not distinguish properly between these two - i.e. it does not
+     map the BSD socket call `recvfrom()' on a stream socket onto
+     SOCK.VXD's `recv()' call.
+
+Common TCP/IP Bugs
+==================
+
+The auto-configuration code does not work for dial-up or WAN links.  It
+should work on LANs for statically or dynamically (DHCP) assigned IP
+addresses.  A method is needed that will obtain the IP address
+information successfully in all cases.
+
+Unix Domain Sockets Interface - unix
+====================================
+
+The Unix domain socket code is an alpha state.  It uses pairs of LAN
+Manager mailslots to implement bidirectional communication.  It was
+written using the assumption that local mailslots are 100% reliable.
+Mailslots are not reliable; hence the code needs to be rewritten to
+cope with data loss.
+
+Windows NT
+==========
+
+libsocket programs crash on exit on Windows NT.  Although Windows NT is
+not supported by libsocket, these programs should abort gracefully.
+

@@ -1,0 +1,3486 @@
+\input texinfo	@c -*-texinfo-*-
+@c %**start of header
+@setfilename lsck.inf
+@settitle libsocket Manual
+@paragraphindent 0
+@setchapternewpage odd
+@c %**end of header
+
+@include version.txi
+
+@c Title page
+@titlepage
+@title libsocket @value{VERSION} Manual
+@author Richard Dawe
+@author Alain Magloire
+@page
+
+@c Copyright page
+
+Copyright @copyright{} 1997, 1998 by Indrek Mandre@*
+Copyright @copyright{} 1997-2002 by Richard Dawe
+
+Portions of libsocket:
+
+@itemize @bullet
+@item
+Copyright @copyright{} 1985-1993 Regents of the University of California;
+@item
+Copyright @copyright{} 1991, 1992 Free Software Foundation Inc.;
+@item
+Copyright @copyright{} 1997, 1998 by the RegDos Group.
+@item
+Copyright @copyright{} 1994-1997 by DJ Delorie
+@end itemize
+
+@end titlepage
+
+@ifinfo
+@dircategory Networking
+@direntry
+* libsocket: (lsck).          libsocket @value{VERSION}
+@end direntry
+@end ifinfo
+
+@node Top, Introduction, (dir), (dir)
+@chapter libsocket @value{VERSION} Manual
+
+@ifnottex
+
+libsocket @value{VERSION} Manual
+Copyright @copyright{} 1999-2002 by Richard Dawe and Alain Magloire
+
+Permission is granted to copy, distribute and/or modify this document
+under the terms of the GNU Free Documentation License, Version 1.1
+or any later version published by the Free Software Foundation;
+with no Invariant Sections, with no Front-Cover Texts, and with no
+Back-Cover Texts. A copy of the license is included in the section
+entitled "GNU Free Documentation License"
+(@pxref{GNU Free Documentation License}).
+
+@menu
+* Introduction::
+
+* Functional Categories::
+* Alphabetical List::
+* Unimplemented::
+* Installation::
+
+* Getting Started::
+* Configuration::
+* Miscellaneous Information::
+
+* Known Bugs::
+* Credits::
+* Changelog::
+
+* License::
+* GNU Free Documentation License::
+
+* Concept Index::
+* Function Index::
+* Variable Index::
+@end menu
+
+@end ifnottex
+
+@node Introduction, Functional Categories, Top, Top
+@chapter Introduction
+
+libsocket:
+
+Copyright @copyright{} 1997, 1998 by Indrek Mandre@*
+Copyright @copyright{} 1997-2002 by Richard Dawe
+
+Portions of libsocket:
+
+@itemize @bullet
+@item
+Copyright @copyright{} 1985-1993 Regents of the University of California;
+@item
+Copyright @copyright{} 1991, 1992 Free Software Foundation Inc.;
+@item
+Copyright @copyright{} 1997, 1998 by the RegDos Group.
+@end itemize
+
+libsocket is distributed under the terms of the
+GNU Library General Public License (the GNU LGPL) (@pxref{License}). Please
+read the license before using libsocket.
+
+@section What is libsocket?
+
+@cindex sockets
+@cindex BSD sockets
+@cindex IPC
+@cindex Interprocess Communication
+@cindex Winsock
+
+libsocket is a BSD sockets library for DJGPP.  It provides DJGPP programs
+with TCP/IP networking as well as Unix domain sockets, a form of Interprocess
+Communication (IPC).  @dfn{BSD sockets} are the @emph{de facto} programming
+interface for networking on Unix systems.  Programs written to this interface
+can be ported to many platforms.  The Windows network programming interface,
+@dfn{Winsock}, is derived from BSD sockets.
+
+libsocket supports the following operating systems:
+
+@itemize @bullet
+@item
+Windows 3.x
+@item
+Windows '95
+@item
+Windows '98
+@item
+Windows NT - Unix domain sockets only; no TCP/IP networking.
+@end itemize
+
+Please note that libsocket has not been tested under Windows 3.x for a long
+time.  It should work, since it uses mostly the same methods as Windows '95.
+Any feedback would be appreciated here.
+
+Please also note that libsocket has not been tested under Windows '98 during
+development, since the maintainer does not have Windows '98.  It has been
+reported variously to work/not work.
+
+@section How to get started
+
+@itemize @bullet
+@item
+Install libsocket (@pxref{Installation});
+
+@item
+Configure libsocket (@pxref{Configuration});
+
+@cindex diag
+@cindex Diagnostic tool
+@cindex httpget
+
+@item
+Check libsocket is configured correctly using the demo programs
+@samp{demo/diag.exe} and @samp{demo/httpget.exe}.  @dfn{diag} lists
+libsocket's configuration (a diagnostic tool); @dfn{httpget} retrieves
+the specified URL from the web and dumps it to the screen, e.g.:
+
+@example
+httpget http://www.slashdot.org/
+@end example
+
+@cindex Beej's Guide to Network Programming
+
+@item
+Browse the function reference (@pxref{Alphabetical List}).  The libsocket
+binary and source distributiosn also contains "Beej's Guide to Network
+Programming" in HTML - if you are new to BSD sockets programming, this will
+help greatly.  Beej's guide can be found in @samp{contrib/ls080/doc/beejng}.
+You can jump directly to functions in the alphabetical index:
+
+@example
+info libsocket alpha socket
+@end example
+@end itemize
+
+@section What to do when things go wrong
+
+Firstly check that you haven't encountered one of the known bugs
+(@pxref{Known Bugs}).  You should also read the release notes (if any) that
+came with libsocket.  Secondly check that there isn't any news at the
+@uref{http://libsocket.tsx.org/, libsocket home page}.  More directly:
+
+@itemize @bullet
+@item
+@uref{http://www.phekda.freeserve.co.uk/richdawe/lsck/lsck_new.htm}
+@item
+@uref{http://libsocket.vip.ee/lsck_new.htm}
+@end itemize
+
+If this doesn't help, please ask a question in the DJGPP newsgroup
+(@uref{mailto:djgpp@@delorie.com} or @uref{news:comp.os.msdos.djgpp})
+@emph{and} the @uref{mailto:libsocket@@egroups.com, libsocket mailing list}.
+Please include the output of @samp{demo/diag.exe} and your libsocket
+configuration files (@pxref{Configuration}).
+
+@section Contact Details
+
+libsocket is maintained by @uref{mailto:richdawe@@bigfoot.com, Richard Dawe}:
+
+@email{richdawe@@bigfoot.com}@*
+@uref{http://www.bigfoot.com/~richdawe/}
+
+@c --- Include function index ---
+@include funcs.txi
+
+@node Unimplemented, Installation, Alphabetical List, Top
+@chapter Unimplemented
+
+@node Installation, Getting Started, Unimplemented, Top
+@chapter Installation
+
+@section Installing the Binary Distribution
+
+Installing the binary distribution (ready-to-run) version of libsocket is
+fairly straightforward.  Firstly, back up the DJGPP header file
+@samp{include/netinet/in.h}, because this is overwritten by one of libsocket's
+header files.  Then extract the ZIP file into the DJGPP directory
+(e.g. @samp{c:\djgpp}), preserving directory names - e.g. use PKUNZIP's
+@samp{-d} option.  The distribution documentation files (e.g. readme files)
+can then be found off the @samp{c:\djgpp\contrib} directory.
+
+To install the info files properly, you will need
+GNU texinfo 4.0@footnote{This is available from the DJGPP archive as
+v2gnu/txi40b.zip}. Run the following commands:
+
+@example
+install-info --info-file=/dev/env/DJDIR/info/lsck.inf \
+             --info-dir=/dev/env/DJDIR/info
+install-info --info-file=/dev/env/DJDIR/info/netsetup.inf \
+             --info-dir=/dev/env/DJDIR/info
+@end example
+
+Now install the Winsock 2 support virtual device driver (see the section
+below). libsocket should now be installed correctly and ready to use
+(@pxref{Getting Started}).
+
+libsocket's binary distribution is built with debugging information,
+because it is still in development.  Programs built with libsocket may
+be larger than expected, because of the debugging information.  Debugging
+information can be removed using strip (@pxref{strip, , strip, binutils}).
+
+@section Installing the Documentation Distribution
+
+Installing the documentation distribution (ready-to-run) version of libsocket
+is fairly straightforward.  Extract the ZIP file into the DJGPP directory
+(e.g. @samp{c:\djgpp}), preserving directory names - e.g. use PKUNZIP's
+@samp{-d} option.  The distribution documentation files (e.g. readme files)
+can then be found off the @samp{c:\djgpp\contrib} directory.
+
+@section Installing the Source Distribution
+
+Extract the ZIP into the DJGPP directory (e.g. @samp{c:\djgpp}), preserving
+directory names - e.g. use PKUNZIP's @samp{-d} option.  The sources can
+then be found off the @samp{c:\djgpp\contrib} directory.
+
+@subsection Required and Optional Packages
+
+To build libsocket requires the following packages:
+
+@itemize @bullet
+@item
+DJGPP development environment, version 2.02 or later
+@item
+GNU bash
+@item
+GNU C compiler (gcc)
+@item
+GNU C++ compiler (g++, also known as gxx)
+@item
+GNU binutils
+@item
+GNU make
+@item
+GNU fileutils
+@item
+GNU shellutils
+@item
+GNU texinfo, version 4.0
+@item
+GNU autoconf, version 2.13 or later
+@item
+GNU awk
+@item
+GNU m4
+@item
+GNU sed, verson 3.02 or later
+@end itemize
+
+Optional packages are as follows:
+
+@itemize @bullet
+@item
+GNU textutils
+@end itemize
+
+@subsection Configuration and Compilation
+
+In the following instructions, I have assumed that bash is the shell.  If not,
+type @samp{bash} and then follow the instructions.
+
+@enumerate 1
+
+@item
+Regenerate the configure script:
+
+@example
+autoconf config.in | sed -e 's/config\.guess/config.gue/' > config
+@end example
+
+It may be necessary to regenerate the configure script, because the DJGPP
+port of autoconf has some extra m4 macros that make it work on DOS.  If a
+Linux (or other Unix) configure script is used under DOS, it will not work
+properly.
+
+The usage of @code{sed} above is necessary to convert the filename
+@samp{config.guess} to the short filename @samp{config.gue} that is used in
+the libsocket distribution (so that libsocket can be compiled on plain ol'
+DOS).
+
+[ Note that source distributions of libsocket should be set up for compilation
+  with DJGPP, so this step shouldn't be necessary.  If it doesn't work, try
+  running @code{autoconf}. ]
+
+@item
+Run @samp{./config} to detect programs and the default prefix (the DJGPP
+directory, @samp{$DJDIR}).  If you wish to enable debugging information, use
+the @samp{--enable-debug} switch, like so:
+
+@example
+./config --enable-debug
+@end example
+
+The @samp{--prefix} option can be used to specify the prefix used when
+installing the built package.  This should probably be the DJGPP directory,
+but you can install it elsewhere if you want.  The default is the DJGPP
+directory. As an example:
+
+@example
+./config --prefix=c:/somedir/ls080
+@end example
+
+@item
+Build the dependency information:
+
+@example
+make dep
+@end example
+
+@item
+Then build everything (library, documentation, demo programs, tests):
+
+@example
+make all
+@end example
+
+@item
+(@emph{Optional}) Run @samp{make install} to install libsocket.  If you want to
+see what would be installed, use @samp{make -n install} instead.  This will
+install the headers, library and info documentation (including adding an entry
+to the info directory) into the prefix specified above.
+
+@end enumerate
+
+Now install the Winsock 2 support virtual device driver (see the section
+below).
+
+libsocket should now be installed correctly and ready to use
+(@pxref{Getting Started}).
+
+@section Installing the Winsock 2 Support Virtual Device Driver
+
+@cindex SOCK.VXD
+@cindex Coda Network File System helper driver
+@cindex Winsock 2 support Virtual Device Driver
+@cindex Winsock 2 support VxD
+
+To work with Winsock 2, libsocket needs a virtual device driver (VxD) to be
+installed.  This VxD is called SOCK.VXD and was written as part of the port
+of the @uref{http://www.coda.cs.cmu.edu/, Coda Network File System} to Windows
+'95.
+
+SOCK.VXD is included in the @samp{redist} directory of the libsocket
+binary and source distributions.  The program @samp{sockvxd.exe} is
+a self-extracting installer.  To run this program, use the @samp{installvxd}
+Makefile target:
+
+@example
+make installvxd
+@end example
+
+When prompted, select the option to dynamically load SOCK.VXD - then it will
+only be loaded when used by libsocket programs.
+
+@node Getting Started, Configuration, Installation, Top
+@chapter Getting Started
+
+@c TODO: Write this section!
+@c TODO: Describe the contents of redist.
+
+This section is under construction.
+
+@xref{Configuration}.
+
+@node Configuration, Miscellaneous Information, Getting Started, Top
+@chapter Configuration
+
+libsocket's configuration can be controlled by a number of files.  These files
+have the same purpose and are in the same format as the ones on Linux, and
+hence many Unices.  Some of these files are also present on Windows - these
+can be used libsocket.  libsocket can run without configuration files, but
+only in certain circumstances.
+
+libsocket comes with a program called @dfn{netsetup}, which generates the
+necessary configuration files (@pxref{Introduction, , Introduction, netsetup}).
+
+libsocket's main configuration file is @samp{lsck.cfg}.  
+
+@ifnottex
+
+@menu
+* libsocket and environment variables::
+* lsck.cfg::
+
+* host.conf::
+* resolv.conf::
+* hostname::
+
+* hosts::
+* networks::
+* services::
+* protocols::
+
+* netrc::
+@end menu
+
+@end ifnottex
+
+@node libsocket and environment variables, lsck.cfg, , Configuration
+@section libsocket and environment variables
+
+libsocket's main configuration file is @samp{lsck.cfg}.  Its location is
+specified by the environment variable @samp{LSCK}. If you use the normal
+DOS shell, @samp{command.com}, you would use:
+
+@example
+SET LSCK=c:\lsck
+@end example
+
+You may want to add this to your @samp{autoexec.bat}.
+
+In bash (@pxref{Top, , Top, bash}) you would use:
+
+@example
+export LSCK=c:/lsck
+@end example
+
+You could also add a line to @samp{DJGPP.ENV}
+(@pxref{DJGPP.ENV, , DJGPP.ENV, kb}) somewhere near the start, e.g. just
+after the line like:
+
+@example
++LFN=Y
+@end example
+
+add a line like:
+
+@example
++LSCK=c:/lsck
+@end example
+
+@subsection libsocket and bash
+
+If you are using bash, you should be aware that it sets the environment
+variable @samp{HOSTNAME} automatically
+(@pxref{Bash Variables, , Bash Variables, bash}).  This
+interferes with libsocket's automatic configuration; it may cause problems,
+when trying to resolve DNS names.
+
+To avoid this problem, please add the following line to your _bashrc file
+(@pxref{Bash Startup Files, , Bash Startup Files, bash}):
+
+@example
+unset HOSTNAME
+@end example
+
+@node lsck.cfg, host.conf, libsocket and environment variables, Configuration
+@section lsck.cfg
+
+@samp{lsck.cfg} is written in a similar way to Windows .INI files - the file
+is split into different sections.  There are four sections:
+
+@itemize @bullet
+@item
+@samp{main}, for libsocket global settings, e.g. resolver files, host name;
+@item
+@samp{wsock}, for the wsock (Winsock 1) interface;
+@item
+@samp{csock}, for the csock (Winsock 2) interface;
+@item
+@samp{unix}, for the unix (Unix domain sockets) interface.
+@end itemize
+
+@subsection The main Section
+
+@multitable {hosts.equiv} {on, off, verbose, yes, no, 0, 1, 2} {User's home directory}
+@item Key @tab Possible Values @tab Default Value
+@item hostname @tab Host name with domain @tab (Via auto-configuration)
+@item debug @tab on, off, verbose, yes, no, 0, 1, 2 @tab off
+@item hosts @tab 'hosts' file location @tab 'hosts', Windows directory
+@item networks @tab 'networks' file location @tab 'networks', Windows directory
+@item services @tab 'services' file location @tab 'services', Windows directory
+
+@item protocols @tab 'protocols' file location
+@tab 'protocol', Windows directory
+
+@item host.conf @tab 'host.conf' file location @tab
+@item resolv.conf @tab 'resolv.conf' file location @tab
+@item hosts.equiv @tab 'hosts.equiv' file location @tab
+
+@item .rhosts @tab '.rhosts' file location @tab User's home directory
+@item .netrc @tab '.netrc' file location @tab User's home directory
+@end multitable
+
+The host name could be, for example, myhost.mycompany.com.
+It is usually a good idea to set hosts, networks, services and protocols
+to point to your Windows directory, e.g.:
+
+@example
+hosts=c:\windows\hosts
+networks=c:\windows\networks
+services=c:\windows\services
+protocols=c:\windows\protocol
+@end example
+
+@samp{hosts.equiv}, @samp{.rhosts} and @samp{.netrc} are for remote command
+execution - @xref{netrc}.  libsocket will look for @samp{.rhosts}
+and @samp{.netrc} in the current user's home directory with the names
+@samp{.rhosts}, @samp{rhosts}, @samp{rhosts} and @samp{.netrc}, @samp{netrc}
+and @samp{_netrc} respectively.  The files specified in @samp{lsck.cfg} are
+global and are only used if none were found in the user's home directory.
+
+The home directory is specified by the environment variable @samp{HOME}.
+
+@subsection The wsock and csock Sections
+
+@multitable {DNSnAddress} {true, yes, 1, false, no, 0} {(Via auto-configuration)}
+@item Key @tab Possible Values @tab Default Value
+@item Enabled @tab true, yes, 1, false, no, 0 @tab true
+@item IPAddress @tab Computer's IP address @tab (Via auto-configuration)
+@item IPMask @tab Computer's IP network mask @tab (Via auto-configuration)
+@item Gateway @tab Gateway's IP address @tab (Via auto-configuration)
+@item DNS1Address @tab DNS server 1's IP address @tab (Via auto-configuration)
+@item DNS2Address @tab DNS server 2's IP address @tab (Via auto-configuration)
+@item DNS3Address @tab DNS server 3's IP address @tab (Via auto-configuration)
+@item DNS4Address @tab DNS server 4's IP address @tab (Via auto-configuration)
+@end multitable
+
+@c TODO: This might be better elsewhere.
+
+@cindex loopback
+@cindex loopback device
+@cindex loopback network
+
+The loopback network is always present and should not be included in
+the list above. The @dfn{loopback network} is an internal IP network with
+the address range 127.x.x.x (also written as 127.0.0.0/8). The
+@dfn{localhost} is the host's IP address on this network -
+127.0.0.1.
+
+@subsection The unix Section
+
+@multitable {Enabled} {true, yes, 1, false, no, 0} {Default Value}
+@item Key @tab Possible Values @tab Default Value
+@item Enabled @tab true, yes, 1, false, no, 0 @tab true
+@end multitable
+
+@node host.conf, resolv.conf, lsck.cfg, Configuration
+@section host.conf
+
+@c This file was originally a Linux man page - see the copyright below. It
+@c was modified for use in libsocket by Richard Dawe <richdawe@bigfoot.com>.
+
+@c libsocket Copyright 1997, 1998 by Indrek Mandre
+@c libsocket Copyright 1997, 1998 by Richard Dawe
+@c Manual pages written by Richard Dawe
+@c
+
+host.conf configures the order of name resolving.  This file tells the
+networking libraries which name resolving resources to use, and in what order.
+
+Valid sources are @samp{hosts}, @samp{bind} and @samp{nis}.
+@samp{hosts} refers to the file @ref{hosts}, which contains name to IP
+address mappings.  @samp{bind} refers to DNS servers, which are configured
+elsewhere - @xref{resolv.conf}.  @samp{nis} refers to Network Information
+Services (NIS) aka Yellow Pages (YP), which probably won't be very common in a
+Windows environment, but might be present if Unix hosts are used.
+
+[ NIS support is not present in libsocket. ]
+
+@subsection Basic Configuration
+
+If you have DNS servers, the recommended order is
+@samp{bind} then @samp{hosts}:
+
+@example
+order bind, hosts
+@end example
+
+If you don't have a DNS server, then only @samp{hosts} is required, like so:
+
+@example
+order hosts
+@end example
+
+If you specify @samp{bind} as well as @samp{hosts}
+without a DNS server, then programs are likely to stall when resolving names.
+
+@subsection host.conf Options
+
+@vtable @samp
+@item order
+@example
+order @var{service-1} ... @var{service-n}
+@end example
+
+This specifies the order in which name resolving services should be used.
+Valid @var{service} options are @samp{bind}, @samp{hosts} and @var{nis}.
+
+@item trim
+@example
+trim @var{domains}
+@end example
+
+?
+
+@item multi
+@example
+multi (on|off)
+@end example
+
+This makes the resolver return multiple matches from @samp{hosts}
+(@pxref{hosts}), which can be slow.
+
+@item nospoof
+@example
+nospoof (on|off|warn|warn off)
+@end example
+
+?
+
+@item alert
+@example
+alert (on|off)
+@end example
+
+?
+
+@item reorder
+@example
+reorder (on|off)
+@end example
+
+?
+@end vtable
+
+@subsection Files
+
+@itemize @bullet
+@item
+/etc/host.conf (Linux)
+@item
+e.g. c:\lsck\host.cfg (libsocket)
+@end itemize
+
+@node resolv.conf, hostname, host.conf, Configuration
+@section resolv.conf
+
+@c This file was originally a Linux man page - see the copyright below. It
+@c was modified for use in libsocket by Richard Dawe <richdawe@bigfoot.com>.
+
+@c Copyright (c) 1986 The Regents of the University of California.
+@c All rights reserved.
+@c
+@c Redistribution and use in source and binary forms are permitted
+@c provided that the above copyright notice and this paragraph are
+@c duplicated in all such forms and that any documentation,
+@c advertising materials, and other materials related to such
+@c distribution and use acknowledge that the software was developed
+@c by the University of California, Berkeley.  The name of the
+@c University may not be used to endorse or promote products derived
+@c from this software without specific prior written permission.
+@c THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR
+@c IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED
+@c WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
+@c
+@c	@(#)resolver.5	5.9 (Berkeley) 12/14/89
+@c	$Id: lsck.txi,v 1.47 2002/07/28 11:23:56 rich Exp $
+@c
+
+
+The resolver is a set of routines in the C library (in this case libsocket)
+that provide access to the Internet Domain Name System (DNS).  The resolver
+configuration file contains information that is read by the resolver routines
+the first time they are invoked by a process.  The file is designed to be human
+readable and contains a list of keywords with values that provide various
+types of resolver information.
+
+On a normally configured system this file should not be necessary.
+The only name server to be queried will be on the local machine,
+the domain name is determined from the host name,
+and the domain search path is constructed from the domain name.
+
+The different configuration options are:
+
+@vtable @samp
+
+@item nameserver
+@example
+nameserver @var{address}
+@end example
+
+@var{Address} specifies the Internet address (in dot notation) of a name server
+that the resolver should query.  Up to MAXNS (currently 3) name servers may be
+listed, one per keyword.  If there are multiple servers, the resolver library
+queries them in the order listed.  If no @samp{nameserver} entries are present,
+the default is to use the name server on the local machine.  (The algorithm
+used is to try a name server, and if the query times out, try the next, until
+out of name servers, then repeat trying all the name servers until a maximum
+number of retries are made).
+
+@item domain
+@example
+domain @var{domain}
+@end example
+
+@var{Domain} specifies the local domain name.  Most queries for names within
+this domain can use short names relative to the local domain.  If no
+@samp{domain} entry is present, the domain is determined from the local host
+name returned by @ref{gethostname, , gethostname, libc}.  The domain part is
+taken to be everything after the first @samp{.}.  Finally, if the host name
+does not contain a domain part, the root domain is assumed.
+
+@item search
+@example
+search @var{domain-1} @dots{} @var{domain-n}
+@end example
+
+This specifies the search list for host-name lookup.  The search list is
+normally determined from the local domain name; by default, it contains only
+the local domain name.  This may be changed by listing the desired domain
+search path following the @samp{search} keyword with spaces or tabs separating
+the names.
+
+Most resolver queries will be attempted using each component
+of the search path in turn until a match is found.
+Note that this process may be slow and will generate a lot of network
+traffic if the servers for the listed domains are not local,
+and that queries will time out if no server is available
+for one of the domains.
+
+The search list is currently limited to six domains
+with a total of 256 characters.
+
+@item sortlist
+@example
+sortlist @var{address-1}[/@var{netmask-1}] @dots{} @var{address-n}[/@var{netmask-n}]
+@end example
+
+Sortlist allows addresses returned by gethostbyname to be sorted
+(@pxref{gethostbyname}).  A sortlist is specified by IP @var{address} and
+@var{netmask} pairs.  The netmask is optional and defaults to the natural
+netmask of the net.  The IP address and optional network pairs are separated
+by slashes.  Up to 10 pairs may be specified. Here is an example:
+
+@example
+sortlist 130.155.160.0/255.255.240.0 130.155.0.0
+@end example
+
+@item options
+@example
+options @var{option-1} @dots{} @var{option-n}
+@end example
+
+Options allows certain internal resolver variables to be modified.
+@var{Option} can be one of the following:
+
+@vtable @samp
+@item debug
+@samp{debug} sets RES_DEBUG in _res.options.
+
+@item ndots
+@example
+ndots:@var{n}
+@end example
+
+@samp{ndots} sets a threshold, @var{n}, for the number of dots which
+must appear in a name given to @code{res_query()} (@pxref{res_query})
+before an @emph{initial absolute query} will be made.  The default for
+@var{n} is 1, meaning that if there are any dots in a name, the name
+will be tried first as an absolute name before any @emph{search list}
+elements are appended to it.
+@end vtable
+
+@end vtable
+
+The @samp{domain} and @samp{search} keywords are mutually exclusive.
+If more than one instance of these keywords is present,
+the last instance wins.
+
+The @samp{search} keyword of a system's @samp{resolv.conf} file can be
+overridden on a per-process basis by setting the environment variable
+@samp{LOCALDOMAIN} to a space-separated list of search domains.
+
+The @samp{options} keyword of a system's @samp{resolv.conf} file can be
+amended on a per-process basis by setting the environment variable
+@code{RES_OPTIONS} to a space-separated list of resolver options
+as explained above under @samp{options}.
+
+The keyword and value must appear on a single line, and the keyword
+(e.g. @samp{nameserver}) must start the line.  The value follows
+the keyword, separated by white space.
+
+@subsection Files
+
+@itemize @bullet
+@item
+/etc/resolv.conf (Linux)
+@item
+e.g. c:\lsck\resolv.cfg
+@end itemize
+
+@node hostname, hosts, resolv.conf, Configuration
+@section hostname
+
+@c This file was originally a Linux man page - see the copyright below. It
+@c was modified for use in libsocket by Richard Dawe <richdawe@bigfoot.com>.
+
+@c Copyright (c) 1987 The Regents of the University of California.
+@c All rights reserved.
+@c
+@c Redistribution and use in source and binary forms are permitted
+@c provided that the above copyright notice and this paragraph are
+@c duplicated in all such forms and that any documentation,
+@c advertising materials, and other materials related to such
+@c distribution and use acknowledge that the software was developed
+@c by the University of California, Berkeley.  The name of the
+@c University may not be used to endorse or promote products derived
+@c from this software without specific prior written permission.
+@c THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR
+@c IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED
+@c WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
+@c
+@c	@(#)hostname.7	6.4 (Berkeley) 1/16/90
+@c
+
+This section describes host name resolution.  Hostnames are domains.  A domain
+is a hierarchical, dot-separated list of subdomains.  For example, the machine
+@samp{monet}, in the @samp{Berkeley} subdomain of the @samp{EDU} subdomain of
+the Internet Domain Name System would be represented as:
+
+@example
+monet.Berkeley.EDU
+@end example
+
+(with no trailing dot).
+
+Hostnames are often used with network client and server programs,
+which must generally translate the name to an address for use.
+(This task is usually performed by the library routine @ref{gethostbyname}.)
+The default method for resolving hostnames by the Internet name resolver is
+to follow RFC 1535's security recommendations.  Actions can be taken
+by the administrator to override these recommendations and to have the
+resolver behave the same as earlier, non-RFC 1535 resolvers.
+
+The default method (using RFC 1535 guidelines) follows:
+
+If the name consists of a single component, i.e. contains no dot, and if the
+environment variable @samp{HOSTALIASES} is set to the name of a file,
+that file is searched for a string matching the input hostname.  The file
+should consist of lines made up of two strings separated by white-space, the
+first of which is the hostname alias, and the second of which is the complete
+hostname to be substituted for that alias.  If a case-insensitive match is
+found between the hostname to be resolved and the first field of a line in
+the file, the substituted name is looked up with no further processing.
+
+If there is at least one dot in the name, then the name is first tried as
+is.  The number of dots to cause this action is configurable by setting the
+threshold using the @samp{ndots} option in 
+@samp{resolv.conf} (@pxref{resolv.conf}) (default: @samp{1}).  If the name
+ends with a dot, the trailing dot is removed, and the remaining name is
+looked up (regardless of the setting of the 'ndots' option) and no further
+processing is done. 
+
+If the input name does not end with a trailing dot, it is looked up by
+searching through a list of domains until a match is found.  If neither the
+search option in the @samp{resolv.conf} (@pxref{resolv.conf})
+file or the @samp{LOCALDOMAIN} environment variable is used, then the
+search list of domains contains only the full domain specified by the domain
+option (in @samp{resolv.conf}) or the domain used in the local hostname
+(@pxref{resolv.conf}).
+
+For example, if the @samp{domain} option is set to @samp{CS.Berkeley.EDU},
+then only CS.Berkeley.EDU will be in the search list and will be the only
+domain appended to the partial hostname, for example, @samp{lithium},
+making @samp{lithium.CS.Berkeley.EDU} the only name to be tried using the
+search list.
+
+If the search option is used in @samp{resolv.conf} or the environment
+variable, @samp{LOCALDOMAIN} is set by the user, then the search list will
+include what is set by these methods. For example, if the @samp{search}
+option contained
+
+@example
+ICS.Berkeley.EDU CChem.Berkeley.EDU Berkeley.EDU
+@end example
+
+then the partial hostname (e.g., @samp{lithium}) will be tried with each
+domainname appended (in the same order specified).  The resulting hostnames 
+that would be tried are:
+
+@example
+lithium.CS.Berkeley.EDU
+lithium.CChem.Berkeley.EDU
+lithium.Berkeley.EDU
+@end example
+
+The environment variable @samp{LOCALDOMAIN} overrides the
+@samp{search} and @samp{domain} options, and if both search and domain
+options are present in the resolver configuration file, then only the last
+one listed is used (@pxref{resolv.conf}).
+
+If the name was not previously tried as-is (i.e., it fell below the
+@samp{ndots} threshold or did not contain a dot), then the name as
+originally provided is attempted.
+
+@node hosts, networks, hostname, Configuration
+@section hosts
+
+@c This file was originally a Linux man page - see the copyright below. It
+@c was modified for use in libsocket by Richard Dawe <richdawe@bigfoot.com>.
+
+@c libsocket Copyright 1997, 1998 by Indrek Mandre
+@c libsocket Copyright 1997, 1998 by Richard Dawe
+@c Manual pages written by Richard Dawe
+@c
+
+@samp{hosts} is the host name to IP address mapping file.  This file tells the
+host name resolver the IP address corresponding to each host name.  This is
+useful if there is no DNS server on the network.  It can also be used if the
+DNS server does not have a record for a particular host name, but its IP
+address is known.  A similar mapping for networks is performed by
+@ref{networks}.
+
+The file is a plain ASCII file.  Comments are denoted by a hash at the start
+of a line.  Each line has the following format:
+
+@example
+@var{IP-address} @var{host-name} [@var{alias}]
+@end example
+
+e.g.
+
+@example
+# hosts - host name to IP address translation file
+127.0.0.1   localhost
+192.168.0.2 gertrude
+192.168.0.3 herbert
+192.168.0.4 norman
+192.168.0.5 jonathon jon
+@end example
+
+There should always be a line refering to @samp{localhost}.  This is the local
+computer, and is always accessible.
+
+Note: Windows doesn't use the aliases, so you will need multiple lines for
+the same IP address to fake aliasing.
+
+@subheading Files
+
+@itemize @bullet
+@item
+/etc/hosts (Linux)
+@item
+c:\windows\hosts (Windows)
+@end itemize
+
+@node networks, services, hosts, Configuration
+@section networks
+
+@c This file was originally a Linux man page - see the copyright below. It
+@c was modified for use in libsocket by Richard Dawe <richdawe@bigfoot.com>.
+
+@c libsocket Copyright 1997, 1998 by Indrek Mandre
+@c libsocket Copyright 1997, 1998 by Richard Dawe
+@c Manual pages written by Richard Dawe
+@c
+
+@samp{networks} is the network name to network IP address mapping file.
+This file tells the host name resolver the network component of an IP address
+corresponding to each network name.  This is useful if there is no DNS server
+on the network.  It can also be used if the DNS server does not have a record
+for a particular network name, but its IP address is known.  A similar mapping
+for hosts is performed by @ref{hosts}.
+
+The file is a plain ASCII file.  Comments are denoted by a hash at the start
+of a line.  Each line has the following format:
+
+@example
+@var{IP-address} @var{network-name} [@var{alias}]
+@end example
+
+e.g.
+
+@example
+# networks - network name to IP address translation file
+127       loopback
+192.168.0 mynet intranet
+@end example
+
+There should always be a line refering to @samp{loopback}.  This is the
+loopback device, and is always accessible.
+
+Note 1: Windows doesn't use the aliases, so you will need multiple lines for
+the same network IP address to fake aliasing.
+
+Note 2: The network IP address can be constructed from an IP address and
+network mask, e.g. if you have an IP address of 1.2.3.4 and a netmask of
+255.255.0.0, then AND'ing them gives a network IP address of 1.2.
+
+@subsection Files
+
+@itemize @bullet
+@item
+/etc/networks (Linux)
+@item
+c:\windows\networks (Windows, libsocket)
+@end itemize
+
+@node services, protocols, networks, Configuration
+@section services
+
+@c This file was originally a Linux man page - see the copyright below. It
+@c was modified for use in libsocket by Richard Dawe <richdawe@bigfoot.com>.
+
+@c Hey Emacs! This file is -*- nroff -*- source.
+@c
+@c This manpage is Copyright (C) 1996 Austin Donnelly <and1000@cam.ac.uk>,
+@c  with additional material (c) 1995 Martin Schulze <joey@infodrom.north.de>
+@c
+@c Permission is granted to make and distribute verbatim copies of this
+@c manual provided the copyright notice and this permission notice are
+@c preserved on all copies.
+@c
+@c Permission is granted to copy and distribute modified versions of this
+@c manual under the conditions for verbatim copying, provided that the
+@c entire resulting derived work is distributed under the terms of a
+@c permission notice identical to this one
+@c 
+@c Since the Linux kernel and libraries are constantly changing, this
+@c manual page may be incorrect or out-of-date.  The author(s) assume no
+@c responsibility for errors or omissions, or for damages resulting from
+@c the use of the information contained herein.  The author(s) may not
+@c have taken the same level of care in the production of this manual,
+@c which is licensed free of charge, as they might when working
+@c professionally.
+@c 
+@c Formatted or processed versions of this manual, if unaccompanied by
+@c the source, must acknowledge the copyright and authors of this work.
+@c
+@c   This manpage was made by merging two independently written manpages,
+@c   one written by Martin Schulze (18 Oct 95), the other written by
+@c   Austin Donnelly, (9 Jan 96).
+@c
+@c Thu Jan 11 12:14:41 1996 Austin Donnelly  <and1000@cam.ac.uk>
+@c   * Merged two services(5) manpages
+@c
+
+@samp{services} is the Internet network services list file.  @samp{services}
+is a plain ASCII file providing a mapping between friendly textual
+names for internet services, and their underlying assigned port
+numbers and protocol types.  Every networking program should look into
+this file to get the port number (and protocol) for its service.
+
+The following C library routines support querying @samp{services} from
+programs:
+
+@itemize @bullet
+@item
+@ref{getservent}
+@item
+@ref{getservbyname}
+@item
+@ref{getservbyport}
+@item
+@ref{setservent}
+@item
+@ref{endservent}
+@end itemize
+
+Port numbers are assigned by the IANA (Internet Assigned Numbers
+Authority), and their current policy is to assign both TCP and UDP
+protocols when assigning a port number.  Therefore, most entries will
+have two entries, even for TCP only services.
+
+Port numbers below 1024 (so-called 'low numbered' ports) can only be
+bound to by root (@pxref{bind}).  This is so that clients connecting to
+low numbered ports can trust that the service running on the port is the
+standard implementation, and not a rogue service run by a user of the machine.
+Well-known port numbers specified by the IANA are normally located in this
+root only space.
+
+The presence of an entry for a service in the 
+@samp{services} file does not necessarily mean that the service is currently
+running on the machine.
+
+The location of the @samp{services} file is defined by @code{_PATH_SERVICES}
+in @samp{/usr/include/netdb.h}.  This is usually set to @samp{/etc/services}.
+
+Each line describes one service, and is of the form:
+
+@example
+@var{service-name} @var{port} @var{protocol} [@var{alias-1} @dots{} @var{alias-n}]
+@end example
+
+where:
+
+@vtable @var
+@item service-name
+This is the friendly name the service is known by and looked up under.  It
+is case sensitive.  Often, the client program is named after the
+@var{service-name}.
+
+@item port
+This is the port number (in decimal) to use for this service.
+
+@item protocol
+This is the type of protocol to be used. This field should match an entry
+in the protocols file - @xref{protocols}. Typical values include @samp{tcp}
+and @samp{udp}.
+
+@item alias-n
+These are optional space or tab separated names for this service Again, the
+names are case sensitive.
+@end vtable
+
+Either spaces or tabs may be used to separate the fields.
+
+Comments are started by the hash sign (#) and continue until the end
+of the line.  Blank lines are skipped.
+
+The @var{service-name} should begin in the first column of the file, since
+leading spaces are not stripped.  A @var{service-name}
+can be any printable characters excluding space and tab, however,
+a conservative choice of characters should be used to minimise
+inter-operability problems. Eg: a-z, 0-9, and hyphen (@samp{-}) would seem a
+sensible choice.
+
+Lines not matching this format should not be present in the
+file.
+
+(Currently, they are silently skipped by @code{getservent()},
+@code{getservbyname()} and @code{getservbyport()}. However, this behaviour
+should not be relied on.)
+
+As a backwards compatibility feature, the slash (/) between the @var{port}
+number and @var{protocol} name can in fact be either a slash or a comma
+(@samp{,}).  Use of the comma in modern installations is depreciated.
+
+This file might be distributed over a network using a network-wide
+naming service like Yellow Pages/NIS or BIND/Hesiod.
+
+A sample @samp{services} file might look like this:
+
+@example
+netstat         15/tcp
+qotd            17/tcp          quote
+msp             18/tcp          # message send protocol
+msp             18/udp          # message send protocol
+chargen         19/tcp          ttytst source
+chargen         19/udp          ttytst source
+ftp             21/tcp
+# 22 - unassigned
+telnet          23/tcp
+@end example
+
+@subheading Files
+
+@itemize @bullet
+@item
+/etc/services (Linux)
+@item
+c:\windows\services (Windows, libsocket)
+@end itemize
+
+@node protocols, netrc, services, Configuration
+@section protocols
+
+@c This file was originally a Linux man page - see the copyright below. It
+@c was modified for use in libsocket by Richard Dawe <richdawe@bigfoot.com>.
+
+@c Copyright (c) 1995 Martin Schulze <joey@infodrom.north.de>
+@c
+@c This is free documentation; you can redistribute it and/or
+@c modify it under the terms of the GNU General Public License as
+@c published by the Free Software Foundation; either version 2 of
+@c the License, or (at your option) any later version.
+@c
+@c The GNU General Public License's references to "object code"
+@c and "executables" are to be interpreted as the output of any
+@c document formatting or typesetting system, including
+@c intermediate and printed output.
+@c
+@c This manual is distributed in the hope that it will be useful,
+@c but WITHOUT ANY WARRANTY; without even the implied warranty of
+@c MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+@c GNU General Public License for more details.
+@c
+@c You should have received a copy of the GNU General Public
+@c License along with this manual; if not, write to the Free
+@c Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139,
+@c USA.
+@c
+@c Wed Oct 18 20:23:54 MET 1995  Martin Schulze  <joey@infodrom.north.de>
+@c	* first released
+@c
+
+@samp{protocols} is the protocols definition file.  This file is a plain
+ASCII file, describing the various DARPA internet protocols that are
+available from the TCP/IP subsystem.  It should be consulted instead of using
+the numbers in the ARPA include files, or, even worse, just guessing them.
+These numbers will occur in the protocol field of any IP header.
+
+Keep this file untouched since changes would result in incorrect IP
+packages.  Protocol numbers and names are specified by the DDN Network
+Information Center.
+
+Each line is of the following format:
+
+@example
+@var{protocol-name} @var{protocol-number} [@var{alias-1} @dots{} @var{alias-n}]
+@end example
+
+where the fields are delimited by spaces or tabs.  Empty lines and
+lines starting with a hash mark (#) are ignored. Remainder of lines
+are also ignored from the occurrence of a hash mark.
+
+The field descriptions are:
+
+@vtable @var
+@item protocol-name
+The native name for the protocol. For example IP, TCP or UDP.
+@item protocol-number
+The official number for this protocol as it will appear within the IP
+header.
+@item alias
+Optional aliases for the protocol.
+@end vtable
+
+This file might be distributed over a network using a networkwide
+naming service like Yellow Pages/NIS or BIND/Hesoid.
+
+@subheading Files
+
+@itemize @bullet
+@item
+/etc/protocols (Linux)
+@item
+c:\windows\protocol (Windows, libsocket)
+@end itemize
+
+@node netrc, , protocols, Configuration
+@section netrc
+
+@c This file was originally a Linux man page - see the copyright below. It
+@c was modified for use in libsocket by Richard Dawe <richdawe@bigfoot.com>.
+
+@c libsocket Copyright 1997, 1998 by Indrek Mandre
+@c libsocket Copyright 1997, 1998 by Richard Dawe
+@c Manual pages written by Richard Dawe
+@c
+
+netrc configures auto-logins for remote hosts.  [ This was taken from the man
+page ftp(1) from GNU inetutils. ]
+
+The @samp{.netrc} file contains login and initialization information
+used by the auto-login process.  It resides in the user's home directory.
+The following tokens are recognized; they may be separated by spaces,
+tabs, or new-lines:
+
+@vtable @samp
+@item machine
+@example
+machine @var{name}
+@end example
+
+This identifies a remote machine @var{name}.  The auto-login process searches
+the @samp{.netrc} file for a @samp{machine} token that matches the remote
+machine specified on the ftp(1) command line or as an @samp{open} command
+argument.  Once a match is made, the subsequent @samp{.netrc} tokens are
+processed, stopping when the end of file is reached or another @samp{machine}
+or a @samp{default} token is encountered.
+
+@item default
+@example
+default @var{name}
+@end example
+
+This is the same as @samp{machine} except that @samp{default} matches any name.
+There can be only one @samp{default} token, and it must be after all
+@samp{machine} tokens.  This is normally used as:
+
+@example
+default
+login anonymous password @var{user}@@@var{site}
+@end example
+
+thereby giving the user automatic anonymous ftp login to machines not
+specified in @samp{.netrc}.  This can be overridden by using the @samp{-n}
+flag to disable auto-login.
+
+@item login
+@example
+login @var{name} password @var{password}
+@end example
+
+If this token is present, the auto-login process will initiate a login using
+the specified @var{name}.
+
+If the @var{password} token is present, the auto-login process will supply the
+specified string if the remote server requires a password as part of the login
+process.  Note that if this token is present in the @samp{.netrc}
+file for any user other than anonymous, ftp(1) will abort the auto-login
+process if the @samp{.netrc} is readable by anyone besides the user.
+
+@item account
+@example
+account @var{string}
+@end example
+
+This supplies an additional account password.  If this token is present,
+the auto-login process will supply the specified string if the remote server
+requires an additional account password, or the auto-login process will
+initiate an @samp{ACCT} command if it does not.
+
+@item macdef
+@example
+macdef @var{name}
+@end example
+
+This defines a macro.  This token functions like the ftp(1) @samp{macdef}
+command functions.  A macro is defined with the specified name; its contents
+begin with the next @samp{.netrc} line and continue until a null line
+(consecutive new-line characters) is encountered.  If a macro named
+@samp{init} is defined, it is automatically executed as the last step in the
+auto-login process.
+@end vtable
+
+@subsection Files
+
+@itemize @bullet
+@item
+$HOME/.netrc
+@item
+$HOME/netrc
+@item As specified in libsocket configuration file
+@end itemize
+
+@node Miscellaneous Information, Known Bugs, Configuration, Top
+@chapter Miscellaneous Information
+
+@ifnottex
+
+@menu
+* mailaddr::
+@end menu
+
+@end ifnottex
+
+@node mailaddr, , , Miscellaneous Information
+@section mailaddr
+
+@c This file was originally a Linux man page - see the copyright below. It
+@c was modified for use in libsocket by Richard Dawe <richdawe@bigfoot.com>.
+
+
+@c
+@c Copyright (c) 1983, 1987 The Regents of the University of California.
+@c All rights reserved.
+@c
+@c Redistribution and use in source and binary forms are permitted
+@c provided that the above copyright notice and this paragraph are
+@c duplicated in all such forms and that any documentation,
+@c advertising materials, and other materials related to such
+@c distribution and use acknowledge that the software was developed
+@c by the University of California, Berkeley.  The name of the
+@c University may not be used to endorse or promote products derived
+@c from this software without specific prior written permission.
+@c THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR
+@c IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED
+@c WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
+@c
+@c	@(#)mailaddr.7	6.5 (Berkeley) 2/14/89
+@c
+@c Extensively rewritten by Arnt Gulbrandsen <agulbra@troll.no>.  My
+@c changes are placed under the same copyright as the original BSD page.
+@c
+@c fool hilith19: "
+
+This section gives a brief introduction to SMTP mail addresses, as
+used on the Internet.  These addresses are in the general format
+
+@example
+user@@domain
+@end example
+
+where a @var{domain} is a hierarchical dot separated list of subdomains.  For
+example, the addresses
+
+@example
+eric@@monet.berkeley.edu
+Eric Allman <eric@@monet.berkeley.edu>
+eric@@monet.berkeley.edu (Eric Allman)
+@end example
+
+are valid forms of the same address.
+
+The domain part (@samp{monet.berkeley.edu}) may be the name of an internet
+host, or it may be a logical mail address.  The domain part is not
+case sensitive.
+
+The local part (@samp{eric}) is often a user name, but its meaning is
+defined by the local software.  It can be case sensitive, but usually
+isn't.  If you see a local-part that looks like garbage, it is usually
+because of a gateway between an internal e-mail system and the net,
+here are some examples:
+
+@example
+"surname/admd=telemail/c=us/o=hp/prmd=hp"@@some.where
+USER%SOMETHING@@some.where
+machine!machine!name@@some.where
+I2461572@@some.where
+@end example
+
+(These are, respectively, an X.400 gateway, a gateway to an arbitrary
+inernal mail system that lacks proper internet support, an UUCP
+gateway, and the last one is just boring username policy.)
+
+The real-name part (@samp{Eric Allman}) can either be placed first, outside
+<>, or last, inside ().  (Strictly speaking the two aren't the same,
+but the difference is outside the scope of this page.)  The name may
+have to be quoted using "" if it contains certain characters, most
+commonly @samp{.}:
+
+@example
+"Eric P. Allman" <eric@@monet.berkeley.edu>
+@end example
+
+@subsection Abbreviation
+
+Many mail systems let users abbreviate the domain name.  For instance,
+users at berkeley.edu may get away with @samp{eric@@monet} to send mail to
+Eric Allman. This behavior is deprecated.
+
+@subsection Route-addrs.
+
+Under some circumstances it may be necessary to route a message
+through several hosts to get it to the final destination.  Normally
+this happens automatically and invisibly, but sometimes not,
+particularly with old and broken software.  Addresses which show these
+relays are termed @dfn{route-addrs}.  These use the syntax:
+
+@example
+<@@hosta,@@hostb:user@@hostc>
+@end example
+
+This specifies that the message should be sent to hosta, from there to
+hostb, and finally to hostc.  Some hosts disregard route-addrs and
+send directly to hostc.
+
+Route-addrs occur frequently on return addresses, since these are generally
+augmented by the software at each host.  It is generally possible to ignore
+all but the @samp{user@@hostc} part of the address to determine the actual
+sender.
+
+@subsection Postmaster
+
+Every site is required to have a user or user alias designated
+@dfn{postmaster} to which problems with the mail system may be
+addressed.  The @dfn{postmaster} address is not case sensitive.
+
+@subsection Frequently Asked Questions
+
+rtfm.mit.edu and many mirrors store a collection of FAQs.  Please find
+and use a nearby FAQ archive; there are dozens or hundreds around the
+world.
+
+@node Known Bugs, Credits, Miscellaneous Information, Top
+@chapter Known Bugs
+
+@section Winsock 1.x Interface - wsock
+
+@itemize @bullet
+@item
+Broadcasts do not seem to work.  It does not appear to be possible to enable
+them via the @code{setsockopt()} call.
+
+@item
+Support for out-of-band (OOB) data is incomplete. For instance, there is no
+support for @code{SO_OOBINLINE} or a @samp{SIGURG} handler.
+@end itemize
+
+@section Winsock 2.x Interface - csock
+
+The Winsock 2.x support is provided by SOCK.VXD from the Windows '95 port
+of the Coda Network File System.  The following are bugs in SOCK.VXD:
+
+@itemize @bullet
+@item
+SOCK.VXD's sockets always behave as though the socket option
+@samp{SO_REUSEADDR} is set, so local addresses are reused on
+the @code{bind()} call.
+
+@item
+SOCK.VXD always closes stream sockets by sending a RST. This causes protocols
+that require graceful closures to fail, e.g. FTP data transfers.
+
+@item
+SOCK.VXD seems to have problems receiving/sending more than 32K through a
+stream socket.  The symptoms are that the DOS box blocks in SOCK.VXD (i.e.
+Ctrl+C will not kill the program and the DOS box has to be forcefully closed).
+
+@item
+SOCK.VXD's @code{getsockname()} call does not seem to work.  libsocket
+attempts to circumvent this by using a table of IP addresses to determine
+the local IP address, but this can easily fail.
+
+@item
+SOCK.VXD has no out-of-band (OOB) support.
+
+@item
+SOCK.VXD has a limit of the number of connections that can be
+@code{accept()}'d. The number of connections is that specified by
+the earlier @code{listen()} call.
+
+@item
+There are problems using firewall software:
+
+@itemize @bullet
+@item
+@cindex AtGuard firewall
+@cindex AtGuard firewall incompatibility
+AtGuard causes libsocket programs to crash, because of an interaction with
+its virtual device driver, @samp{IAMDRV.VXD}.
+
+@item
+@cindex ZoneAlarm firewall
+@cindex ZoneAlarm firewall problems
+ZoneAlarm will block any traffic that doesn't go to ports it considers to be
+safe, e.g. DNS (UDP, port 23).  The solution is to disable ZoneAlarm.
+This is far from ideal.
+@end itemize
+
+There may be problems with other firewall software, but no other programs
+have been reported yet.
+
+@end itemize
+
+There are a number of bugs in the csock inteface within libsocket:
+
+@itemize @bullet
+@item
+SOCK.VXD's @code{recv()} function is for stream sockets only; its
+@code{recvfrom()} function is for datagrams only.  The csock interface does
+not distinguish properly between these two - i.e. it does not map the BSD
+socket call @code{recvfrom()} on a stream socket onto
+SOCK.VXD's @code{recv()} call.
+@end itemize
+
+@section Common TCP/IP Bugs
+
+The auto-configuration code does not work for dial-up or WAN links.  It should
+work on LANs for statically or dynamically (DHCP) assigned IP addresses.
+A method is needed that will obtain the IP address information successfully
+in all cases.
+
+@section Unix Domain Sockets Interface - unix
+
+The Unix domain socket code is an alpha state.  It uses pairs of LAN Manager
+mailslots to implement bidirectional communication.  It was written using the
+assumption that local mailslots are 100% reliable.  Mailslots are not reliable;
+hence the code needs to be rewritten to cope with data loss.
+
+@section Windows NT
+
+libsocket programs crash on exit on Windows NT.  Although Windows NT is not
+supported by libsocket, these programs should abort gracefully.
+
+@node Credits, Changelog, Known Bugs, Top
+@chapter Credits
+
+The following people have contributed to libsocket.  The list is in no
+particular order.  A big thank you to all those listed!
+
+@itemize @bullet
+
+@item
+Dan M. Hedlund
+@uref{http://www.geocities.com/SiliconValley/Peaks/8523/}
+@sp 1
+His Wsock library is the base of this library.
+@sp 1
+
+@item
+Alfons Hoogervorst
+@uref{http://www.hoogervorst.demon.nl/}
+@sp 1
+His dsock library helped Indrek to get select() and blocking recv() calls
+work.  He also contributed some information on how to obtain Windows machine
+and DNS IP addresses.
+@sp 1
+
+@item
+The Regdos Group
+@uref{http://www.hoogervorst.demon.nl/}
+@sp 1
+They contributed the registry-access code that is used to automatically find
+out some IP settings.  Alfons is the maintainer.
+@sp 1
+
+@item
+Michael Callahan, Peter Braam and the Coda Project
+@uref{http://www.coda.cs.cmu.edu/}
+@sp 1
+For Win95 port of the Coda network file system, a VxD for BSD socket
+networking was produced.  This enabled me to add Winsock 2 support to
+libsocket.  This is something I had been trying to do for over a year,
+so I am extremely grateful and happy that this has happened! Big thanks.
+ - @emph{Rich}
+@sp 1
+
+@item
+Heiko Jappe
+@sp 1
+He has a very nice habit of finding all the nastiest bugs and
+reporting them.  There would be some very bad "features" in the library
+without him. - @emph{Indrek}
+
+@item
+Wojciech Galazka
+@sp 1
+He pointed out some bugs and has some great ideas.  A man with an open
+mind. - @emph{Indrek} - I agree - @emph{Rich}
+@sp 1
+
+@item
+Indrek Mandre
+@uref{http://www.pld.ttu.ee/~indrek/}
+@sp 1
+Thanks to Indrek for writing the library in the first place, letting me
+contribute to it, and then, gulp, trusting me to look after it.  This man has
+a lot faith and trust!  Thanks also for providing a mirror site.
+ - @emph{Rich}
+@sp 1
+
+@item
+Petr Frisch
+@sp 1
+Thanks to Petr for finding that libsocket's non-blocking sockets didn't work
+properly, and for informing me how they should work. - @emph{Rich}
+@sp 1
+
+@item
+Vlad Pambucol
+@sp 1
+Thanks to Vlad for noticing that his data was being mangled by libsocket,
+which lead to me finding an absolutely @emph{huge} bug! - @emph{Rich}
+@sp 1
+
+@item
+Philippe Hanrigou
+@sp 1
+Thanks to Phillipe for trying to port BSD traceroute, finding problems and
+then diving into libsocket's internals to find out the problem.
+Bravery!  Thanks for the feedback. - @emph{Rich}
+@sp 1
+
+@item
+Ove Kaaven
+@sp 1
+Thanks to Ove for providing me with information about how Windows 3.11
+stores its DNS IP addresses.  Thanks for your packet driver code - sorry
+I was unable to integrate it into libsocket. - @emph{Rich}
+@sp 1
+
+@item
+Michael Mauch
+@sp 1
+Thanks to Michael for pointing out that the resolving code didn't open the
+files in text mode, which meant that setting fmode to binary could lead to
+the resolving code failing inexplicably. - @emph{Rich}
+@sp 1
+
+@item
+Alex Fiori
+@sp 1
+Thanks for providing a mirror site for a while. - @emph{Rich}
+@sp 1
+
+@item
+Federico Bianchi
+@sp 1
+Thanks for sending me a *huge* amount of networking information.  I hope I
+actually have enough time at some point to something useful with it ;)
+Thanks for the support and ideas! - @emph{Rich}
+@sp 1
+
+@item
+Alain Magloire
+@sp 1
+Thanks for all the advice on sockets on Unix, POSIX, etc.  Thanks for
+motivating me to add Unix domain socket support.  I think libsocket will
+improve and prosper greatly with your support! - @emph{Rich}
+@sp 1
+
+@item
+Beej
+@uref{http://www.ecst.csuchico.edu/~beej/}
+@sp 1
+Thanks for letting me distribute your sockets programming guide with
+libsocket. - @emph{Rich}
+@sp 1
+
+@item
+Jason Winnebeck
+@uref{http://skyscraper.fortunecity.com/solarcity/552/}
+@sp 1
+Thanks for being patient, giving me copious debugging info and feedback
+generally! - @emph{Rich}
+@sp 1
+
+@item
+Eli Zaretskii
+@sp 1
+For his continual advice and help with all things DJGPP - an inspiration.
+@sp 1
+
+@item
+DJ Delorie
+@sp 1
+For the DJGPP phenomenom!
+@sp 1
+
+@end itemize
+
+Thanks to everyone else who has shown interest in libsocket, and has
+mailed me to say they are using it.  Please continue to do this!
+
+@node Changelog, License, Credits, Top
+@chapter Changelog
+
+@section Version 0.8.1 ????
+
+These changes are in no particular order:
+
+@itemize @bullet
+
+@item
+@code{recv()} and @code{send()} should not hang the DOS box anymore, when
+waiting for input/output with SOCK.VXD and Winsock 2.
+
+@item
+Various texinfo documentation updates, to be consistent with DJGPP libc's
+documentation style.
+@end itemize
+
+@section Version 0.8.0 2000-11-16
+
+These changes are in no particular order:
+
+@itemize @bullet
+
+@item
+Fixed bug in version string construction (@pxref{__lsck_get_version}).
+
+@item
+Documentation fixes:
+
+@itemize @bullet
+@item
+Clarified @code{FIONBIO} versus @code{O_NONBLOCK} (@pxref{ioctl_list}).
+
+@item
+@code{gethostname()} page now describes how the host name
+is discovered (@pxref{gethostname}).
+@end itemize
+
+@item
+Fixed the DSMs for installation with pakke.
+
+@item
+Fixed a bug in the auto-configuration code, where some network cards were
+ignored due to a bug in the registry entry parsing.
+
+@item
+Added @samp{tags}, @samp{id} and @samp{ID} targets to Makefile, for building
+Emacs tags and GNU id-utils files respectively.
+
+@item
+Fixed a big in @code{gethostname()}; previously EINVAL was erroneously
+returned for buffers larger than @samp{MAXHOSTNAME}. This broke the name
+resolving code for automatic configuration.
+
+@item
+Documented how bash and libsocket's auto-configuration code interacts
+with regard to @samp{$HOSTNAME} (@pxref{libsocket and environment variables}).
+
+@item
+Fixed the DNS server questions in netsetup
+(@pxref{Introduction, , Introduction, netsetup}). The input routines also now
+perform more validation.
+
+@item
+Fixed header files so that #include lines are before checks for C++
+(extern "C", etc.).
+
+@item
+Fixed header @samp{netinet/in.h} to work around a compiler bug in g++ 2.95.x.
+The structure @code{struct ip_opts} is not defined, when using g++ 2.95.x.
+
+@item
+"Beej's Guide to Network Programming" and the libsocket demos are now included
+in the binary distribution.
+@end itemize
+
+@section Version 0.8.0 Pre 1 2000-09-11
+
+These changes are in no particular order:
+
+@itemize @bullet
+
+@item
+Texinfo documentation: corrected copyright message to include Alain Magloire
+in info version; now distributed under GNU FDL.
+
+@item
+Fixed assembly code to work with binutils 2.9.5.1 beta and later.  Hopefully
+libsocket will build with @emph{all} versions of binutils now.  Thanks to
+Eli Zaretskii for his help & suggestions.
+
+@item
+Problems using libsocket with firewall software were discovered and documented
+(@pxref{Known Bugs}). Thanks to Robert, Tim van Holder.
+
+@item
+The demo @samp{solist} now builds on Linux.
+
+@item
+The source distribution requires GNU shellutils to build; this is now
+documented.
+
+@item
+The binary distribution had dependency generation for the demo and netsetup
+directories.  This is no longer included - it was not very useful and it meant
+that GNU shellutils was required to build (only @samp{echo} was actually
+required).
+
+@item
+@samp{all} target now fixed in source distribution, so that it doesn't run
+@samp{netsetup} by default.  This problem stopped cross-compilation from
+completing.
+
+@item
+The error code @samp{ELOOP} is now defined conditionally in
+@samp{include/lsck/errno.h}, so as not to conflict with DJGPP 2.04's
+symlink support (DJGPP 2.04 is currently in development).  Thanks to
+Laurynas Biveinis.
+
+@item
+Finished error messages for all libsocket-specific error messages in
+@samp{src/newerror.c}.
+
+@item
+Fixed the code for parsing the DHCP settings from the registry. Thanks to
+Tim van Holder.
+@end itemize
+
+@section Version 0.7.4 Beta 4 2000-05-28
+
+These changes are in no particular order:
+
+@itemize @bullet
+
+@item
+Added a guide to configuration and usage of libsocket programs (a user
+guide), to be distributed with programs built using libsocket.  This was
+added to the @samp{redist} directory.
+
+@item
+The auto-configuration from the registry was found to be buggy and was fixed.
+
+@item
+Problems were found compiling with gcc 2.95.x:
+
+@itemize @bullet
+
+@item
+The inline assembly used by several of the source files was buggy, but was
+compiled without error with previous versions of gcc.  The assembly code was
+fixed.  See the section in the gcc FAQ about spilled registers.
+
+@c TODO: Put an xref in the para above
+
+@item
+The resolver code used pragmas to generate weak symbols that could be
+overridden by Linux threading libraries.  These generated warnings with
+gcc 2.95.2 (whose DJGPP port had no weak symbol support at the time) and errors
+with a cross-compiler (egcs-2.91.66 19990314 (egcs-1.1.2 release)) on Linux.
+The pragmas were removed.  This involved implementing @code{readv()} and
+@code{writev()}.
+
+@end itemize
+
+@item
+A new demo was added, @samp{solist}, to list the available socket options for
+UDP and TCP options.
+
+@item
+netsetup previously only configured one DNS server - now the user can specify
+multiple DNS servers.
+
+@item
+The top-level source Makefile, @samp{Makefile.src}, used to create the
+directory @samp{lib} when building the library.  This was moved to
+@samp{src/Makefile}, since this is where the library is actually built.
+
+@item
+The @samp{uninstall} Makefile target previously failed to uninstall some
+files from @samp{$DJDIR/include/arpa}.  This has been fixed.
+
+@item
+The @code{socketpair()} function has been implemented, but only for Unix domain
+sockets (see below).
+
+@item
+The Unix domain socket support is now much better.  It is still alpha-quality
+code, which means there are definitely some bugs/problems with it.
+
+@item
+Added the POSIX function @code{sockatmark()}, which always fails.
+
+@item
+Changes were made to better conform with Unix98 description of the sockets
+interface: added @code{SHUT_*} definitions for @code{shutdown()}; use of
+@code{size_t}, @code{ssize_t} instead of @samp{int}.
+
+@item
+Fixed @code{fcntl()} so that it accepts more than one option simultaneously.
+Previously passing more than one option OR'd together would have caused
+@code{fcntl()} to fail.
+
+@item
+Fixed @code{accept()} to work when the peer address is NULL. This error was
+pointed out by Alain Magloire.
+
+@item
+Many simplifications in socket functions due to removal of @code{__lsck_init()}
+calls and use of @code{isfdtype()}, as suggested by Alain Magloire.
+
+@item
+The library now overrides DJGPP's @code{gethostname()}, @code{sethostname()},
+@code{perror()}, @code{strerror()} and @code{uname()} functions.  The old
+libsocket functions @code{__lsck_gethostname()}, @code{__lsck_sethostname()},
+@code{lsck_perror()} and @code{lsck_strerror()} are now deprecated, but will
+still work.
+
+@item
+Fixed @code{gethostname()}, @code{sethostname()}, @code{getdomainname()},
+@code{setdomainname()}, so that they interact properly.
+
+@item
+@code{send()}, @code{sendto()} now raise SIGPIPE when sending data on a
+connection that has had its outbound channel shutdown.
+
+@item
+The Winsock 2 interface (csock) now has basic read-only (i.e.
+@code{getsockopt()}) support for the following socket options:
+
+@itemize @bullet
+@item
+SO_REUSEADDR
+@item
+SO_RCVBUF
+@item
+SO_RCVLOWAT
+@item
+SO_RCVTIMEO
+@item
+SO_SNDBUF
+@item
+SO_SNDLOWAT
+@item
+SO_SNDTIMEO
+@end itemize
+
+@item
+Fixed many issues with datagrams with regard to @code{connect()},
+@code{sendto()}.  Hopefully not too many bugs have been introduced here.
+
+@item
+Many issues with WSOCK.VXD, used for Winsock 1 support, were sorted out.
+These included issues such as the size of @code{struct so_linger} passed to
+WSOCK.VXD, supported socket options, etc.
+
+@item
+SOCK.VXD is no longer unloaded by the csock interface (Winsock 2 support).
+This caused General Protection Faults (GPFs) on occasion.
+
+@item
+Removed VDHCP.VXD support code from libsocket, because it was unused and
+did not work.
+
+@item
+DJGPP 2.02 now required - libsocket uses DJGPP 2.02's new File System Extension
+features.  The code is tidier as a result.
+
+@item
+The separation between the BSD layer and the interface layer was improved.
+This should allow other interfaces (e.g. DOS support) to be added much
+more easily.
+
+@item
+Added the header file @samp{lsck/copyrite.h}, containing information about
+the version of libsocket (version numbers, etc.).
+
+@item
+Switched from man pages to info documentation.  The horrible long filename and
+short filename Makefile targets are no longer needed.
+
+@item
+Project management: libsocket has been placed in CVS; all source files now
+have unique names, to ease debugging, editing, etc.; the libsocket web pages
+have been separated from sources; netsetup is now distributed under the GNU
+GPL.
+
+@end itemize
+
+@section Version 0.7.4 Beta 3 1999-05-06
+
+@itemize @bullet
+
+@item
+Fixed some of the debugging messages in @samp{src/inet/ghstnmad.c},
+@samp{src/inet/r_init.c}, @samp{src/csock/c_initnt.c}.
+
+@item
+Man pages now go in @samp{man/} off the DJGPP directory, not in
+@samp{share/man/} as previously.
+
+@item
+Fixed bug in @samp{sys/socket.h}, which meant that @samp{u_int} was undefined
+when using @code{SO_DONTLINGER}. @samp{sys/socket.h} now includes
+@samp{lsck/bsdtypes.h} too, to define @code{u_int}.
+
+@item
+Fixed bug in @samp{src/initnt.c} where csock interface was not
+uninitialised.
+
+@item
+Fixed bug in @samp{src/fcntl.c} that meant the logical NOT of the true value
+would be obtained doing e.g.:
+
+@example
+fcntl(sock, F_GETFL, O_NONBLOCK)
+@end example
+
+@item
+Added Unix domain socket support. THIS IS IN AN ALPHA TEST STATE. It's
+extremely buggy.
+
+@item
+Removed nasty hack that sets protocol number when a protocol of 0 is
+used. Now a nice mapping table is used.
+
+@item
+Fixed bug in @samp{src/csock/c_recv.c} in @code{__csock_recvfrom()}. It should
+now return the address correctly.  Also, it should work if the @var{from}
+parameter is @samp{NULL}.
+
+@item
+Fixed bug in @samp{src/wsock/w_recv.c} which always returned the address, even
+if the @var{from} parameter were NULL.
+
+@item
+Added support for @samp{FIONREAD} with @code{ioctl()} for Winsock 1.x module
+(wsock).
+
+@item
+Fixed @samp{src/csock/c_select.c} functions @code{__csock_select()},
+@code{__csock_select_wait()} so they actually work properly.
+
+@item
+Added POSIX function @code{isfdtype()}. However, necessary includes are in
+@samp{sys/socket.h} rather than @samp{sys/stat.h}.
+
+@item
+Added @code{fcntl()} support for csock interface.
+
+@item
+Fixed bugs in non-blocking ioctl @samp{FIONBIO} for both wsock &
+csock.
+
+@item
+Moved to an interface descriptor, so that the BSD calls now do not need
+to know the internals of each interface in *any* way.  The interface
+descriptor also includes address and routing tables. The code was updated
+to build the address tables correctly for each IP address, including the
+loopback network.
+
+@item
+Fixed problem with @code{select()} on socket that lead to select'ing for
+reading always succeeded if the socket was ready for writing.
+
+@item
+Source code reorganisation:
+
+@multitable {src/wsock/win95/*.c} {src/win9x/w9x_*.c (some names altered)}
+@item Old name(s) @tab New name(s)
+@item src/wsock/win311 @tab src/win3x
+@item src/wsock/win95 @tab src/win9x
+@item src/wsock/win95/*.c @tab src/win9x/w9x_*.c (& some names altered)
+@end multitable
+
+@item
+Discovered that the Linux ioctls added were actually BSD-ish, so
+renamed @samp{demo/linioctl.c} to @samp{demo/ioctl.c}.  The refs in the man
+pages have also been changed.
+
+@item
+@code{accept()} & @code{closesocket()} memory leaks fixed.
+
+@item
+@code{connect()} fixed for non-blocking operation.
+
+@item
+@code{getsockopt()} for wsock interface (@samp{src/wsock/w_sckopt.c}) now
+converts errors returned by @code{SO_ERROR} from Winsock to BSD errors.
+
+@item
+Debugging output can now be enabled/disabled with a function call or
+the 'debug' key in the 'main' section of the configuration file.
+
+@end itemize
+
+@section Version 0.7.4 Beta 2 1999-02-28
+
+@itemize @bullet
+
+@item
+Added Winsock 2 support.  Yes, finally! However, the support
+isn't as complete as for Winsock 1.x.
+
+@item
+The resolver code again looks in the Windows directory for its files,
+if their location has not been specified.  This was the previous
+behaviour.
+
+@item
+Fixed the @code{select()} for sockets bug (again).
+
+@item
+'linger'ing should now work correctly - added a wrapper, since
+Winsock uses short ints &amp; DJGPP defaults to long int's.
+
+@item
+Fixed @code{connect()} so it stores the local socket name.
+
+@item
+Fixed the DHCP code to work with multiple addresses.
+
+@item
+Added 'Enabled' key to all interface section.
+
+@item
+Documentation: Updated install information.  Added a new version of
+man2html, now called m2h, that can now generate HTML with short filenames,
+for easier & faster browsing of the library reference.  Sorted out the
+supplementary information included.
+
+@item
+Makefiles: Streamlined a couple of Makefiles.
+
+@end itemize
+
+@section Version 0.7.4 Beta 1 1999-02-04
+
+There are probably many more changes than this, as I've been working on this
+version for a while, trying to add DOS support.  It still seems to work the
+same as version 0.7.3 though :( Still no support for DOS, Win98, etc.
+
+@itemize @bullet
+
+@item
+Moved to standard header files.  This means that winsock.h and ws.h
+do not exist anymore, as they have been incorporated into other header
+files.  The problems with ioctls have been also been fixed in
+@samp{sys/socket.h}.
+
+@itemize @bullet
+@item
+ioctls.h @emph{(New)}
+@item
+netdb.h
+@item
+resolv.h
+@item
+arpa/ftp.h @emph{(New)}
+@item
+arpa/inet.h
+@item
+arpa/nameser.h
+@item
+arpa/telnet.h @emph{(New)}
+@item
+arpa/tftp.h @emph{(New)}
+@item
+net/if.h @emph{(New)}
+@item
+netinet/in.h
+@item
+sys/socket.h
+@end itemize
+
+@item
+Added more code to the layer between the BSD socket functions and the
+actual networking code, while trying to implement DOS networking.  It should
+be easier to add other network transports now - only Winsock is currently
+supported.  libsocket also stores networking information for each
+transport.
+
+@item
+BSD functions can now distinguish between socket file descriptors and
+normal file desciptors and will return the @samp{ENOTSOCK} error message as
+appropriate.
+
+@item
+Modified the assembly code to use the proper size of the ES register.
+
+@item
+Added support for some Linux ioctls: @samp{SIOCGIFNAME},
+@samp{SIOCGIFADDR}, @samp{SIOCGIFDSTADDR}, @samp{SIOCGIFNETMASK}.
+
+@item
+Added some Win95 DHCP code that allows auto-configuration from the registry.
+
+@item
+Switched from @samp{LIBSOCKET} to @samp{LSCK} environment variable.
+Also made the configuration more flexible by the use of a configuration file.
+
+@item
+Added a patch for libc so that @code{perror()} and @code{strerror()} give
+proper error messages for BSD socket errors.
+
+@item
+Compilation tested with DJGPP 2.02 beta - works fine.
+
+@item
+The remote login code has been reinserted.  Previously I thought this
+code was for Remote Procedure Calls (RPC) and I removed it because I didn't
+think it worked.  This was short-sighted of me - sorry.
+
+@item
+Added man pages for:
+
+@itemize @bullet
+@item
+ioctl_list(2)
+@item
+rcmd(3)
+@item
+readv(3)
+@item
+ruserok(3)
+@item
+rresvport(3)
+@item
+stdarg(3)
+@item
+va_arg(3)
+@item
+va_start(3)
+@item
+va_end(3)
+@item
+writev(3)
+@item
+netrc(5)
+@end itemize
+
+@item
+Bugs: Fixed the bug in @code{resolv_conf_getdomainname()} in
+@samp{src/config/domname.c}.  Fixed the bug in the Windows 3.11 DNS IP address
+code.  Fixed the dependency checking, so it works again (oops).  The problems
+with ioctls have also been fixed (see above).  Finally nailed the bizarre
+@code{select()} bugs (phew).
+
+@item
+Makefiles: Created a shared Makefile for shared rules between the
+source and binary distributions - hopefully this will reduce errors.  Added
+an 'uninstallation' target for man pages (uninstallman), plus 'sfnman' and
+'lfnman' targets for using the man pages with short filenames and long
+filenames (after installation via installman), so they can be used under
+DOS too.  The library is now compiled for 386s rather 486s, and the option
+@samp{-Werror} is only used when compiling debug versions.
+
+@end itemize
+
+@section Version 0.7.3 1998-8-18
+
+@itemize @bullet
+
+@item
+Rearranged include files so they have their own directory - lsck. These
+can be included using lines like:
+
+@example
+#include <lsck/blah.h>
+@end example
+
+The include files have been heavily reorganised, but existing programs
+shouldn't have to be changed.
+
+@item
+libsocket's internal functions were renamed so the prefix @samp{ls_}
+was changed to @code{lsck_}.
+
+@item
+Added support to netsetup for the networks file, which allows mapping
+of domain names to network IP addresses - see the man page networks(5).
+Also fixed a couple of typos in netsetup's messages.
+
+@item
+Added support for auto-configuration with Windows for Workgroups 3.11.
+The DNS IP address is determined from a section in system.ini.
+
+@item
+Restructured the library to allow addition of packet driver
+code.
+
+Added @code{lsck_perror()} and @code{lsck_strerror()} functions, which work as
+@code{perror()} and @code{strerror()}, but print/return error messages for
+socket errors too, unlike the libc versions.
+
+@item
+Bugs: Configuration files now opened in text mode rather than the
+default file mode; Winsock initialisation now uses the correct ID for
+WSOCK2.VXD rather than the old one, which was wrong; name server now defaults
+to using hosts file if host.conf is not present, rather than hanging;
+@code{resolv_conf_getdomainname()} in @samp{src/config/domname.c} now looks
+for the various filename combinations possible (created long, read short,
+etc.); file extension handling of @code{__FSEXT_ready} in @samp{src/fsext.c};
+more checks are done on socket function parameters; fixed bugs in the RAS code
+and the DNS IP list code (@code{lsck_getdnsaddrs()}).
+
+@item
+Demos: The demo program @samp{demo/internal.c} was renamed to
+@samp{demo/diag.c} and modified to give lots of diagnostic information about
+libsocket's auto-configuration, in addition to demonstrating the internal
+functions.  The demo @samp{demo/netnet.c} was added to demonstrate lookups from
+the networks file.  httpget can now cope with URLs without a trailing slash,
+e.g. @samp{http://myhost}.
+
+@item
+Makefiles: Demos now don't have their debugging information stripped.
+Added an uninstall target that removes include files and libraries from the
+DJGPP directory tree.  The source distribution Makefile now creates the lib/
+directory if it does not already exist.  Also fixed clean targets in top-level
+Makefiles.
+
+@item
+Removals: @samp{src/resolve/rcmd.c}, @samp{src/resolve/rexec.c}
+and @samp{src/resolve/rusrpass.c} were removed because they are
+untested and probably won't work as they rely on functions DJGPP
+doesn't support (properly).  They implement(ed) remote execution
+of commands.  I will put these back if there is demand for them.  
+The man pages for the @code{WS_*} functions were removed as
+the functions no longer exist.
+
+@item
+Documentation: Added Indrek Mandre's kewl buttons; added questions to
+the FAQ; other updates.
+
+@end itemize
+
+@section Version 0.7.2 1998-6-12
+
+@itemize @bullet
+
+@item
+The library by default comes ready for building short filename
+programs - use:
+
+@example
+make lfn
+@end example
+
+to build long filename programs.
+
+@item
+Fixed @code{read()} and @code{write()}.  Previously they didn't return the
+correct values for non-blocking sockets when no data was present.  winsock.h
+is now installed to support non-blocking sockets properly - please see
+question 3.6 of the FAQ for more details.
+
+@item
+Added support for @code{F_GETFL} parameter on @code{fcntl()}.
+
+@item
+Added some Winsock 2 constants to the include files.
+
+@item
+Bugs: Fixed the memory problem I introduced with last version, that
+leads to junk being returned by @code{recv()} sometimes.  Also fixed
+@code{send()}, @code{recv()}, @code{sendto()}, @code{recvfrom()},
+@code{getpeername()}, @code{getsockname()}, @code{getsockopt()} and
+@code{setsockopt()} to avoid data loss / rubbish being returned.
+
+@item
+Configuration: The configuration files should now be found and read,
+no matter what combination of short and long filenames they were created with
+and are being read with.  libsocket now looks for several possible
+filenames.
+
+@item
+Documentation: Indrek Mandre redesigned the pages.  The documentation
+on the Web site should now be the same as that in the archive, or more
+up-to-date.  The HTML pages all have short filenames, and therefore can be
+viewed on any version of Windows with a browser.  The latest version of
+man2html (1.2) is also included.
+
+@item
+Makefiles: Fixed demo/Makefile.  Added some new targets to cope with
+short and long filename issues (@samp{make lfn} and @samp{make sfn}).
+Added debug and nodebug targets to binary distribution.
+
+@item
+Man pages: Added man pages from Linux for @code{read()}, @code{write()},
+@code{fcntl()}, @code{ioctl()} and @code{select()}.  Fixed mistakes in
+a couple of the libsocket man pages.
+
+@end itemize
+
+@section Version 0.7.1 1998-5-12
+
+@itemize @bullet
+
+@item
+Fixed some ambiguities in conditions in the resolver code, so that the
+source could be compiled with gcc 2.8.0 (and later?).
+
+@item
+Added code to query the DHCP VxD, to obtain more DNS addresses automatically.
+
+@item
+Tidied up some of the code.
+
+@item
+Fixed many memory leaks and reduced memory usage slightly.
+
+@item
+Fixed some bugs in the DNS address obtaining code.
+
+@item
+@code{gethostname()} will no longer return spaces in host names.
+
+@item
+Fixed a bug in @samp{callvxd.c} that lead to nearly *all* socket functions
+failing :(
+
+@item
+Client demo now has name resolving.
+
+@item
+Found a bug in Netsetup that created host.conf incorrectly when no DNS server
+was present, leading to the computer appearing to hang when resolving names.
+Also fixed some errors in the Netsetup Makefile.
+
+@item
+Slight updates to the FAQ.
+
+@item
+Added a man page for host.conf.
+
+@item
+Added two new targets, debug and nodebug, to the top-level Makefile to
+create Makefile.cfg for debugging and non-debugging builds of the
+library.
+
+@item
+Moved the library into the @samp{contrib/} tree and added manifest files.
+
+@end itemize
+
+@section Version 0.7.0 Work-in-progress 1998-5-3
+
+@itemize @bullet
+
+@item
+Richard Dawe took over maintainance of the library.
+
+@item
+The source files renamed to have short filenames. This lead to
+successful compilation after typing @samp{SET LFN=N} at the DOS prompt.
+
+@item
+The Regdos Group's registry code was incorporated, to allow automatic
+configuration using registry settings.
+
+@item
+Added Winsock 2 detection. Creation of sockets fails, in order to
+prevent protection faults.
+
+@item
+Rearranged the library, and created binary and source distributions.
+
+@item
+Fixed a bug in the VxD calling code, pointed out by George
+Foot (Later: This was actually a mistake.).
+
+@item
+Wrote some new documentation, including a FAQ, and updated the old
+documentation.
+
+@item
+Fixed @code{getdomainname()} to look at the environment variable
+@samp{LOCALDOMAIN}, resolv.conf or the registry, so it's more likely to
+succeed.
+
+@item
+Modified @code{WS_init()} to return errors.
+
+@item
+Added support for the enviroment variable @samp{LIBSOCKET}, so that
+configuration files could be placed somewhere other than in the Windows
+directory.
+
+@item
+Upgraded to the latest version of man2html, the program that converts
+man pages into HTML.
+
+@item
+Modified resit to use command-line parameters as well as prompting for
+a name (e.g. the command form @samp{resit jimbo} now works).
+
+@item
+Fixed bug in Netsetup.
+
+@item
+Added some defines: @samp{FIONREAD}, @samp{FIONBIO}.
+
+@item
+Fixed @code{socket()} and @code{accept()} calls.
+
+@item
+Added @code{select()} demo, @samp{demo/select.c}.
+
+@item
+The library now works with C++.
+
+@end itemize
+
+@section Version 0.6 1997-12-02
+
+@itemize @bullet
+
+@item
+Made workaround to DJGPP'S FSEXT bug, thanks to Heiko Jappe.
+
+@item
+Fixed @code{close()}, now @code{fopen()} after creating and closing sockets
+works.
+
+@item
+Added a huge amount of documentation by Richard Dawe.
+
+@item
+Added netsetup script by Richard Dawe.
+
+@item
+Lots of minor bugs fixed.
+
+@item
+Added @code{fcntl()} call and defined some new flags that I would like to see
+in future DJGPP versions: @code{O_NDELAY} and @code{O_FNDELAY}.
+
+@end itemize
+
+@section Version 0.5 1997-10-11
+
+@itemize @bullet
+
+@item
+Fixed misfeatures in Makefiles pointed out by Laszlo Vecsey.  Created one
+global Makefile.cfg.
+
+@item
+Name resolving now works.
+
+@item
+Wrote new demo resit that demonstrates name resolving.
+
+@end itemize
+
+@section Version 0.4 1997-09-15
+
+@itemize @bullet
+
+@item
+Fixed the bugfix made in @code{recv()}.  I discovered that programs crash
+after connect on many Windows '95 installations.
+
+@end itemize
+
+@section Version 0.3 1997-08-28
+
+@itemize @bullet
+
+@item
+Fixed bug in @code{recv()}/@code{recvfrom()} (blocking and return value and
+EOF condition).
+
+@item
+@code{connect()} now waits for Windows; this means @code{send()} just after
+@code{connect()} works now.
+
+@item
+Wrote new demo httpget that gets http files from WWW servers.
+
+@end itemize
+
+@section Version 0.2 1997-08-22
+
+@itemize @bullet
+
+@item
+Fixed Makefile bug when make all gave errors at demo directory.
+
+@item
+Wrote client.c and server.c as demos at demo directory.
+
+@end itemize
+
+@node License, GNU Free Documentation License, Changelog, Top
+@unnumbered License
+
+Portions of libsocket are distributed under different terms; the table below
+lists the base directories for these sources:
+
+@table @samp
+@item src/sxbxinet
+Copyright @copyright{} 1985-1993 Regents of the University of California;
+@item src
+Copyright @copyright{} 1991, 1992 Free Software Foundation Inc.;
+@item src/win9x/regdos
+Copyright @copyright{} 1997, 1998 by the RegDos Group.
+@item src/oldlibc
+Copyright @copyright{} 1994-1997 by DJ Delorie
+@end table
+
+The remainder of libsocket is distributed under the GNU Library General Public
+License (GNU LGPL):
+
+@example
+GNU LIBRARY GENERAL PUBLIC LICENSE
+**********************************
+
+                         Version 2, June 1991
+
+     Copyright (C) 1991 Free Software Foundation, Inc.
+     675 Mass Ave, Cambridge, MA 02139, USA
+     Everyone is permitted to copy and distribute verbatim copies
+     of this license document, but changing it is not allowed.
+     
+     [This is the first released version of the library GPL.  It is
+      numbered 2 because it goes with version 2 of the ordinary GPL.]
+
+Preamble
+========
+
+   The licenses for most software are designed to take away your
+freedom to share and change it.  By contrast, the GNU General Public
+Licenses are intended to guarantee your freedom to share and change
+free software--to make sure the software is free for all its users.
+
+   This license, the Library General Public License, applies to some
+specially designated Free Software Foundation software, and to any
+other libraries whose authors decide to use it.  You can use it for
+your libraries, too.
+
+   When we speak of free software, we are referring to freedom, not
+price.  Our General Public Licenses are designed to make sure that you
+have the freedom to distribute copies of free software (and charge for
+this service if you wish), that you receive source code or can get it
+if you want it, that you can change the software or use pieces of it in
+new free programs; and that you know you can do these things.
+
+   To protect your rights, we need to make restrictions that forbid
+anyone to deny you these rights or to ask you to surrender the rights.
+These restrictions translate to certain responsibilities for you if you
+distribute copies of the library, or if you modify it.
+
+   For example, if you distribute copies of the library, whether gratis
+or for a fee, you must give the recipients all the rights that we gave
+you.  You must make sure that they, too, receive or can get the source
+code.  If you link a program with the library, you must provide
+complete object files to the recipients so that they can relink them
+with the library, after making changes to the library and recompiling
+it.  And you must show them these terms so they know their rights.
+
+   Our method of protecting your rights has two steps: (1) copyright
+the library, and (2) offer you this license which gives you legal
+permission to copy, distribute and/or modify the library.
+
+   Also, for each distributor's protection, we want to make certain
+that everyone understands that there is no warranty for this free
+library.  If the library is modified by someone else and passed on, we
+want its recipients to know that what they have is not the original
+version, so that any problems introduced by others will not reflect on
+the original authors' reputations.
+
+   Finally, any free program is threatened constantly by software
+patents.  We wish to avoid the danger that companies distributing free
+software will individually obtain patent licenses, thus in effect
+transforming the program into proprietary software.  To prevent this,
+we have made it clear that any patent must be licensed for everyone's
+free use or not licensed at all.
+
+   Most GNU software, including some libraries, is covered by the
+ordinary GNU General Public License, which was designed for utility
+programs.  This license, the GNU Library General Public License,
+applies to certain designated libraries.  This license is quite
+different from the ordinary one; be sure to read it in full, and don't
+assume that anything in it is the same as in the ordinary license.
+
+   The reason we have a separate public license for some libraries is
+that they blur the distinction we usually make between modifying or
+adding to a program and simply using it.  Linking a program with a
+library, without changing the library, is in some sense simply using
+the library, and is analogous to running a utility program or
+application program.  However, in a textual and legal sense, the linked
+executable is a combined work, a derivative of the original library,
+and the ordinary General Public License treats it as such.
+
+   Because of this blurred distinction, using the ordinary General
+Public License for libraries did not effectively promote software
+sharing, because most developers did not use the libraries.  We
+concluded that weaker conditions might promote sharing better.
+
+   However, unrestricted linking of non-free programs would deprive the
+users of those programs of all benefit from the free status of the
+libraries themselves.  This Library General Public License is intended
+to permit developers of non-free programs to use free libraries, while
+preserving your freedom as a user of such programs to change the free
+libraries that are incorporated in them.  (We have not seen how to
+achieve this as regards changes in header files, but we have achieved
+it as regards changes in the actual functions of the Library.)  The
+hope is that this will lead to faster development of free libraries.
+
+   The precise terms and conditions for copying, distribution and
+modification follow.  Pay close attention to the difference between a
+"work based on the library" and a "work that uses the library".  The
+former contains code derived from the library, while the latter only
+works together with the library.
+
+   Note that it is possible for a library to be covered by the ordinary
+General Public License rather than by this special one.
+
+    TERMS AND CONDITIONS FOR COPYING, DISTRIBUTION AND MODIFICATION
+
+  0. This License Agreement applies to any software library which
+     contains a notice placed by the copyright holder or other
+     authorized party saying it may be distributed under the terms of
+     this Library General Public License (also called "this License").
+     Each licensee is addressed as "you".
+
+     A "library" means a collection of software functions and/or data
+     prepared so as to be conveniently linked with application programs
+     (which use some of those functions and data) to form executables.
+
+     The "Library", below, refers to any such software library or work
+     which has been distributed under these terms.  A "work based on the
+     Library" means either the Library or any derivative work under
+     copyright law: that is to say, a work containing the Library or a
+     portion of it, either verbatim or with modifications and/or
+     translated straightforwardly into another language.  (Hereinafter,
+     translation is included without limitation in the term
+     "modification".)
+
+     "Source code" for a work means the preferred form of the work for
+     making modifications to it.  For a library, complete source code
+     means all the source code for all modules it contains, plus any
+     associated interface definition files, plus the scripts used to
+     control compilation and installation of the library.
+
+     Activities other than copying, distribution and modification are
+     not covered by this License; they are outside its scope.  The act
+     of running a program using the Library is not restricted, and
+     output from such a program is covered only if its contents
+     constitute a work based on the Library (independent of the use of
+     the Library in a tool for writing it).  Whether that is true
+     depends on what the Library does and what the program that uses
+     the Library does.
+
+  1. You may copy and distribute verbatim copies of the Library's
+     complete source code as you receive it, in any medium, provided
+     that you conspicuously and appropriately publish on each copy an
+     appropriate copyright notice and disclaimer of warranty; keep
+     intact all the notices that refer to this License and to the
+     absence of any warranty; and distribute a copy of this License
+     along with the Library.
+
+     You may charge a fee for the physical act of transferring a copy,
+     and you may at your option offer warranty protection in exchange
+     for a fee.
+
+  2. You may modify your copy or copies of the Library or any portion
+     of it, thus forming a work based on the Library, and copy and
+     distribute such modifications or work under the terms of Section 1
+     above, provided that you also meet all of these conditions:
+
+       a. The modified work must itself be a software library.
+
+       b. You must cause the files modified to carry prominent notices
+          stating that you changed the files and the date of any change.
+
+       c. You must cause the whole of the work to be licensed at no
+          charge to all third parties under the terms of this License.
+
+       d. If a facility in the modified Library refers to a function or
+          a table of data to be supplied by an application program that
+          uses the facility, other than as an argument passed when the
+          facility is invoked, then you must make a good faith effort
+          to ensure that, in the event an application does not supply
+          such function or table, the facility still operates, and
+          performs whatever part of its purpose remains meaningful.
+
+          (For example, a function in a library to compute square roots
+          has a purpose that is entirely well-defined independent of the
+          application.  Therefore, Subsection 2d requires that any
+          application-supplied function or table used by this function
+          must be optional: if the application does not supply it, the
+          square root function must still compute square roots.)
+
+     These requirements apply to the modified work as a whole.  If
+     identifiable sections of that work are not derived from the
+     Library, and can be reasonably considered independent and separate
+     works in themselves, then this License, and its terms, do not
+     apply to those sections when you distribute them as separate
+     works.  But when you distribute the same sections as part of a
+     whole which is a work based on the Library, the distribution of
+     the whole must be on the terms of this License, whose permissions
+     for other licensees extend to the entire whole, and thus to each
+     and every part regardless of who wrote it.
+
+     Thus, it is not the intent of this section to claim rights or
+     contest your rights to work written entirely by you; rather, the
+     intent is to exercise the right to control the distribution of
+     derivative or collective works based on the Library.
+
+     In addition, mere aggregation of another work not based on the
+     Library with the Library (or with a work based on the Library) on
+     a volume of a storage or distribution medium does not bring the
+     other work under the scope of this License.
+
+  3. You may opt to apply the terms of the ordinary GNU General Public
+     License instead of this License to a given copy of the Library.
+     To do this, you must alter all the notices that refer to this
+     License, so that they refer to the ordinary GNU General Public
+     License, version 2, instead of to this License.  (If a newer
+     version than version 2 of the ordinary GNU General Public License
+     has appeared, then you can specify that version instead if you
+     wish.)  Do not make any other change in these notices.
+
+     Once this change is made in a given copy, it is irreversible for
+     that copy, so the ordinary GNU General Public License applies to
+     all subsequent copies and derivative works made from that copy.
+
+     This option is useful when you wish to copy part of the code of
+     the Library into a program that is not a library.
+
+  4. You may copy and distribute the Library (or a portion or
+     derivative of it, under Section 2) in object code or executable
+     form under the terms of Sections 1 and 2 above provided that you
+     accompany it with the complete corresponding machine-readable
+     source code, which must be distributed under the terms of Sections
+     1 and 2 above on a medium customarily used for software
+     interchange.
+
+     If distribution of object code is made by offering access to copy
+     from a designated place, then offering equivalent access to copy
+     the source code from the same place satisfies the requirement to
+     distribute the source code, even though third parties are not
+     compelled to copy the source along with the object code.
+
+  5. A program that contains no derivative of any portion of the
+     Library, but is designed to work with the Library by being
+     compiled or linked with it, is called a "work that uses the
+     Library".  Such a work, in isolation, is not a derivative work of
+     the Library, and therefore falls outside the scope of this License.
+
+     However, linking a "work that uses the Library" with the Library
+     creates an executable that is a derivative of the Library (because
+     it contains portions of the Library), rather than a "work that
+     uses the library".  The executable is therefore covered by this
+     License.  Section 6 states terms for distribution of such
+     executables.
+
+     When a "work that uses the Library" uses material from a header
+     file that is part of the Library, the object code for the work may
+     be a derivative work of the Library even though the source code is
+     not.  Whether this is true is especially significant if the work
+     can be linked without the Library, or if the work is itself a
+     library.  The threshold for this to be true is not precisely
+     defined by law.
+
+     If such an object file uses only numerical parameters, data
+     structure layouts and accessors, and small macros and small inline
+     functions (ten lines or less in length), then the use of the object
+     file is unrestricted, regardless of whether it is legally a
+     derivative work.  (Executables containing this object code plus
+     portions of the Library will still fall under Section 6.)
+
+     Otherwise, if the work is a derivative of the Library, you may
+     distribute the object code for the work under the terms of Section
+     6.  Any executables containing that work also fall under Section 6,
+     whether or not they are linked directly with the Library itself.
+
+  6. As an exception to the Sections above, you may also compile or
+     link a "work that uses the Library" with the Library to produce a
+     work containing portions of the Library, and distribute that work
+     under terms of your choice, provided that the terms permit
+     modification of the work for the customer's own use and reverse
+     engineering for debugging such modifications.
+
+     You must give prominent notice with each copy of the work that the
+     Library is used in it and that the Library and its use are covered
+     by this License.  You must supply a copy of this License.  If the
+     work during execution displays copyright notices, you must include
+     the copyright notice for the Library among them, as well as a
+     reference directing the user to the copy of this License.  Also,
+     you must do one of these things:
+
+       a. Accompany the work with the complete corresponding
+          machine-readable source code for the Library including
+          whatever changes were used in the work (which must be
+          distributed under Sections 1 and 2 above); and, if the work
+          is an executable linked with the Library, with the complete
+          machine-readable "work that uses the Library", as object code
+          and/or source code, so that the user can modify the Library
+          and then relink to produce a modified executable containing
+          the modified Library.  (It is understood that the user who
+          changes the contents of definitions files in the Library will
+          not necessarily be able to recompile the application to use
+          the modified definitions.)
+
+       b. Accompany the work with a written offer, valid for at least
+          three years, to give the same user the materials specified in
+          Subsection 6a, above, for a charge no more than the cost of
+          performing this distribution.
+
+       c. If distribution of the work is made by offering access to copy
+          from a designated place, offer equivalent access to copy the
+          above specified materials from the same place.
+
+       d. Verify that the user has already received a copy of these
+          materials or that you have already sent this user a copy.
+
+     For an executable, the required form of the "work that uses the
+     Library" must include any data and utility programs needed for
+     reproducing the executable from it.  However, as a special
+     exception, the source code distributed need not include anything
+     that is normally distributed (in either source or binary form)
+     with the major components (compiler, kernel, and so on) of the
+     operating system on which the executable runs, unless that
+     component itself accompanies the executable.
+
+     It may happen that this requirement contradicts the license
+     restrictions of other proprietary libraries that do not normally
+     accompany the operating system.  Such a contradiction means you
+     cannot use both them and the Library together in an executable
+     that you distribute.
+
+  7. You may place library facilities that are a work based on the
+     Library side-by-side in a single library together with other
+     library facilities not covered by this License, and distribute
+     such a combined library, provided that the separate distribution
+     of the work based on the Library and of the other library
+     facilities is otherwise permitted, and provided that you do these
+     two things:
+
+       a. Accompany the combined library with a copy of the same work
+          based on the Library, uncombined with any other library
+          facilities.  This must be distributed under the terms of the
+          Sections above.
+
+       b. Give prominent notice with the combined library of the fact
+          that part of it is a work based on the Library, and explaining
+          where to find the accompanying uncombined form of the same
+          work.
+
+  8. You may not copy, modify, sublicense, link with, or distribute the
+     Library except as expressly provided under this License.  Any
+     attempt otherwise to copy, modify, sublicense, link with, or
+     distribute the Library is void, and will automatically terminate
+     your rights under this License.  However, parties who have
+     received copies, or rights, from you under this License will not
+     have their licenses terminated so long as such parties remain in
+     full compliance.
+
+  9. You are not required to accept this License, since you have not
+     signed it.  However, nothing else grants you permission to modify
+     or distribute the Library or its derivative works.  These actions
+     are prohibited by law if you do not accept this License.
+     Therefore, by modifying or distributing the Library (or any work
+     based on the Library), you indicate your acceptance of this
+     License to do so, and all its terms and conditions for copying,
+     distributing or modifying the Library or works based on it.
+
+ 10. Each time you redistribute the Library (or any work based on the
+     Library), the recipient automatically receives a license from the
+     original licensor to copy, distribute, link with or modify the
+     Library subject to these terms and conditions.  You may not impose
+     any further restrictions on the recipients' exercise of the rights
+     granted herein.  You are not responsible for enforcing compliance
+     by third parties to this License.
+
+ 11. If, as a consequence of a court judgment or allegation of patent
+     infringement or for any other reason (not limited to patent
+     issues), conditions are imposed on you (whether by court order,
+     agreement or otherwise) that contradict the conditions of this
+     License, they do not excuse you from the conditions of this
+     License.  If you cannot distribute so as to satisfy simultaneously
+     your obligations under this License and any other pertinent
+     obligations, then as a consequence you may not distribute the
+     Library at all.  For example, if a patent license would not permit
+     royalty-free redistribution of the Library by all those who
+     receive copies directly or indirectly through you, then the only
+     way you could satisfy both it and this License would be to refrain
+     entirely from distribution of the Library.
+
+     If any portion of this section is held invalid or unenforceable
+     under any particular circumstance, the balance of the section is
+     intended to apply, and the section as a whole is intended to apply
+     in other circumstances.
+
+     It is not the purpose of this section to induce you to infringe any
+     patents or other property right claims or to contest validity of
+     any such claims; this section has the sole purpose of protecting
+     the integrity of the free software distribution system which is
+     implemented by public license practices.  Many people have made
+     generous contributions to the wide range of software distributed
+     through that system in reliance on consistent application of that
+     system; it is up to the author/donor to decide if he or she is
+     willing to distribute software through any other system and a
+     licensee cannot impose that choice.
+
+     This section is intended to make thoroughly clear what is believed
+     to be a consequence of the rest of this License.
+
+ 12. If the distribution and/or use of the Library is restricted in
+     certain countries either by patents or by copyrighted interfaces,
+     the original copyright holder who places the Library under this
+     License may add an explicit geographical distribution limitation
+     excluding those countries, so that distribution is permitted only
+     in or among countries not thus excluded.  In such case, this
+     License incorporates the limitation as if written in the body of
+     this License.
+
+ 13. The Free Software Foundation may publish revised and/or new
+     versions of the Library General Public License from time to time.
+     Such new versions will be similar in spirit to the present version,
+     but may differ in detail to address new problems or concerns.
+
+     Each version is given a distinguishing version number.  If the
+     Library specifies a version number of this License which applies
+     to it and "any later version", you have the option of following
+     the terms and conditions either of that version or of any later
+     version published by the Free Software Foundation.  If the Library
+     does not specify a license version number, you may choose any
+     version ever published by the Free Software Foundation.
+
+ 14. If you wish to incorporate parts of the Library into other free
+     programs whose distribution conditions are incompatible with these,
+     write to the author to ask for permission.  For software which is
+     copyrighted by the Free Software Foundation, write to the Free
+     Software Foundation; we sometimes make exceptions for this.  Our
+     decision will be guided by the two goals of preserving the free
+     status of all derivatives of our free software and of promoting
+     the sharing and reuse of software generally.
+
+                                NO WARRANTY
+
+ 15. BECAUSE THE LIBRARY IS LICENSED FREE OF CHARGE, THERE IS NO
+     WARRANTY FOR THE LIBRARY, TO THE EXTENT PERMITTED BY APPLICABLE
+     LAW.  EXCEPT WHEN OTHERWISE STATED IN WRITING THE COPYRIGHT
+     HOLDERS AND/OR OTHER PARTIES PROVIDE THE LIBRARY "AS IS" WITHOUT
+     WARRANTY OF ANY KIND, EITHER EXPRESSED OR IMPLIED, INCLUDING, BUT
+     NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND
+     FITNESS FOR A PARTICULAR PURPOSE.  THE ENTIRE RISK AS TO THE
+     QUALITY AND PERFORMANCE OF THE LIBRARY IS WITH YOU.  SHOULD THE
+     LIBRARY PROVE DEFECTIVE, YOU ASSUME THE COST OF ALL NECESSARY
+     SERVICING, REPAIR OR CORRECTION.
+
+ 16. IN NO EVENT UNLESS REQUIRED BY APPLICABLE LAW OR AGREED TO IN
+     WRITING WILL ANY COPYRIGHT HOLDER, OR ANY OTHER PARTY WHO MAY
+     MODIFY AND/OR REDISTRIBUTE THE LIBRARY AS PERMITTED ABOVE, BE
+     LIABLE TO YOU FOR DAMAGES, INCLUDING ANY GENERAL, SPECIAL,
+     INCIDENTAL OR CONSEQUENTIAL DAMAGES ARISING OUT OF THE USE OR
+     INABILITY TO USE THE LIBRARY (INCLUDING BUT NOT LIMITED TO LOSS OF
+     DATA OR DATA BEING RENDERED INACCURATE OR LOSSES SUSTAINED BY YOU
+     OR THIRD PARTIES OR A FAILURE OF THE LIBRARY TO OPERATE WITH ANY
+     OTHER SOFTWARE), EVEN IF SUCH HOLDER OR OTHER PARTY HAS BEEN
+     ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
+
+                      END OF TERMS AND CONDITIONS
+@end example
+
+@node GNU Free Documentation License, Concept Index, License, Top
+@appendix GNU Free Documentation License
+
+@example
+		GNU Free Documentation License
+		   Version 1.1, March 2000
+
+ Copyright (C) 2000  Free Software Foundation, Inc.
+     59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ Everyone is permitted to copy and distribute verbatim copies
+ of this license document, but changing it is not allowed.
+
+
+0. PREAMBLE
+
+The purpose of this License is to make a manual, textbook, or other
+written document "free" in the sense of freedom: to assure everyone
+the effective freedom to copy and redistribute it, with or without
+modifying it, either commercially or noncommercially.  Secondarily,
+this License preserves for the author and publisher a way to get
+credit for their work, while not being considered responsible for
+modifications made by others.
+
+This License is a kind of "copyleft", which means that derivative
+works of the document must themselves be free in the same sense.  It
+complements the GNU General Public License, which is a copyleft
+license designed for free software.
+
+We have designed this License in order to use it for manuals for free
+software, because free software needs free documentation: a free
+program should come with manuals providing the same freedoms that the
+software does.  But this License is not limited to software manuals;
+it can be used for any textual work, regardless of subject matter or
+whether it is published as a printed book.  We recommend this License
+principally for works whose purpose is instruction or reference.
+
+
+1. APPLICABILITY AND DEFINITIONS
+
+This License applies to any manual or other work that contains a
+notice placed by the copyright holder saying it can be distributed
+under the terms of this License.  The "Document", below, refers to any
+such manual or work.  Any member of the public is a licensee, and is
+addressed as "you".
+
+A "Modified Version" of the Document means any work containing the
+Document or a portion of it, either copied verbatim, or with
+modifications and/or translated into another language.
+
+A "Secondary Section" is a named appendix or a front-matter section of
+the Document that deals exclusively with the relationship of the
+publishers or authors of the Document to the Document's overall subject
+(or to related matters) and contains nothing that could fall directly
+within that overall subject.  (For example, if the Document is in part a
+textbook of mathematics, a Secondary Section may not explain any
+mathematics.)  The relationship could be a matter of historical
+connection with the subject or with related matters, or of legal,
+commercial, philosophical, ethical or political position regarding
+them.
+
+The "Invariant Sections" are certain Secondary Sections whose titles
+are designated, as being those of Invariant Sections, in the notice
+that says that the Document is released under this License.
+
+The "Cover Texts" are certain short passages of text that are listed,
+as Front-Cover Texts or Back-Cover Texts, in the notice that says that
+the Document is released under this License.
+
+A "Transparent" copy of the Document means a machine-readable copy,
+represented in a format whose specification is available to the
+general public, whose contents can be viewed and edited directly and
+straightforwardly with generic text editors or (for images composed of
+pixels) generic paint programs or (for drawings) some widely available
+drawing editor, and that is suitable for input to text formatters or
+for automatic translation to a variety of formats suitable for input
+to text formatters.  A copy made in an otherwise Transparent file
+format whose markup has been designed to thwart or discourage
+subsequent modification by readers is not Transparent.  A copy that is
+not "Transparent" is called "Opaque".
+
+Examples of suitable formats for Transparent copies include plain
+ASCII without markup, Texinfo input format, LaTeX input format, SGML
+or XML using a publicly available DTD, and standard-conforming simple
+HTML designed for human modification.  Opaque formats include
+PostScript, PDF, proprietary formats that can be read and edited only
+by proprietary word processors, SGML or XML for which the DTD and/or
+processing tools are not generally available, and the
+machine-generated HTML produced by some word processors for output
+purposes only.
+
+The "Title Page" means, for a printed book, the title page itself,
+plus such following pages as are needed to hold, legibly, the material
+this License requires to appear in the title page.  For works in
+formats which do not have any title page as such, "Title Page" means
+the text near the most prominent appearance of the work's title,
+preceding the beginning of the body of the text.
+
+
+2. VERBATIM COPYING
+
+You may copy and distribute the Document in any medium, either
+commercially or noncommercially, provided that this License, the
+copyright notices, and the license notice saying this License applies
+to the Document are reproduced in all copies, and that you add no other
+conditions whatsoever to those of this License.  You may not use
+technical measures to obstruct or control the reading or further
+copying of the copies you make or distribute.  However, you may accept
+compensation in exchange for copies.  If you distribute a large enough
+number of copies you must also follow the conditions in section 3.
+
+You may also lend copies, under the same conditions stated above, and
+you may publicly display copies.
+
+
+3. COPYING IN QUANTITY
+
+If you publish printed copies of the Document numbering more than 100,
+and the Document's license notice requires Cover Texts, you must enclose
+the copies in covers that carry, clearly and legibly, all these Cover
+Texts: Front-Cover Texts on the front cover, and Back-Cover Texts on
+the back cover.  Both covers must also clearly and legibly identify
+you as the publisher of these copies.  The front cover must present
+the full title with all words of the title equally prominent and
+visible.  You may add other material on the covers in addition.
+Copying with changes limited to the covers, as long as they preserve
+the title of the Document and satisfy these conditions, can be treated
+as verbatim copying in other respects.
+
+If the required texts for either cover are too voluminous to fit
+legibly, you should put the first ones listed (as many as fit
+reasonably) on the actual cover, and continue the rest onto adjacent
+pages.
+
+If you publish or distribute Opaque copies of the Document numbering
+more than 100, you must either include a machine-readable Transparent
+copy along with each Opaque copy, or state in or with each Opaque copy
+a publicly-accessible computer-network location containing a complete
+Transparent copy of the Document, free of added material, which the
+general network-using public has access to download anonymously at no
+charge using public-standard network protocols.  If you use the latter
+option, you must take reasonably prudent steps, when you begin
+distribution of Opaque copies in quantity, to ensure that this
+Transparent copy will remain thus accessible at the stated location
+until at least one year after the last time you distribute an Opaque
+copy (directly or through your agents or retailers) of that edition to
+the public.
+
+It is requested, but not required, that you contact the authors of the
+Document well before redistributing any large number of copies, to give
+them a chance to provide you with an updated version of the Document.
+
+
+4. MODIFICATIONS
+
+You may copy and distribute a Modified Version of the Document under
+the conditions of sections 2 and 3 above, provided that you release
+the Modified Version under precisely this License, with the Modified
+Version filling the role of the Document, thus licensing distribution
+and modification of the Modified Version to whoever possesses a copy
+of it.  In addition, you must do these things in the Modified Version:
+
+A. Use in the Title Page (and on the covers, if any) a title distinct
+   from that of the Document, and from those of previous versions
+   (which should, if there were any, be listed in the History section
+   of the Document).  You may use the same title as a previous version
+   if the original publisher of that version gives permission.
+B. List on the Title Page, as authors, one or more persons or entities
+   responsible for authorship of the modifications in the Modified
+   Version, together with at least five of the principal authors of the
+   Document (all of its principal authors, if it has less than five).
+C. State on the Title page the name of the publisher of the
+   Modified Version, as the publisher.
+D. Preserve all the copyright notices of the Document.
+E. Add an appropriate copyright notice for your modifications
+   adjacent to the other copyright notices.
+F. Include, immediately after the copyright notices, a license notice
+   giving the public permission to use the Modified Version under the
+   terms of this License, in the form shown in the Addendum below.
+G. Preserve in that license notice the full lists of Invariant Sections
+   and required Cover Texts given in the Document's license notice.
+H. Include an unaltered copy of this License.
+I. Preserve the section entitled "History", and its title, and add to
+   it an item stating at least the title, year, new authors, and
+   publisher of the Modified Version as given on the Title Page.  If
+   there is no section entitled "History" in the Document, create one
+   stating the title, year, authors, and publisher of the Document as
+   given on its Title Page, then add an item describing the Modified
+   Version as stated in the previous sentence.
+J. Preserve the network location, if any, given in the Document for
+   public access to a Transparent copy of the Document, and likewise
+   the network locations given in the Document for previous versions
+   it was based on.  These may be placed in the "History" section.
+   You may omit a network location for a work that was published at
+   least four years before the Document itself, or if the original
+   publisher of the version it refers to gives permission.
+K. In any section entitled "Acknowledgements" or "Dedications",
+   preserve the section's title, and preserve in the section all the
+   substance and tone of each of the contributor acknowledgements
+   and/or dedications given therein.
+L. Preserve all the Invariant Sections of the Document,
+   unaltered in their text and in their titles.  Section numbers
+   or the equivalent are not considered part of the section titles.
+M. Delete any section entitled "Endorsements".  Such a section
+   may not be included in the Modified Version.
+N. Do not retitle any existing section as "Endorsements"
+   or to conflict in title with any Invariant Section.
+
+If the Modified Version includes new front-matter sections or
+appendices that qualify as Secondary Sections and contain no material
+copied from the Document, you may at your option designate some or all
+of these sections as invariant.  To do this, add their titles to the
+list of Invariant Sections in the Modified Version's license notice.
+These titles must be distinct from any other section titles.
+
+You may add a section entitled "Endorsements", provided it contains
+nothing but endorsements of your Modified Version by various
+parties--for example, statements of peer review or that the text has
+been approved by an organization as the authoritative definition of a
+standard.
+
+You may add a passage of up to five words as a Front-Cover Text, and a
+passage of up to 25 words as a Back-Cover Text, to the end of the list
+of Cover Texts in the Modified Version.  Only one passage of
+Front-Cover Text and one of Back-Cover Text may be added by (or
+through arrangements made by) any one entity.  If the Document already
+includes a cover text for the same cover, previously added by you or
+by arrangement made by the same entity you are acting on behalf of,
+you may not add another; but you may replace the old one, on explicit
+permission from the previous publisher that added the old one.
+
+The author(s) and publisher(s) of the Document do not by this License
+give permission to use their names for publicity for or to assert or
+imply endorsement of any Modified Version.
+
+
+5. COMBINING DOCUMENTS
+
+You may combine the Document with other documents released under this
+License, under the terms defined in section 4 above for modified
+versions, provided that you include in the combination all of the
+Invariant Sections of all of the original documents, unmodified, and
+list them all as Invariant Sections of your combined work in its
+license notice.
+
+The combined work need only contain one copy of this License, and
+multiple identical Invariant Sections may be replaced with a single
+copy.  If there are multiple Invariant Sections with the same name but
+different contents, make the title of each such section unique by
+adding at the end of it, in parentheses, the name of the original
+author or publisher of that section if known, or else a unique number.
+Make the same adjustment to the section titles in the list of
+Invariant Sections in the license notice of the combined work.
+
+In the combination, you must combine any sections entitled "History"
+in the various original documents, forming one section entitled
+"History"; likewise combine any sections entitled "Acknowledgements",
+and any sections entitled "Dedications".  You must delete all sections
+entitled "Endorsements."
+
+
+6. COLLECTIONS OF DOCUMENTS
+
+You may make a collection consisting of the Document and other documents
+released under this License, and replace the individual copies of this
+License in the various documents with a single copy that is included in
+the collection, provided that you follow the rules of this License for
+verbatim copying of each of the documents in all other respects.
+
+You may extract a single document from such a collection, and distribute
+it individually under this License, provided you insert a copy of this
+License into the extracted document, and follow this License in all
+other respects regarding verbatim copying of that document.
+
+
+
+7. AGGREGATION WITH INDEPENDENT WORKS
+
+A compilation of the Document or its derivatives with other separate
+and independent documents or works, in or on a volume of a storage or
+distribution medium, does not as a whole count as a Modified Version
+of the Document, provided no compilation copyright is claimed for the
+compilation.  Such a compilation is called an "aggregate", and this
+License does not apply to the other self-contained works thus compiled
+with the Document, on account of their being thus compiled, if they
+are not themselves derivative works of the Document.
+
+If the Cover Text requirement of section 3 is applicable to these
+copies of the Document, then if the Document is less than one quarter
+of the entire aggregate, the Document's Cover Texts may be placed on
+covers that surround only the Document within the aggregate.
+Otherwise they must appear on covers around the whole aggregate.
+
+
+8. TRANSLATION
+
+Translation is considered a kind of modification, so you may
+distribute translations of the Document under the terms of section 4.
+Replacing Invariant Sections with translations requires special
+permission from their copyright holders, but you may include
+translations of some or all Invariant Sections in addition to the
+original versions of these Invariant Sections.  You may include a
+translation of this License provided that you also include the
+original English version of this License.  In case of a disagreement
+between the translation and the original English version of this
+License, the original English version will prevail.
+
+
+9. TERMINATION
+
+You may not copy, modify, sublicense, or distribute the Document except
+as expressly provided for under this License.  Any other attempt to
+copy, modify, sublicense or distribute the Document is void, and will
+automatically terminate your rights under this License.  However,
+parties who have received copies, or rights, from you under this
+License will not have their licenses terminated so long as such
+parties remain in full compliance.
+
+
+10. FUTURE REVISIONS OF THIS LICENSE
+
+The Free Software Foundation may publish new, revised versions
+of the GNU Free Documentation License from time to time.  Such new
+versions will be similar in spirit to the present version, but may
+differ in detail to address new problems or concerns. See
+http:///www.gnu.org/copyleft/.
+
+Each version of the License is given a distinguishing version number.
+If the Document specifies that a particular numbered version of this
+License "or any later version" applies to it, you have the option of
+following the terms and conditions either of that specified version or
+of any later version that has been published (not as a draft) by the
+Free Software Foundation.  If the Document does not specify a version
+number of this License, you may choose any version ever published (not
+as a draft) by the Free Software Foundation.
+@end example
+
+@node Concept Index, Function Index, GNU Free Documentation License, Top
+@unnumbered Concept Index
+
+@printindex cp
+
+@node Function Index, Variable Index, Concept Index, Top
+@unnumbered Function Index
+
+@printindex fn
+
+@node Variable Index, , Function Index, Top
+@unnumbered Function Index
+
+@printindex vr
+
+@contents
+@bye

@@ -1,0 +1,53 @@
+@comment function __lsck_get_version
+
+@node __lsck_get_version, libsocket
+@findex __lsck_get_version
+
+@subheading Syntax
+
+@example
+#include <lsck/copyrite.h>
+
+char *__lsck_get_version (void);
+@end example
+
+@subheading Description
+
+This function returns a string containing the version information for
+libsocket.  If this is longer than one line, it will be formatted to fit on
+an 80-column terminal.
+
+@vindex LSCK_VERSION_MAJOR
+@vindex LSCK_VERSION_MINOR
+@vindex LSCK_VERSION_SUBMINOR
+The version message is constructed from constants defined in
+@samp{lsck/copyrite.h}.  The ones that should be used in user programs are
+listed in the table below. As an example, consider the version number 0.8.0.
+
+@table @samp
+@item LSCK_VERSION_MAJOR
+This is libsocket's major version, which is @samp{0} for the example.
+@item LSCK_VERSION_MINOR
+This is libsocket's minor version, which is @samp{8} for the example.
+@item LSCK_VERSION_SUBMINOR
+This is libsocket's minor-minor or subminor version, which is @samp{0} for
+the example.
+@end table
+
+@subheading Return Values
+
+A pointer to the string is returned on success; on failure, @samp{NULL} is
+returned.
+
+@subheading Portability
+
+@portability !ansi, !posix, !unix98
+
+This function is specific to libsocket.
+
+@subheading Example
+
+@example
+char *p = __lsck_get_version();
+puts(p);
+@end example

@@ -1,0 +1,11 @@
+Location of Coda BSD Sockets VxD
+================================
+
+The Coda BSD sockets VxD, SOCK.VXD, source can be downloaded from:
+
+    ftp://ftp.coda.cs.cmu.edu/pub/tools/95
+
+It is distributed under the GNU General Public License as part of the Coda
+network filesystem project.
+
+Richard Dawe <richdawe@bigfoot.com> 1999-07-01

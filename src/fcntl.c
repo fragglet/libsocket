@@ -1,7 +1,12 @@
 /*
  *  libsocket - BSD socket like library for DJGPP
  *  Copyright 1997, 1998 by Indrek Mandre
- *  Copyright 1997, 1998 by Richard Dawe
+ *  Copyright 1997-2000 by Richard Dawe
+ *
+ *  Portions of libsocket Copyright 1985-1993 Regents of the University of 
+ *  California.
+ *  Portions of libsocket Copyright 1991, 1992 Free Software Foundation, Inc.
+ *  Portions of libsocket Copyright 1997, 1998 by the Regdos Group.
  *
  *  This library is free software; you can redistribute it and/or modify it
  *  under the terms of the GNU Library General Public License as published
@@ -18,60 +23,93 @@
  *  Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-/*
-    fcntl.c
-
-    Written by Richard Dawe (RD) - Code for F_SETFL written by Indrek Mandre
-    (IM). fcntl() is unusual in that it doesn't actually require any interface
-    code - this is handled by ioctlsocket().
-*/
-
-#include <fcntl.h>
 #include <errno.h>
+#include <string.h>
+#include <unistd.h>
+
+#include <sys/socket.h>
 
 #include <lsck/lsck.h>
+#include <lsck/if.h>
 
-#include "winsock.h"
-#include "lsckglob.h"
+int fcntlsocket_emulated (LSCK_SOCKET * lsd, int command, int request);
+
+/* ---------------
+ * - fcntlsocket -
+ * --------------- */
 
 int fcntlsocket (int s, int command, int request)
 {
-    LSCK_SOCKET *lsd;
-    int x = 1;          /* Used only ioctlsocket()                */
-    int fakeflags = 0;  /* Used to build return value for F_GETFL */
+	LSCK_SOCKET *lsd;
+	int handled = 0; /* Set if the interface handled the request. */
+	int ret, rv;
 
-    if (!lsck_init()) {
-        errno = ENODEV;
-        return(-1);
-    }
+	/* Find the socket descriptor */
+	lsd = __fd_to_lsd (s);
 
-    lsd = lsckDescriptor[s];
+	if (lsd == NULL) {
+		isfdtype(s, S_IFSOCK);
+		return (-1);
+	}
 
-    /* Process the command appropriately */
+	/* Check for completion of outstanding non-blocking I/O */
+	if (lsd->interface->nonblocking_check != NULL)
+		lsd->interface->nonblocking_check (lsd);
 
-    switch(command) {
-        /* Set flags - taken from IM's original code in fsext.c */
-        case F_SETFL:
-            if (request == O_NONBLOCK) return(ioctlsocket(s, FIONBIO, &x));
-            break;
+	/* Process the command appropriately */        
+	if (lsd->interface->fcntl != NULL) {
+		/* If the fcntl is not supported by the interface, this should
+		 * return 0, so it can be emulated. */
+		handled = lsd->interface->fcntl(lsd, &rv, command, request);
+	}
 
-        /* Get flags */
-        case F_GETFL:
-            /* Fake socket flags from flags element of socket struct, as the
-               flags in the socket struct don't correspond one-to-one. */
+	/* Try to emulate it if the call failed */
+	if (!handled)
+		ret = fcntlsocket_emulated (lsd, command, request);
+	else
+		ret = rv;
 
-            /* Only O_NONBLOCK is changed by the code - other flags? */
-            if ((lsd->flags & LSCK_FLAG_BLOCKING) != LSCK_FLAG_BLOCKING)
-                fakeflags |= O_NONBLOCK;
+	/* TODO: The flags from F_GETFL should be as used by open(). However,
+	 * the socket is created using socket(), so some "reasonable" flags
+	 * should probably be OR'd into ret here. */
+    
+	return (ret);
+}
 
-            return(fakeflags);
-            break;
+/* ------------------------
+ * - fcntlsocket_emulated -
+ * ------------------------ */
 
-        /* Something unknown */
-        default:
-            break;
-    }
+int fcntlsocket_emulated (LSCK_SOCKET *lsd, int command, int request)
+{
+	int ret = -1;
 
-    /* Fail by default */
-    return(-1);
+	switch (request) {
+	/* F_GETOWN, F_SETOWN are needed to implement SIGURG support.
+	 * See fcntl(2) for details. */
+		
+	case F_GETOWN:
+		ret = lsd->urgent_pid;
+		break;
+
+	case F_SETOWN:
+		/* DJGPP's libc can only send signals to current process at the
+		 * moment, so F_SETOWN is meaningless unless the pid refers to
+		 * the current process / process group (of 1 process). */
+		if ((request != getpid ())
+		    && (request != -getpid ())) {
+			/* TODO: Is this the correct error? */
+			errno = EPERM;
+		} else {
+			lsd->urgent_pid = request;
+			ret = 0;
+		}
+		break;
+
+	default:
+		errno = EINVAL;
+		break;
+	}
+
+	return (ret);
 }

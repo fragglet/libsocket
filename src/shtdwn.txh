@@ -1,0 +1,58 @@
+@comment The start of a comment is indicated by the following comment. This
+@comment syntax is used by the script funcstxh.sh: @comment function <name>
+
+@comment function shutdown
+
+@node shutdown, socket
+@findex shutdown
+
+@subheading Syntax
+
+@example
+#include <sys/socket.h>
+
+int shutdown (int s, int how);
+@end example
+
+@subheading Description
+
+@code{shutdown()} stops communication in one or both directions of a
+full-duplex connection on socket @var{s}.  @var{how} is one of the following:
+
+@table @samp
+@item SHUT_RD
+Receives will be disabled.
+@item SHUT_WR
+Sends will be disabled.
+@item SHUT_RDWR
+Receives and sends will be disabled.
+@end table
+
+These correspond to the values 0, 1 and 2 respectively.
+
+If sends are disabled for a stream socket (@code{SOCK_STREAM}), any further
+writes on the socket will return @code{EPIPE} and raise the signal
+@code{SIGPIPE} (@pxref{sendto}).
+
+@subheading Return Value
+
+On successful completion the function returns 0.  Otherwise, a value of -1
+is returned and @var{errno} is set appropriately.
+
+@table @samp
+@item EBADF
+@var{s} is not a valid file descriptor.
+@item ENOTSOCK
+@var{s} is not a socket.
+@item ENOTCONN
+The socket @var{s} is not connected.
+@end table
+
+@subheading Portability
+
+@portability posix, unix98
+
+@subheading Example
+
+@example
+@end example

@@ -1,0 +1,43 @@
+@c tmpl.txh - a template texinfo include file for libsocket
+@c
+@c Please replace <name> by the function name - makeinfo will barf otherwise.
+@c Please do similarly for other <...> occurrences.
+@c
+@c Richard Dawe <richdawe@bigfoot.com> 1999-09-04
+
+@comment The start of a function description is indicated by the following
+@comment comment. This syntax is used by the script functxh.sh:
+@comment @comment function <name>
+
+@comment function <name>
+
+@node <name>, , , Function Reference
+@section <name>
+
+@subheading Syntax
+
+@example
+<Includes>
+
+<Function declaration>
+@end example
+
+@subheading Description
+
+@subheading Return Value
+
+On successful completion the function returns <whatever>. Otherwise, a value
+of <whatever> is returned and @var{errno} is set appropriately.
+
+@table @samp
+@item <error>
+@end table
+
+@subheading Portability
+
+<ANSI, POSIX.1g, Unix98>
+
+@subheading Example
+
+@example
+@end example

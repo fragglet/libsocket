@@ -1,7 +1,12 @@
 /*
  *  libsocket - BSD socket like library for DJGPP
  *  Copyright 1997, 1998 by Indrek Mandre
- *  Copyright 1997, 1998 by Richard Dawe
+ *  Copyright 1997-2000 by Richard Dawe
+ *
+ *  Portions of libsocket Copyright 1985-1993 Regents of the University of 
+ *  California.
+ *  Portions of libsocket Copyright 1991, 1992 Free Software Foundation, Inc.
+ *  Portions of libsocket Copyright 1997, 1998 by the Regdos Group.
  *
  *  This library is free software; you can redistribute it and/or modify it
  *  under the terms of the GNU Library General Public License as published
@@ -19,37 +24,42 @@
  */
 
 #include <stdlib.h>
+#include <string.h>
+
 #include <sys/socket.h>
 
 #include <lsck/if.h>
-#include <lsck/ws.h>
-#include <winsock.h>
-
-#include "lsckglob.h"
-#include "wsockvxd.h"
+#include "wsock.h"
 #include "farptrx.h"
+#include "wsockvxd.h"
 
-int wsock_bind (LSCK_SOCKET *lsd, struct sockaddr *my_addr, int addrlen)
+/* ----------------
+ * - __wsock_bind -
+ * ---------------- */
+
+int __wsock_bind (LSCK_SOCKET * lsd, struct sockaddr *my_addr, size_t addrlen)
 {
-    WSOCK_BIND_PARAMS params;
+	LSCK_SOCKET_WSOCK *wsock = (LSCK_SOCKET_WSOCK *) lsd->idata;
+	WSOCK_BIND_PARAMS params;
 
-    params.Address = (void *)((SocketP << 16) + (5 * 4));
-    params.Socket = (void *) lsd->wsock._Socket;
-    params.AddressLength = addrlen;
-    params.ApcRoutine = 0;
-    params.ApcContext = 0;
+	bzero (&params, sizeof (params));
 
-    _farpokex (SocketP, 0, &params, sizeof (WSOCK_BIND_PARAMS));
-    _farpokex (SocketP, 5 * 4, my_addr, addrlen);
+	params.Address = (void *) ((SocketP << 16) + (5 * 4));
+	params.Socket = (void *) wsock->_Socket;
+	params.AddressLength = addrlen;
+	params.ApcRoutine = 0;
+	params.ApcContext = 0;
 
-    CallVxD (WSOCK_BIND_CMD);
+	_farpokex (SocketP, 0, &params, sizeof (WSOCK_BIND_PARAMS));
+	_farpokex (SocketP, 5 * 4, my_addr, addrlen);
 
-    if (_VXDError && _VXDError != 0xffff) return -1;
+	__wsock_callvxd (WSOCK_BIND_CMD);
 
-    _farpeekx (SocketP, 5 * 4, my_addr, addrlen);
+	if (_VXDError && _VXDError != 0xffff) return -1;
 
-    memcpy(&lsd->wsock.inetaddr, my_addr, sizeof (struct sockaddr));
+	_farpeekx (SocketP, 5 * 4, my_addr, addrlen);
 
-    return(0);
+	memcpy (&wsock->inetaddr, my_addr, sizeof (struct sockaddr));
+
+	return (0);
 }
-

@@ -1,0 +1,700 @@
+File: lsck.inf,  Node: Changelog,  Next: License,  Prev: Credits,  Up: Top
+
+Changelog
+*********
+
+Version 0.8.1 ????
+==================
+
+These changes are in no particular order:
+
+   * `recv()' and `send()' should not hang the DOS box anymore, when
+     waiting for input/output with SOCK.VXD and Winsock 2.
+
+   * Various texinfo documentation updates, to be consistent with DJGPP
+     libc's documentation style.
+
+Version 0.8.0 2000-11-16
+========================
+
+These changes are in no particular order:
+
+   * Fixed bug in version string construction (*note
+     __lsck_get_version::).
+
+   * Documentation fixes:
+
+        * Clarified `FIONBIO' versus `O_NONBLOCK' (*note ioctl_list::).
+
+        * `gethostname()' page now describes how the host name is
+          discovered (*note gethostname::).
+
+   * Fixed the DSMs for installation with pakke.
+
+   * Fixed a bug in the auto-configuration code, where some network
+     cards were ignored due to a bug in the registry entry parsing.
+
+   * Added `tags', `id' and `ID' targets to Makefile, for building
+     Emacs tags and GNU id-utils files respectively.
+
+   * Fixed a big in `gethostname()'; previously EINVAL was erroneously
+     returned for buffers larger than `MAXHOSTNAME'. This broke the name
+     resolving code for automatic configuration.
+
+   * Documented how bash and libsocket's auto-configuration code
+     interacts with regard to `$HOSTNAME' (*note libsocket and
+     environment variables::).
+
+   * Fixed the DNS server questions in netsetup (*note Introduction:
+     (netsetup)Introduction.). The input routines also now perform more
+     validation.
+
+   * Fixed header files so that #include lines are before checks for C++
+     (extern "C", etc.).
+
+   * Fixed header `netinet/in.h' to work around a compiler bug in g++
+     2.95.x.  The structure `struct ip_opts' is not defined, when using
+     g++ 2.95.x.
+
+   * "Beej's Guide to Network Programming" and the libsocket demos are
+     now included in the binary distribution.
+
+Version 0.8.0 Pre 1 2000-09-11
+==============================
+
+These changes are in no particular order:
+
+   * Texinfo documentation: corrected copyright message to include
+     Alain Magloire in info version; now distributed under GNU FDL.
+
+   * Fixed assembly code to work with binutils 2.9.5.1 beta and later.
+     Hopefully libsocket will build with _all_ versions of binutils
+     now.  Thanks to Eli Zaretskii for his help & suggestions.
+
+   * Problems using libsocket with firewall software were discovered
+     and documented (*note Known Bugs::). Thanks to Robert, Tim van
+     Holder.
+
+   * The demo `solist' now builds on Linux.
+
+   * The source distribution requires GNU shellutils to build; this is
+     now documented.
+
+   * The binary distribution had dependency generation for the demo and
+     netsetup directories.  This is no longer included - it was not
+     very useful and it meant that GNU shellutils was required to build
+     (only `echo' was actually required).
+
+   * `all' target now fixed in source distribution, so that it doesn't
+     run `netsetup' by default.  This problem stopped cross-compilation
+     from completing.
+
+   * The error code `ELOOP' is now defined conditionally in
+     `include/lsck/errno.h', so as not to conflict with DJGPP 2.04's
+     symlink support (DJGPP 2.04 is currently in development).  Thanks
+     to Laurynas Biveinis.
+
+   * Finished error messages for all libsocket-specific error messages
+     in `src/newerror.c'.
+
+   * Fixed the code for parsing the DHCP settings from the registry.
+     Thanks to Tim van Holder.
+
+Version 0.7.4 Beta 4 2000-05-28
+===============================
+
+These changes are in no particular order:
+
+   * Added a guide to configuration and usage of libsocket programs (a
+     user guide), to be distributed with programs built using
+     libsocket.  This was added to the `redist' directory.
+
+   * The auto-configuration from the registry was found to be buggy and
+     was fixed.
+
+   * Problems were found compiling with gcc 2.95.x:
+
+        * The inline assembly used by several of the source files was
+          buggy, but was compiled without error with previous versions
+          of gcc.  The assembly code was fixed.  See the section in the
+          gcc FAQ about spilled registers.
+
+        * The resolver code used pragmas to generate weak symbols that
+          could be overridden by Linux threading libraries.  These
+          generated warnings with gcc 2.95.2 (whose DJGPP port had no
+          weak symbol support at the time) and errors with a
+          cross-compiler (egcs-2.91.66 19990314 (egcs-1.1.2 release))
+          on Linux.  The pragmas were removed.  This involved
+          implementing `readv()' and `writev()'.
+
+
+   * A new demo was added, `solist', to list the available socket
+     options for UDP and TCP options.
+
+   * netsetup previously only configured one DNS server - now the user
+     can specify multiple DNS servers.
+
+   * The top-level source Makefile, `Makefile.src', used to create the
+     directory `lib' when building the library.  This was moved to
+     `src/Makefile', since this is where the library is actually built.
+
+   * The `uninstall' Makefile target previously failed to uninstall some
+     files from `$DJDIR/include/arpa'.  This has been fixed.
+
+   * The `socketpair()' function has been implemented, but only for
+     Unix domain sockets (see below).
+
+   * The Unix domain socket support is now much better.  It is still
+     alpha-quality code, which means there are definitely some
+     bugs/problems with it.
+
+   * Added the POSIX function `sockatmark()', which always fails.
+
+   * Changes were made to better conform with Unix98 description of the
+     sockets interface: added `SHUT_*' definitions for `shutdown()';
+     use of `size_t', `ssize_t' instead of `int'.
+
+   * Fixed `fcntl()' so that it accepts more than one option
+     simultaneously.  Previously passing more than one option OR'd
+     together would have caused `fcntl()' to fail.
+
+   * Fixed `accept()' to work when the peer address is NULL. This error
+     was pointed out by Alain Magloire.
+
+   * Many simplifications in socket functions due to removal of
+     `__lsck_init()' calls and use of `isfdtype()', as suggested by
+     Alain Magloire.
+
+   * The library now overrides DJGPP's `gethostname()', `sethostname()',
+     `perror()', `strerror()' and `uname()' functions.  The old
+     libsocket functions `__lsck_gethostname()', `__lsck_sethostname()',
+     `lsck_perror()' and `lsck_strerror()' are now deprecated, but will
+     still work.
+
+   * Fixed `gethostname()', `sethostname()', `getdomainname()',
+     `setdomainname()', so that they interact properly.
+
+   * `send()', `sendto()' now raise SIGPIPE when sending data on a
+     connection that has had its outbound channel shutdown.
+
+   * The Winsock 2 interface (csock) now has basic read-only (i.e.
+     `getsockopt()') support for the following socket options:
+
+        * SO_REUSEADDR
+
+        * SO_RCVBUF
+
+        * SO_RCVLOWAT
+
+        * SO_RCVTIMEO
+
+        * SO_SNDBUF
+
+        * SO_SNDLOWAT
+
+        * SO_SNDTIMEO
+
+   * Fixed many issues with datagrams with regard to `connect()',
+     `sendto()'.  Hopefully not too many bugs have been introduced here.
+
+   * Many issues with WSOCK.VXD, used for Winsock 1 support, were
+     sorted out.  These included issues such as the size of `struct
+     so_linger' passed to WSOCK.VXD, supported socket options, etc.
+
+   * SOCK.VXD is no longer unloaded by the csock interface (Winsock 2
+     support).  This caused General Protection Faults (GPFs) on
+     occasion.
+
+   * Removed VDHCP.VXD support code from libsocket, because it was
+     unused and did not work.
+
+   * DJGPP 2.02 now required - libsocket uses DJGPP 2.02's new File
+     System Extension features.  The code is tidier as a result.
+
+   * The separation between the BSD layer and the interface layer was
+     improved.  This should allow other interfaces (e.g. DOS support)
+     to be added much more easily.
+
+   * Added the header file `lsck/copyrite.h', containing information
+     about the version of libsocket (version numbers, etc.).
+
+   * Switched from man pages to info documentation.  The horrible long
+     filename and short filename Makefile targets are no longer needed.
+
+   * Project management: libsocket has been placed in CVS; all source
+     files now have unique names, to ease debugging, editing, etc.; the
+     libsocket web pages have been separated from sources; netsetup is
+     now distributed under the GNU GPL.
+
+
+Version 0.7.4 Beta 3 1999-05-06
+===============================
+
+   * Fixed some of the debugging messages in `src/inet/ghstnmad.c',
+     `src/inet/r_init.c', `src/csock/c_initnt.c'.
+
+   * Man pages now go in `man/' off the DJGPP directory, not in
+     `share/man/' as previously.
+
+   * Fixed bug in `sys/socket.h', which meant that `u_int' was undefined
+     when using `SO_DONTLINGER'. `sys/socket.h' now includes
+     `lsck/bsdtypes.h' too, to define `u_int'.
+
+   * Fixed bug in `src/initnt.c' where csock interface was not
+     uninitialised.
+
+   * Fixed bug in `src/fcntl.c' that meant the logical NOT of the true
+     value would be obtained doing e.g.:
+
+          fcntl(sock, F_GETFL, O_NONBLOCK)
+
+   * Added Unix domain socket support. THIS IS IN AN ALPHA TEST STATE.
+     It's extremely buggy.
+
+   * Removed nasty hack that sets protocol number when a protocol of 0
+     is used. Now a nice mapping table is used.
+
+   * Fixed bug in `src/csock/c_recv.c' in `__csock_recvfrom()'. It
+     should now return the address correctly.  Also, it should work if
+     the FROM parameter is `NULL'.
+
+   * Fixed bug in `src/wsock/w_recv.c' which always returned the
+     address, even if the FROM parameter were NULL.
+
+   * Added support for `FIONREAD' with `ioctl()' for Winsock 1.x module
+     (wsock).
+
+   * Fixed `src/csock/c_select.c' functions `__csock_select()',
+     `__csock_select_wait()' so they actually work properly.
+
+   * Added POSIX function `isfdtype()'. However, necessary includes are
+     in `sys/socket.h' rather than `sys/stat.h'.
+
+   * Added `fcntl()' support for csock interface.
+
+   * Fixed bugs in non-blocking ioctl `FIONBIO' for both wsock & csock.
+
+   * Moved to an interface descriptor, so that the BSD calls now do not
+     need to know the internals of each interface in *any* way.  The
+     interface descriptor also includes address and routing tables. The
+     code was updated to build the address tables correctly for each IP
+     address, including the loopback network.
+
+   * Fixed problem with `select()' on socket that lead to select'ing for
+     reading always succeeded if the socket was ready for writing.
+
+   * Source code reorganisation:
+
+     Old name(s)           New name(s)
+     src/wsock/win311      src/win3x
+     src/wsock/win95       src/win9x
+     src/wsock/win95/*.c   src/win9x/w9x_*.c (& some names altered)
+
+   * Discovered that the Linux ioctls added were actually BSD-ish, so
+     renamed `demo/linioctl.c' to `demo/ioctl.c'.  The refs in the man
+     pages have also been changed.
+
+   * `accept()' & `closesocket()' memory leaks fixed.
+
+   * `connect()' fixed for non-blocking operation.
+
+   * `getsockopt()' for wsock interface (`src/wsock/w_sckopt.c') now
+     converts errors returned by `SO_ERROR' from Winsock to BSD errors.
+
+   * Debugging output can now be enabled/disabled with a function call
+     or the 'debug' key in the 'main' section of the configuration file.
+
+
+Version 0.7.4 Beta 2 1999-02-28
+===============================
+
+   * Added Winsock 2 support.  Yes, finally! However, the support isn't
+     as complete as for Winsock 1.x.
+
+   * The resolver code again looks in the Windows directory for its
+     files, if their location has not been specified.  This was the
+     previous behaviour.
+
+   * Fixed the `select()' for sockets bug (again).
+
+   * 'linger'ing should now work correctly - added a wrapper, since
+     Winsock uses short ints &amp; DJGPP defaults to long int's.
+
+   * Fixed `connect()' so it stores the local socket name.
+
+   * Fixed the DHCP code to work with multiple addresses.
+
+   * Added 'Enabled' key to all interface section.
+
+   * Documentation: Updated install information.  Added a new version of
+     man2html, now called m2h, that can now generate HTML with short
+     filenames, for easier & faster browsing of the library reference.
+     Sorted out the supplementary information included.
+
+   * Makefiles: Streamlined a couple of Makefiles.
+
+
+Version 0.7.4 Beta 1 1999-02-04
+===============================
+
+There are probably many more changes than this, as I've been working on
+this version for a while, trying to add DOS support.  It still seems to
+work the same as version 0.7.3 though :( Still no support for DOS,
+Win98, etc.
+
+   * Moved to standard header files.  This means that winsock.h and ws.h
+     do not exist anymore, as they have been incorporated into other
+     header files.  The problems with ioctls have been also been fixed
+     in `sys/socket.h'.
+
+        * ioctls.h _(New)_
+
+        * netdb.h
+
+        * resolv.h
+
+        * arpa/ftp.h _(New)_
+
+        * arpa/inet.h
+
+        * arpa/nameser.h
+
+        * arpa/telnet.h _(New)_
+
+        * arpa/tftp.h _(New)_
+
+        * net/if.h _(New)_
+
+        * netinet/in.h
+
+        * sys/socket.h
+
+   * Added more code to the layer between the BSD socket functions and
+     the actual networking code, while trying to implement DOS
+     networking.  It should be easier to add other network transports
+     now - only Winsock is currently supported.  libsocket also stores
+     networking information for each transport.
+
+   * BSD functions can now distinguish between socket file descriptors
+     and normal file desciptors and will return the `ENOTSOCK' error
+     message as appropriate.
+
+   * Modified the assembly code to use the proper size of the ES
+     register.
+
+   * Added support for some Linux ioctls: `SIOCGIFNAME', `SIOCGIFADDR',
+     `SIOCGIFDSTADDR', `SIOCGIFNETMASK'.
+
+   * Added some Win95 DHCP code that allows auto-configuration from the
+     registry.
+
+   * Switched from `LIBSOCKET' to `LSCK' environment variable.  Also
+     made the configuration more flexible by the use of a configuration
+     file.
+
+   * Added a patch for libc so that `perror()' and `strerror()' give
+     proper error messages for BSD socket errors.
+
+   * Compilation tested with DJGPP 2.02 beta - works fine.
+
+   * The remote login code has been reinserted.  Previously I thought
+     this code was for Remote Procedure Calls (RPC) and I removed it
+     because I didn't think it worked.  This was short-sighted of me -
+     sorry.
+
+   * Added man pages for:
+
+        * ioctl_list(2)
+
+        * rcmd(3)
+
+        * readv(3)
+
+        * ruserok(3)
+
+        * rresvport(3)
+
+        * stdarg(3)
+
+        * va_arg(3)
+
+        * va_start(3)
+
+        * va_end(3)
+
+        * writev(3)
+
+        * netrc(5)
+
+   * Bugs: Fixed the bug in `resolv_conf_getdomainname()' in
+     `src/config/domname.c'.  Fixed the bug in the Windows 3.11 DNS IP
+     address code.  Fixed the dependency checking, so it works again
+     (oops).  The problems with ioctls have also been fixed (see
+     above).  Finally nailed the bizarre `select()' bugs (phew).
+
+   * Makefiles: Created a shared Makefile for shared rules between the
+     source and binary distributions - hopefully this will reduce
+     errors.  Added an 'uninstallation' target for man pages
+     (uninstallman), plus 'sfnman' and 'lfnman' targets for using the
+     man pages with short filenames and long filenames (after
+     installation via installman), so they can be used under DOS too.
+     The library is now compiled for 386s rather 486s, and the option
+     `-Werror' is only used when compiling debug versions.
+
+
+Version 0.7.3 1998-8-18
+=======================
+
+   * Rearranged include files so they have their own directory - lsck.
+     These can be included using lines like:
+
+          #include <lsck/blah.h>
+
+     The include files have been heavily reorganised, but existing
+     programs shouldn't have to be changed.
+
+   * libsocket's internal functions were renamed so the prefix `ls_'
+     was changed to `lsck_'.
+
+   * Added support to netsetup for the networks file, which allows
+     mapping of domain names to network IP addresses - see the man page
+     networks(5).  Also fixed a couple of typos in netsetup's messages.
+
+   * Added support for auto-configuration with Windows for Workgroups
+     3.11.  The DNS IP address is determined from a section in
+     system.ini.
+
+   * Restructured the library to allow addition of packet driver code.
+
+     Added `lsck_perror()' and `lsck_strerror()' functions, which work
+     as `perror()' and `strerror()', but print/return error messages for
+     socket errors too, unlike the libc versions.
+
+   * Bugs: Configuration files now opened in text mode rather than the
+     default file mode; Winsock initialisation now uses the correct ID
+     for WSOCK2.VXD rather than the old one, which was wrong; name
+     server now defaults to using hosts file if host.conf is not
+     present, rather than hanging; `resolv_conf_getdomainname()' in
+     `src/config/domname.c' now looks for the various filename
+     combinations possible (created long, read short, etc.); file
+     extension handling of `__FSEXT_ready' in `src/fsext.c'; more
+     checks are done on socket function parameters; fixed bugs in the
+     RAS code and the DNS IP list code (`lsck_getdnsaddrs()').
+
+   * Demos: The demo program `demo/internal.c' was renamed to
+     `demo/diag.c' and modified to give lots of diagnostic information
+     about libsocket's auto-configuration, in addition to demonstrating
+     the internal functions.  The demo `demo/netnet.c' was added to
+     demonstrate lookups from the networks file.  httpget can now cope
+     with URLs without a trailing slash, e.g. `http://myhost'.
+
+   * Makefiles: Demos now don't have their debugging information
+     stripped.  Added an uninstall target that removes include files
+     and libraries from the DJGPP directory tree.  The source
+     distribution Makefile now creates the lib/ directory if it does
+     not already exist.  Also fixed clean targets in top-level
+     Makefiles.
+
+   * Removals: `src/resolve/rcmd.c', `src/resolve/rexec.c' and
+     `src/resolve/rusrpass.c' were removed because they are untested
+     and probably won't work as they rely on functions DJGPP doesn't
+     support (properly).  They implement(ed) remote execution of
+     commands.  I will put these back if there is demand for them.  The
+     man pages for the `WS_*' functions were removed as the functions
+     no longer exist.
+
+   * Documentation: Added Indrek Mandre's kewl buttons; added questions
+     to the FAQ; other updates.
+
+
+Version 0.7.2 1998-6-12
+=======================
+
+   * The library by default comes ready for building short filename
+     programs - use:
+
+          make lfn
+
+     to build long filename programs.
+
+   * Fixed `read()' and `write()'.  Previously they didn't return the
+     correct values for non-blocking sockets when no data was present.
+     winsock.h is now installed to support non-blocking sockets
+     properly - please see question 3.6 of the FAQ for more details.
+
+   * Added support for `F_GETFL' parameter on `fcntl()'.
+
+   * Added some Winsock 2 constants to the include files.
+
+   * Bugs: Fixed the memory problem I introduced with last version, that
+     leads to junk being returned by `recv()' sometimes.  Also fixed
+     `send()', `recv()', `sendto()', `recvfrom()', `getpeername()',
+     `getsockname()', `getsockopt()' and `setsockopt()' to avoid data
+     loss / rubbish being returned.
+
+   * Configuration: The configuration files should now be found and
+     read, no matter what combination of short and long filenames they
+     were created with and are being read with.  libsocket now looks
+     for several possible filenames.
+
+   * Documentation: Indrek Mandre redesigned the pages.  The
+     documentation on the Web site should now be the same as that in
+     the archive, or more up-to-date.  The HTML pages all have short
+     filenames, and therefore can be viewed on any version of Windows
+     with a browser.  The latest version of man2html (1.2) is also
+     included.
+
+   * Makefiles: Fixed demo/Makefile.  Added some new targets to cope
+     with short and long filename issues (`make lfn' and `make sfn').
+     Added debug and nodebug targets to binary distribution.
+
+   * Man pages: Added man pages from Linux for `read()', `write()',
+     `fcntl()', `ioctl()' and `select()'.  Fixed mistakes in a couple
+     of the libsocket man pages.
+
+
+Version 0.7.1 1998-5-12
+=======================
+
+   * Fixed some ambiguities in conditions in the resolver code, so that
+     the source could be compiled with gcc 2.8.0 (and later?).
+
+   * Added code to query the DHCP VxD, to obtain more DNS addresses
+     automatically.
+
+   * Tidied up some of the code.
+
+   * Fixed many memory leaks and reduced memory usage slightly.
+
+   * Fixed some bugs in the DNS address obtaining code.
+
+   * `gethostname()' will no longer return spaces in host names.
+
+   * Fixed a bug in `callvxd.c' that lead to nearly *all* socket
+     functions failing :(
+
+   * Client demo now has name resolving.
+
+   * Found a bug in Netsetup that created host.conf incorrectly when no
+     DNS server was present, leading to the computer appearing to hang
+     when resolving names.  Also fixed some errors in the Netsetup
+     Makefile.
+
+   * Slight updates to the FAQ.
+
+   * Added a man page for host.conf.
+
+   * Added two new targets, debug and nodebug, to the top-level
+     Makefile to create Makefile.cfg for debugging and non-debugging
+     builds of the library.
+
+   * Moved the library into the `contrib/' tree and added manifest
+     files.
+
+
+Version 0.7.0 Work-in-progress 1998-5-3
+=======================================
+
+   * Richard Dawe took over maintainance of the library.
+
+   * The source files renamed to have short filenames. This lead to
+     successful compilation after typing `SET LFN=N' at the DOS prompt.
+
+   * The Regdos Group's registry code was incorporated, to allow
+     automatic configuration using registry settings.
+
+   * Added Winsock 2 detection. Creation of sockets fails, in order to
+     prevent protection faults.
+
+   * Rearranged the library, and created binary and source
+     distributions.
+
+   * Fixed a bug in the VxD calling code, pointed out by George Foot
+     (Later: This was actually a mistake.).
+
+   * Wrote some new documentation, including a FAQ, and updated the old
+     documentation.
+
+   * Fixed `getdomainname()' to look at the environment variable
+     `LOCALDOMAIN', resolv.conf or the registry, so it's more likely to
+     succeed.
+
+   * Modified `WS_init()' to return errors.
+
+   * Added support for the enviroment variable `LIBSOCKET', so that
+     configuration files could be placed somewhere other than in the
+     Windows directory.
+
+   * Upgraded to the latest version of man2html, the program that
+     converts man pages into HTML.
+
+   * Modified resit to use command-line parameters as well as prompting
+     for a name (e.g. the command form `resit jimbo' now works).
+
+   * Fixed bug in Netsetup.
+
+   * Added some defines: `FIONREAD', `FIONBIO'.
+
+   * Fixed `socket()' and `accept()' calls.
+
+   * Added `select()' demo, `demo/select.c'.
+
+   * The library now works with C++.
+
+
+Version 0.6 1997-12-02
+======================
+
+   * Made workaround to DJGPP'S FSEXT bug, thanks to Heiko Jappe.
+
+   * Fixed `close()', now `fopen()' after creating and closing sockets
+     works.
+
+   * Added a huge amount of documentation by Richard Dawe.
+
+   * Added netsetup script by Richard Dawe.
+
+   * Lots of minor bugs fixed.
+
+   * Added `fcntl()' call and defined some new flags that I would like
+     to see in future DJGPP versions: `O_NDELAY' and `O_FNDELAY'.
+
+
+Version 0.5 1997-10-11
+======================
+
+   * Fixed misfeatures in Makefiles pointed out by Laszlo Vecsey.
+     Created one global Makefile.cfg.
+
+   * Name resolving now works.
+
+   * Wrote new demo resit that demonstrates name resolving.
+
+
+Version 0.4 1997-09-15
+======================
+
+   * Fixed the bugfix made in `recv()'.  I discovered that programs
+     crash after connect on many Windows '95 installations.
+
+
+Version 0.3 1997-08-28
+======================
+
+   * Fixed bug in `recv()'/`recvfrom()' (blocking and return value and
+     EOF condition).
+
+   * `connect()' now waits for Windows; this means `send()' just after
+     `connect()' works now.
+
+   * Wrote new demo httpget that gets http files from WWW servers.
+
+
+Version 0.2 1997-08-22
+======================
+
+   * Fixed Makefile bug when make all gave errors at demo directory.
+
+   * Wrote client.c and server.c as demos at demo directory.
+
+

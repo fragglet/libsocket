@@ -1,0 +1,39 @@
+@c From: Alain Magloire <alainm@rcsm.ece.mcgill.ca>
+@c Some modifications by Richard Dawe <richdawe@bigfoot.com>
+
+@comment The start of a comment is indicated by the following comment. This
+@comment syntax is used by the script funcstxh.sh: @comment function <name>
+
+@comment function recv
+
+@node recv, socket
+@findex recv
+
+@subheading Syntax
+
+@example
+#include <sys/types.h>
+#include <sys/socket.h>
+
+ssize_t recv (int s, void * buf, size_t len, int flags);
+@end example
+
+@subheading Description
+
+The @code{recv()} function is used on a connected socket and is identical
+to @code{recvfrom()} (@pxref{recvfrom}) with NULL @var{from} and
+@var{fromlen} parameters. 
+
+@subheading Return Values
+
+On success the number of octets received is return, or -1 and
+errno is set. @xref{recvfrom}.
+
+@subheading Portability
+
+@portability posix, unix98
+
+@subheading Example
+
+@example
+@end example

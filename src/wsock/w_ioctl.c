@@ -1,7 +1,12 @@
 /*
  *  libsocket - BSD socket like library for DJGPP
  *  Copyright 1997, 1998 by Indrek Mandre
- *  Copyright 1997, 1998 by Richard Dawe
+ *  Copyright 1997-2000 by Richard Dawe
+ *
+ *  Portions of libsocket Copyright 1985-1993 Regents of the University of 
+ *  California.
+ *  Portions of libsocket Copyright 1991, 1992 Free Software Foundation, Inc.
+ *  Portions of libsocket Copyright 1997, 1998 by the Regdos Group.
  *
  *  This library is free software; you can redistribute it and/or modify it
  *  under the terms of the GNU Library General Public License as published
@@ -20,44 +25,74 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
+
+#include <dpmi.h>
 #include <sys/farptr.h>
 #include <sys/segments.h>
-#include <dpmi.h>
-#include <pc.h>
+
+#include <sys/socket.h>
 
 #include <lsck/if.h>
-#include <lsck/ws.h>
-#include <winsock.h>
-
-#include "lsckglob.h"
-#include "wsockvxd.h"
+#include "wsock.h"
 #include "farptrx.h"
+#include "wsockvxd.h"
 
-int wsock_ioctlsocket (LSCK_SOCKET *lsd, int request, int *param)
+/* -----------------
+ * - __wsock_ioctl -
+ * ----------------- */
+
+int __wsock_ioctl (LSCK_SOCKET *lsd, int *rv, int request, int *param)
 {
-    WSOCK_IOCTLSOCKET_PARAMS params;
+	LSCK_SOCKET_WSOCK *wsock = (LSCK_SOCKET_WSOCK *) lsd->idata;
+	WSOCK_IOCTLSOCKET_PARAMS params;
 
-    params.Socket = (void *) lsd->wsock._Socket;
-    params.Command = request;
-    params.Param = *param;
+	/* Check the inbound parameters */
+	switch (request) {
+	case FIONBIO:
+	case FIONREAD:
+	case SIOCATMARK:
+		break;
 
-    _farpokex ( SocketP, 0, &params, sizeof ( WSOCK_IOCTLSOCKET_PARAMS ) );
+		/* These aren't supported! */
+		/*case SIOCSHIWAT:
+		 * case SIOCGHIWAT:
+		 * case SIOCSLOWAT:
+		 * case SIOCGLOWAT: */
 
-    CallVxD ( WSOCK_IOCTLSOCKET_CMD );
+	/* Unsupported ioctl */
+	default:
+		/* Unhandled */
+		return(0);
+	}
 
-    if ( _VXDError && _VXDError != 0xffff ) return -1;
+	/* Set up the call */
+	bzero (&params, sizeof (params));
 
-    _farpeekx ( SocketP, 0, &params, sizeof ( WSOCK_IOCTLSOCKET_PARAMS ) );
+	params.Socket = (void *) wsock->_Socket;
+	params.Command = request;
+	params.Param = *param;
 
-    *param = params.Param;
+	_farpokex (SocketP, 0, &params, sizeof (WSOCK_IOCTLSOCKET_PARAMS));
 
-    if (request == FIONBIO) {
-        if (*param == 1)
-            lsd->flags &= ~LSCK_FLAG_BLOCKING;
-        else
-            lsd->flags |= LSCK_FLAG_BLOCKING;
-    }
+	__wsock_callvxd (WSOCK_IOCTLSOCKET_CMD);
 
-    return 0;
+	if (_VXDError && _VXDError != 0xffff) {
+		/* Handled and it failed. */
+		*rv = -1;
+		return(1);
+	}
+
+	_farpeekx (SocketP, 0, &params, sizeof (WSOCK_IOCTLSOCKET_PARAMS));
+	*param = params.Param;
+
+	if (request == FIONBIO) {
+		if (*param == 0)
+			lsd->blocking = 1;
+		else
+			lsd->blocking = 0;
+	}
+
+	*rv = 0;
+	return(1);
 }
-

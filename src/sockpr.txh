@@ -1,0 +1,49 @@
+@comment The start of a comment is indicated by the following comment. This
+@comment syntax is used by the script funcstxh.sh: @comment function <name>
+
+@comment function socketpair
+
+@node socketpair, socket
+@findex socketpair
+
+@subheading Syntax
+
+@example
+#include <sys/socket.h>
+
+int socketpair (int domain, int type, int protocol, int sv[2]);
+@end example
+
+@subheading Description
+
+@code{socketpair()} creates a pair of unbound connected sockets.  The sockets
+are identical. @var{sv} contains two file descriptors, one for each socket.
+
+@var{domain}, @var{type} and @var{protocol} are described in the section
+on @code{socket()} (@pxref{socket}).  Using a @var{protocol} of 0 will give a
+default protocol.
+
+@subheading Return Values
+
+0 is returned on success.  Otherwise -1 is returned and the error code is
+stored in @var{errno}.
+
+Possible errors for this function are:
+
+@table @samp
+@item EOPNOTSUPP
+The specified protocol does not permit creation of socket pairs.
+@item EAFNOTSUPP
+The specified address family is not supported.
+@item ENOPROTOSUPPORT
+The specified protocol is not supported.
+@end table
+
+@subheading Portability
+
+@portability posix, unix98
+
+@subheading Example
+
+@example
+@end example
