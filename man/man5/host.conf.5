@@ -1,0 +1,52 @@
+.\" libsocket Copyright 1997, 1998 by Indrek Mandre
+.\" libsocket Copyright 1997, 1998 by Richard Dawe
+.\" Manual pages written by Richard Dawe
+.\"
+.TH HOST.CONF 5 "11 June 1998" "libsocket 0.7.2" "libsocket Reference"
+.SH NAME
+host.conf \- configures the order of name resolving
+.SH DESCRIPTION
+This file tells the networking libraries which name resolving resources to use,
+and in what order.
+.sp
+Valid sources are
+.BR hosts ", " bind " and " nis .
+.B hosts
+refers to the file
+.IR hosts ,
+which contains name to IP address mappings.
+.B bind
+refers to DNS servers, which are configured elsewhere
+.RI ( resolv.conf
+- see
+.BR resolver (5)).
+.I nis
+refers to Network Information Services, which probably won't be very common in
+a Windows environment, but might be present if Unix hosts are used.
+.sp
+If you have DNS servers, the recommended order is
+.BR bind " then " hosts ,
+i.e.
+.HP
+.RS
+order bind, hosts
+.RE
+.sp
+If you don't have a DNS server, then only
+.B hosts
+is required, like so:
+.HP
+.RS
+order hosts
+.RE
+.sp
+If you specify
+.B bind
+as well as
+.B hosts
+without a DNS server, then programs are likely to stall when resolving names.
+.SH FILES
+.IR /etc/host.conf " (Linux),"
+.IR C:\eWINDOWS\eHOST.CONF " (Windows)"
+.SH SEE ALSO
+.BR hosts "(5), " resolver (5)

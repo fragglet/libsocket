@@ -1,0 +1,28 @@
+libsocket Demos Readme
+======================
+
+libsocket Copyright 1997, 1998 by Indrek Mandre
+libsocket Copyright 1997, 1998 by Richard Dawe
+
+netprototest.c
+  How to find protocols by name. It's also possible by numbers and
+ to look all protocol one by one. From file ~window/protocol
+
+netservtest.c
+  Find services by name. Same story as previous but only from file
+ ~windows/services.
+
+client.c
+server.c
+  Client and server show basic socket programming.
+
+httpget.c
+  Sample programme that gets files from www servers.
+  Now name resolving added by Rich Dawe.
+
+resit.c
+  Simple name resolver.
+
+select.c
+  Demonstrates the basic use of select.
+

@@ -1,0 +1,58 @@
+.\" libsocket Copyright 1997, 1998 by Indrek Mandre
+.\" libsocket Copyright 1997, 1998 by Richard Dawe
+.\" Manual pages written by Richard Dawe
+.\"
+.TH NETSETUP 8 "11 June 1998" "libsocket 0.7.2" "libsocket Reference"
+.SH NAME
+netsetup \- libsocket Library Networking Set-Up
+.SH SYNOPSIS
+.B netsetup
+.SH DESCRIPTION
+netsetup sets up various configuration files for libsocket.
+.sp
+netsetup is an interactive program that creates versions of
+.IR host.conf ,
+.I resolv.conf
+and
+.IR hosts ,
+because these are not usually present on Windows '95 computers. These are
+required for libsocket's networking to function correctly. The files created
+need to moved and renamed to the Windows directory, usually
+.IR C:\eWINDOWS .
+.sp
+In order to create the files, netsetup needs the following information:
+.HP
+.RS
+Your computer's name and IP address
+.sp
+Your domain name
+.sp
+Whether there is a DNS server and its IP address (if applicable)
+.RE
+.sp
+The first piece of information is used to create the
+.I hosts
+file. The remainder is used to create the
+.I host.conf
+and
+.I resolv.conf
+files.
+.sp
+The
+.I hosts
+file created contains entries for
+.B localhost
+and whatever name you entered for your computer. This file is used to resolve
+names when no DNS server is present - it is used to translate names to IP
+addresses, e.g. myserver -> 192.168.0.2.
+.sp
+If there is no DNS server present, then netsetup will tell libsocket to use
+the
+.I hosts
+file for name resolution before using a DNS server. If one is present, then
+the order will be reversed.
+.SH SEE ALSO
+.BR libsocket (7),
+.BR hosts (5)
+and
+.BR resolver (5).

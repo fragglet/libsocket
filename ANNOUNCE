@@ -1,0 +1,51 @@
+libsocket 0.7.3 Announcement
+============================
+
+libsocket Copyright 1997, 1998 by Indrek Mandre
+libsocket Copyright 1997, 1998 by Richard Dawe
+Portions of libsocket Copyright 1997, 1998 by the Regdos Group
+
+Hello.
+
+    I'd like to announce libsocket 0.7.3, the latest version of a BSD-style
+socket library for DJGPP. libsocket uses Windows 3.x and '95's networking
+services to provide networking functions to programs running in a DOS box
+under Windows. It is primarily intended for TCP/IP networking, but sockets
+using other protocols can be created.
+
+    libsocket programs should be able to auto-configure itself to a certain
+extent by obtaining Windows's TCP/IP settings. It also comes with a
+configuration program, Netsetup, that should ease configuration when this
+fails.
+
+    It comes with some example programs and a large amount of socket function
+documentation (man and HTML pages). A FAQ is also included. I've tried to
+anticipate many questions, but I'm sure it doesn't answer all of them. Some
+pointers to further sources of information about socket programming are
+provided. All the libsocket documentation is on the Web.
+
+    This release is mainly a tidy-up release before I add packet driver
+support, but it also fixes many small bugs - please see the libsocket home
+page for the changelog. The auto-configuration of the library has been tested
+and fixed, but is limited.
+
+    libsocket is distributed under the GNU Library General Public License
+(LGPL). It is available from the libsocket home page at:
+
+    http://libsocket.home.ml.org/
+
+Note that the home page has changed again, but this should be its final URL.
+This will redirect to wherever it actually is.
+
+    Hopefully libsocket 0.7.3 will appear on the DJGPP archive soon.
+
+    If you have any questions relating to libsocket, please mail me and I'll
+be happy to help.
+
+    Thanks,
+
+    Richard Dawe
+    <richdawe@bigfoot.com>
+    http://irix.bris.ac.uk/~rd5718/
+
+    August 18th 1998

@@ -1,0 +1,177 @@
+DOCUMENT:Q131978  15-MAR-1996  [win32sdk]
+TITLE   :Receive/Send Multicasts in Windows NT & Win95 Using WinSock
+PRODUCT :Microsoft Win32 Software Development Kit
+PROD/VER:4.00    | 3.50 3.51
+OPER/SYS:WINDOWS | WINDOWS NT
+KEYWORDS:kbnetwork kbcode
+
+----------------------------------------------------------------------
+The information in this article applies to:
+
+ - Microsoft Win32 Software Development Kit (SDK), versions 3.5, and 3.51
+ - Microsoft Windows version 4.0
+----------------------------------------------------------------------
+
+SUMMARY
+=======
+
+This article describes how a host can become a member of a multicast group
+and receive and send multicast packets with Windows NT using the Windows
+Sockets (WinSock) interface.
+
+This functionality is also available with Windows 95.
+
+MORE INFORMATION
+================
+
+Sending IP Multicast Datagrams
+------------------------------
+
+IP multicasting is currently supported only on AF_INET sockets of type
+SOCK_DGRAM.
+
+To send a multicast datagram, specify an IP multicast address with a range
+of 224.0.0.0 to 239.255.255.255 as the destination address in a sendto()
+call.
+
+By default, IP multicast datagrams are sent with a time-to-live (TTL) of 1,
+which prevents them from being forwarded beyond a single subnetwork. The
+following code demonstrates how to change this functionality:
+
+  int ttl = 7 ; // Arbitrary TTL value.
+  setsockopt(sock, IPPROTO_IP, IP_MULTICAST_TTL, (char *)&ttl, sizeof(ttl))
+
+Multicast datagrams with a TTL of 0 are not transmitted on any subnetwork.
+Multicast datagrams with a TTL of greater than one may be delivered to more
+than one subnetwork if there are one or more multicast routers attached to
+the first-hop subnetwork.
+
+A multicast router does not forward multicast datagrams with destination
+addresses between 224.0.0.0 and 224.0.0.255, inclusive, regardless of their
+TTLs. This particular range of addresses is reserved for the use of routing
+protocols and other low-level topology discovery or maintenance protocols,
+such as gateway discovery and group membership reporting.
+
+Each multicast transmission is sent from a single network interface, even
+if the host has more than one multicast-capable interface. A socket option
+is available to override the default for subsequent transmissions from a
+given socket. For example
+
+  unsigned long addr = inet_addr("157.57.8.1");
+  setsockopt(sock, IPPROTO_IP, IP_MULTICAST_IF,
+            (char *)&addr, sizeof(addr))
+
+where "addr" is the local IP address of the desired outgoing interface.
+An address of INADDR_ANY may be used to revert to the default interface.
+Note that this address might be different from the one the socket is bound
+to.
+
+If a multicast datagram is sent to a group to which the sending host itself
+belongs (on the outgoing interface), by default, a copy of the datagram is
+looped back by the IP layer for local delivery. Under some versions of
+UNIX, there is an option available to disable this behavior
+(IP_MULTICAST_LOOP). This option is not supported in Windows NT. If you try
+to disable this behavior, the call fails with the error WSAENOPROTOOPT (Bad
+protocol option).
+
+A multicast datagram sent with an initial TTL greater than 1 may be
+delivered to the sending host on a different interface from that on which
+it was sent, if the host belongs to the destination group on that other
+interface. The loopback control option has no effect on such delivery.
+
+Receiving IP Multicast Datagrams
+--------------------------------
+
+Before a host can receive IP multicast datagrams, it must become a member
+of one or more IP multicast groups. A process can ask the host to join
+a multicast group by using the following socket option
+
+   struct ip_mreq mreq;
+
+where "mreq" is the following structure:
+
+   struct ip_mreq {
+       struct in_addr imr_multiaddr;   /* multicast group to join */
+       struct in_addr imr_interface;   /* interface to join on    */
+   }
+
+For example:
+
+        #define RECV_IP_ADDR   "225.6.7.8"  // arbitrary multicast address
+
+        mreq.imr_multiaddr.s_addr = inet_addr(RECV_IP_ADDR);
+        mreq.imr_interface.s_addr = INADDR_ANY;
+        err = setsockopt(sock, IPPROTO_IP, IP_ADD_MEMBERSHIP,
+                        (char*)&mreq, sizeof(mreq))
+
+Note that it is necessary to bind to an address before calling the
+setsockopt() function.
+
+Every membership is associated with a single interface, and it is possible
+to join the same group on more than one interface. The address of
+"imr_interface" should be INADDR_ANY to choose the default multicast
+interface, or one of the host's local addresses to choose a particular
+(multicast-capable) interface.
+
+The maximum number of memberships is limited only by memory and what the
+network card supports.
+
+The following code sample can be used to drop a membership
+
+   struct ip_mreq mreq;
+   setsockopt(sock, IPPROTO_IP, IP_DROP_MEMBERSHIP,
+             (char*)&mreq,sizeof(mreq))
+
+where "mreq" contains the same values as used to add the membership. The
+memberships associated with a socket are also dropped when the socket is
+closed or the process holding the socket is killed. However, more than
+one socket may claim a membership in a particular group, and the host
+remains a member of that group until the last claim is dropped.
+
+The memberships associated with a socket do not necessarily determine which
+datagrams are received by that socket. Incoming multicast packets are
+accepted by the kernel IP layer if any socket has claimed a membership in
+the destination group of the datagram; however, delivery of a multicast
+datagram to a particular socket is based on the destination port (or
+protocol type, for raw sockets), just as with unicast datagrams. To receive
+multicast datagrams sent to a particular port, it is necessary to bind to
+that local port, leaving the local address unspecified (that is,
+INADDR_ANY).
+
+More than one process may bind to the same SOCK_DGRAM UDP port if the
+bind() call is preceded by the following code:
+
+   int one = 1;
+   setsockopt(sock, SOL_SOCKET, SO_REUSEADDR, (char *)&one, sizeof(one))
+
+In this case, every incoming multicast or broadcast UDP datagram destined
+for the shared port is delivered to all sockets bound to the port.
+
+The definitions required for the new, multicast-related socket options are
+located in the WINSOCK.H file. All IP addresses are passed in network
+byte-order.
+
+REFERENCES
+==========
+
+The file DOC\MISC\MULTICAST.TXT is included with the Win32 SDK.
+
+Additional reference words: 3.50 4.00
+KBCategory: kbnetwork kbcode
+KBSubcategory: NtwkWinsock
+
+=============================================================================
+
+THE INFORMATION PROVIDED IN THE MICROSOFT KNOWLEDGE BASE IS
+PROVIDED "AS IS" WITHOUT WARRANTY OF ANY KIND.  MICROSOFT DISCLAIMS
+ALL WARRANTIES, EITHER EXPRESS OR IMPLIED, INCLUDING THE WARRANTIES
+OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  IN NO
+EVENT SHALL MICROSOFT CORPORATION OR ITS SUPPLIERS BE LIABLE FOR
+ANY DAMAGES WHATSOEVER INCLUDING DIRECT, INDIRECT, INCIDENTAL,
+CONSEQUENTIAL, LOSS OF BUSINESS PROFITS OR SPECIAL DAMAGES, EVEN IF
+MICROSOFT CORPORATION OR ITS SUPPLIERS HAVE BEEN ADVISED OF THE
+POSSIBILITY OF SUCH DAMAGES.  SOME STATES DO NOT ALLOW THE EXCLUSION
+OR LIMITATION OF LIABILITY FOR CONSEQUENTIAL OR INCIDENTAL DAMAGES
+SO THE FOREGOING LIMITATION MAY NOT APPLY.
+
+Copyright Microsoft Corporation 1996.

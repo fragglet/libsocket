@@ -1,0 +1,175 @@
+<!--
+  HTML code made by Indrek Mandre
+  Copyright <C> 1998 Indrek Mandre
+  Thank you for reading my HTML code, if you have any questions,
+  please email me: indrek@warp.edu.ee
+ -->
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN"
+   "http://www.w3.org/TR/REC-html40/loose.dtd">
+
+<HTML>
+  <HEAD>
+    <TITLE>libsocket 0.7.3: Bugs</TITLE>
+
+    <META name="author" content="Indrek Mandre">
+    <META name="copyright" content="Copyright &copy; 1998 Indrek Mandre">
+    <META name="keywords" content="libsocket,bugs">
+
+  <SCRIPT LANGUAGE="JavaScript">
+    nms  = new Array('lsck', 'new', 'faq', 'log', 'bug', 'dl', 'aut', 'crd', 'lnk');
+    imag = new Array();
+
+    for (i = 0; i < 9; i++) {
+      imag[i] = new Array();
+      imag[i][0] = new Image();
+      imag[i][1] = new Image();
+      imag[i][0].src = 'l_'  + nms[i] + '.gif';
+      imag[i][1].src = 'lm_' + nms[i] + '.gif';
+    }
+
+    function chit (i, j, k) { i.src = imag[j][k].src; }
+  </SCRIPT>
+
+  </HEAD>
+
+  <BODY bgcolor="#000000" link="#0000FF" alink="#FF0000">
+    <A name="top">
+    <CENTER>
+    <TABLE bgcolor="#FFFFFF" border="0" cellpadding="15">
+    <TR><TD align="center">
+    <TABLE border="0" cellspacing="0" cellpadding="0" bgcolor="#FFFFFF">
+      <TR>
+        <TD width="157" height="124" rowspan=2 bgcolor="#6EA6AC">&nbsp;</TD>
+	<TD colspan=2 height="19" bgcolor="#6EA6AC">&nbsp</TD>
+
+        <!--<TD width="157" height="124" rowspan="2"><IMG src="lsck_ka2.gif" alt="[-=-]"></TD>
+	<TD width="99" height="124" rowspan="2"><IMG src="lsck_ka1.gif" alt="[-=-]"></TD>
+	<TD width="10000" height="19" bgcolor="#6EA6AC">&nbsp;</TD>-->
+      </TR>
+      <TR>
+        <TD width="500" height="105"><IMG src="lsck_bug.jpg" alt="[Bugs]"></TD>
+      </TR>
+      <TR>
+        <TD bgcolor="#6EA6AC" width="157" height="19">&nbsp;</TD>
+	<TD width="99" height="19" bgcolor="#6EA6AC">&nbsp</TD>
+	<TD width="500" height="19" bgcolor="#6EA6AC">&nbsp</TD>
+      </TR>
+      <TR>
+        <TD bgcolor="#6EA6AC" rowspan="2" valign="top">
+	  <CENTER>
+	  <TABLE border=0 cellspacing="10" cellpadding="5" width="150" align="center">
+	    <TR><TD><A href="lsck.htm" onMouseOver="chit(document.im0,0,1)" onMouseOut="chit(document.im0,0,0)"><IMG SRC="l_lsck.gif" NAME="im0" BORDER=0></A></TD></TR>
+	    <TR><TD><A href="lsck_new.htm" onMouseOver="chit(document.im1,1,1)" onMouseOut="chit(document.im1,1,0)"><IMG SRC="l_new.gif" NAME="im1" BORDER=0></A></TD></TR>
+	    <TR><TD><A href="lsck_faq.htm" onMouseOver="chit(document.im2,2,1)" onMouseOut="chit(document.im2,2,0)"><IMG SRC="l_faq.gif" NAME="im2" BORDER=0></A></TD></TR>
+	    <TR><TD><A href="lsck_log.htm" onMouseOver="chit(document.im3,3,1)" onMouseOut="chit(document.im3,3,0)"><IMG SRC="l_log.gif" NAME="im3" BORDER=0></A></TD></TR>
+	    <TR><TD><IMG SRC="la_bug.gif" NAME="im4" BORDER=0></TD></TR>
+	    <TR><TD><A href="lsck_dl.htm" onMouseOver="chit(document.im5,5,1)" onMouseOut="chit(document.im5,5,0)"><IMG SRC="l_dl.gif" NAME="im5" BORDER=0></A></TD></TR>
+	    <TR><TD><A href="lsck_aut.htm" onMouseOver="chit(document.im6,6,1)" onMouseOut="chit(document.im6,6,0)"><IMG SRC="l_aut.gif" NAME="im6" BORDER=0></A></TD></TR>
+	    <TR><TD><A href="lsck_crd.htm" onMouseOver="chit(document.im7,7,1)" onMouseOut="chit(document.im7,7,0)"><IMG SRC="l_crd.gif" NAME="im7" BORDER=0></A></TD></TR>
+	    <TR><TD><A href="lsck_lnk.htm" onMouseOver="chit(document.im8,8,1)" onMouseOut="chit(document.im8,8,0)"><IMG SRC="l_lnk.gif" NAME="im8" BORDER=0></A></TD></TR>
+	    <TR><TD bgcolor="#79B6BD"><A HREF="lsck_man.htm">Library Reference</A> (~330K HTML!)</TD><TR>
+	  </TABLE>
+	  </CENTER>
+	</TD>
+        <TD colspan="2" valign="top">
+	   <TABLE border=0 cellpadding="15">
+	     <TR><TD>
+
+<!-- Content between "Rich's" markers Copyright 1997, 1998 by Richard Dawe -->
+<!-- Rich's code starts here -->
+
+<P ALIGN="CENTER"><A NAME="toc">Jump to:</A>
+<A HREF="#bugs">[Bugs]</A>
+<A HREF="#todos">[To-dos]</A></P>
+
+<P>If you find any bugs or problems with libsocket, please
+<A HREF="mailto:richdawe@bigfoot.com">mail me</A> with the details (i.e.
+the program code and a description).</P>
+
+<HR>
+
+<H2><A NAME="bugs">Bugs</A></H2>
+
+<UL>
+
+<LI><P>Lack of Winsock 2 support</P></LI>
+
+<LI><P>gethostname() will return a space-free version of the host name,
+which may not be the DNS name.</P></LI>
+
+<LI><P>Connecting to non-existent IP addresses seems to hang the library and
+not time-out - why? How long is the time-out?</P></LI>
+
+<LI><P>Non-blocking sockets are blocking?</P></LI>
+
+<LI><P>libsocket isn't aware of the connection being closed by the
+other end?</P></LI>
+
+</UL>
+
+<P><A HREF="#toc">[Top]</A></P>
+
+<HR>
+
+<H2><A NAME="todos">To-dos</A></H2>
+
+<P>Here are some things I plan to add when I have time:</P>
+
+<UL>
+
+<LI><P>Better documentation (as always) - any comments on how I can improve it
+would be appreciated.</P></LI>
+
+<LI><P>Add a Windows set-up program. This should be able to detect settings
+automatically, making the library easier to use, not just by programmers, but
+by end-users too.</P></LI>
+
+<LI><P>Check that libsocket works with the DJGPP version 2.02 (currently in
+alpha).</P></LI>
+
+<LI><P>Write some documentation about the library's internal functions, for
+those who want to know.</P></LI>
+
+<LI><P>Packet driver support? (e.g. like WAT/TCP, maybe using
+ndispkt3?)</P></LI>
+
+</UL>
+
+<P><A HREF="#toc">[Top]</A></P>
+
+<HR>
+
+<P><I>The layout of this page is by Indrek Mandre, and the content is by
+<A HREF="mailto:richdawe@bigfoot.com">Richard Dawe</A>.
+
+<SCRIPT LANGUAGE="JavaScript">
+lastmod = new Date(document.lastModified);
+document.write('This page was last updated on ' + lastmod.toGMTString() + '.');
+</SCRIPT>
+
+</I></P>
+
+<!-- Rich's code ends here -->
+
+<HR WIDTH="100%">
+	     </TD></TR>
+	   </TABLE>
+	</TD>
+      </TR>
+      <TR>
+        <TD colspan="2" valign="bottom">
+	  <DIV align="right">
+	    <A href="lsck_log.htm"><IMG src="lsck_l.jpg" border=0 alt="[Left]"></A>
+	    <A href="#top"><IMG SRC="lsck_u.jpg" border=0 alt="[Top]"></A>
+	    <A href="lsck_dl.htm"><IMG SRC="lsck_r.jpg" border=0 alt="[Right]"></A>
+	  </DIV>
+	</TD>
+      </TR>
+    </TD></TR>
+    </TABLE>
+    </TABLE>
+    </CENTER>
+  </BODY>
+</HTML>
+

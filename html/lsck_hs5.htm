@@ -1,0 +1,77 @@
+<HTML>
+<HEAD>
+<TITLE>hosts(5)</TITLE>
+</HEAD>
+<BODY>
+<PRE>
+
+
+<A HREF="lsck_hs5.htm">HOSTS(5)</A>               libsocket Reference               <A HREF="lsck_hs5.htm">HOSTS(5)</A>
+
+
+NAME
+       hosts - the host name to IP address mapping file
+
+DESCRIPTION
+       This file tells the host name resolver the IP address cor-
+       responding to each host name. This is useful if  there  is
+       no  DNS  server on the network. It can also be used if the
+       DNS server does not have a record for  a  particular  host
+       name, but its IP address is known.
+
+       The  file is a plain ASCII file. Comments are denoted by a
+       hash at the start of a line. Each line has  the  following
+       format:
+
+              (lt)IP address(gt) (lt)host name(gt)
+
+       e.g.
+              # hosts - host name to IP address translation file
+              127.0.0.1   localhost
+              192.168.0.2 gertrude
+              192.168.0.3 herbert
+              192.168.0.4 norman
+
+       There should always be a line refering to localhost.  This
+       is the local computer, and is always accessible.
+
+FILES
+       /etc/hosts (Linux), C:\WINDOWS\HOSTS (Windows)
+
+SEE ALSO
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+libsocket 0.7               2 May 1998                          1
+
+
+</PRE>
+<HR>
+<I>Please look at the <A HREF="trans.htm">man2html translation issues</A>.
+<BR>man2html.pl Version 1.1, Copyright 1997, 1998 by Richard Dawe</I>
+</BODY>
+</HTML>

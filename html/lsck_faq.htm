@@ -1,0 +1,700 @@
+<!--
+  HTML code made by Indrek Mandre
+  Copyright <C> 1998 Indrek Mandre
+  Thank you for reading my HTML code, if you have any questions,
+  please email me: indrek@warp.edu.ee
+ -->
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN"
+   "http://www.w3.org/TR/REC-html40/loose.dtd">
+
+<HTML>
+  <HEAD>
+    <TITLE>libsocket 0.7.3: The FAQ</TITLE>
+
+    <META name="author" content="Indrek Mandre">
+    <META name="copyright" content="Copyright &copy; 1998 Indrek Mandre">
+    <META name="keywords" content="libsocket,faq">
+
+  <SCRIPT LANGUAGE="JavaScript">
+    nms  = new Array('lsck', 'new', 'faq', 'log', 'bug', 'dl', 'aut', 'crd', 'lnk');
+    imag = new Array();
+
+    for (i = 0; i < 9; i++) {
+      imag[i] = new Array();
+      imag[i][0] = new Image();
+      imag[i][1] = new Image();
+      imag[i][0].src = 'l_'  + nms[i] + '.gif';
+      imag[i][1].src = 'lm_' + nms[i] + '.gif';
+    }
+
+    function chit (i, j, k) { i.src = imag[j][k].src; }
+  </SCRIPT>
+
+  </HEAD>
+
+  <BODY bgcolor="#000000" link="#0000FF" alink="#FF0000">
+    <A name="top">
+    <CENTER>
+    <TABLE bgcolor="#FFFFFF" border="0" cellpadding="15">
+    <TR><TD align="center">
+    <TABLE border="0" cellspacing="0" cellpadding="0" bgcolor="#FFFFFF">
+      <TR>
+        <TD width="157" height="124" rowspan=2 bgcolor="#6EA6AC">&nbsp;</TD>
+	<TD colspan=2 height="19" bgcolor="#6EA6AC">&nbsp</TD>
+
+        <!--<TD width="157" height="124" rowspan="2"><IMG src="lsck_ka2.gif" alt="[-=-]"></TD>
+	<TD width="99" height="124" rowspan="2"><IMG src="lsck_ka1.gif" alt="[-=-]"></TD>
+	<TD width="10000" height="19" bgcolor="#6EA6AC">&nbsp;</TD>-->
+      </TR>
+      <TR>
+        <TD width="500" height="105"><IMG src="lsck_faq.jpg" alt="[FAQ]"></TD>
+      </TR>
+      <TR>
+        <TD bgcolor="#6EA6AC" width="157" height="19">&nbsp;</TD>
+	<TD width="99" height="19" bgcolor="#6EA6AC">&nbsp</TD>
+	<TD width="500" height="19" bgcolor="#6EA6AC">&nbsp</TD>
+      </TR>
+      <TR>
+        <TD bgcolor="#6EA6AC" rowspan="2" valign="top">
+	  <CENTER>
+	  <TABLE border=0 cellspacing="10" cellpadding="5" width="150" align="center">
+	    <TR><TD><A href="lsck.htm" onMouseOver="chit(document.im0,0,1)" onMouseOut="chit(document.im0,0,0)"><IMG SRC="l_lsck.gif" NAME="im0" BORDER=0></A></TD></TR>
+	    <TR><TD><A href="lsck_new.htm" onMouseOver="chit(document.im1,1,1)" onMouseOut="chit(document.im1,1,0)"><IMG SRC="l_new.gif" NAME="im1" BORDER=0></A></TD></TR>
+	    <TR><TD><IMG SRC="la_faq.gif" NAME="im2" BORDER=0></TD></TR>
+	    <TR><TD><A href="lsck_log.htm" onMouseOver="chit(document.im3,3,1)" onMouseOut="chit(document.im3,3,0)"><IMG SRC="l_log.gif" NAME="im3" BORDER=0></A></TD></TR>
+	    <TR><TD><A href="lsck_bug.htm" onMouseOver="chit(document.im4,4,1)" onMouseOut="chit(document.im4,4,0)"><IMG SRC="l_bug.gif" NAME="im4" BORDER=0></A></TD></TR>
+	    <TR><TD><A href="lsck_dl.htm" onMouseOver="chit(document.im5,5,1)" onMouseOut="chit(document.im5,5,0)"><IMG SRC="l_dl.gif" NAME="im5" BORDER=0></A></TD></TR>
+	    <TR><TD><A href="lsck_aut.htm" onMouseOver="chit(document.im6,6,1)" onMouseOut="chit(document.im6,6,0)"><IMG SRC="l_aut.gif" NAME="im6" BORDER=0></A></TD></TR>
+	    <TR><TD><A href="lsck_crd.htm" onMouseOver="chit(document.im7,7,1)" onMouseOut="chit(document.im7,7,0)"><IMG SRC="l_crd.gif" NAME="im7" BORDER=0></TD></TR>
+	    <TR><TD><A href="lsck_lnk.htm" onMouseOver="chit(document.im8,8,1)" onMouseOut="chit(document.im8,8,0)"><IMG SRC="l_lnk.gif" NAME="im8" BORDER=0></A></TD></TR>
+	    <TR><TD bgcolor="#79B6BD"><A HREF="lsck_man.htm">Library Reference</A> (~330K HTML!)</TD><TR>
+	  </TABLE>
+	  </CENTER>
+	</TD>
+        <TD colspan="2" valign="top">
+	   <TABLE border=0 cellpadding="15">
+	     <TR><TD>
+
+<!-- Content between "Rich's" markers Copyright 1997, 1998 by Richard Dawe -->
+<!-- Rich's code starts here -->
+
+<P ALIGN="CENTER">FAQ version 1.1.0</P>
+
+<P ALIGN="CENTER">Last updated: 18<SUP>th</SUP> August 1998</P>
+
+<H2>Copyright</H2>
+
+libsocket Copyright 1997, 1998 by Indrek Mandre<BR>
+libsocket Copyright 1997, 1998 by <A HREF="mailto:richdawe@bigfoot.com">Richard
+Dawe</A><BR>
+Portions of libsocket Copyright 1997, 1998 by the Regdos Group
+
+<P>This FAQ was written by <A HREF="mailto:richdawe@bigfoot.com">Richard
+Dawe</A>. Please see <A HREF="lsck_aut.htm#rich">his details</A> for
+more information.</P>
+
+<HR WIDTH="100%">
+
+<H2><A NAME="toc"></A>Table Of Contents</H2>
+
+<A HREF="#s1">Section 1: Introduction</A>
+
+<UL>
+<LI><A HREF="#q1.1">Question 1.1: What is libsocket?</A></LI>
+<LI><A HREF="#q1.2">Question 1.2: Who wrote libsocket?</A></LI>
+<LI><A HREF="#q1.3">Question 1.3: Which versions of libsocket does this
+FAQ cover?</A></LI>
+<LI><A HREF="#q1.4">Question 1.4: I have a question that is not covered
+in the FAQ. What should I do?</A></LI>
+</UL><P>
+
+<A HREF="#s2">Section 2: Operating System Support</A>
+
+<UL>
+<LI><A HREF="#q2.1">Question 2.1: Will libsocket work with DOS?</A></LI>
+<LI><A HREF="#q2.2">Question 2.2: Will libsocket work with Windows 3.x?</A></LI>
+<LI><A HREF="#q2.3">Question 2.3: Will libsocket work with Windows '95?</A></LI>
+<LI><A HREF="#q2.4">Question 2.4: Will libsocket work with Windows '98?</A></LI>
+<LI><A HREF="#q2.4">Question 2.5: Will libsocket work with Windows NT?</A></LI>
+<LI><A HREF="#q2.5">Question 2.6: Will libsocket work with Linux?</A></LI>
+</UL><P>
+
+<A HREF="#s3">Section 3: Installation and Compilation</A>
+
+<UL>
+<LI><A HREF="#q3.1">Question 3.1: How should I rebuild libsocket?</A></LI>
+<LI><A HREF="#q3.2">Question 3.2: When I do "make installman", the man
+pages are installed into the wrong place. Why?</A></LI>
+<LI><A HREF="#q3.3">Question 3.3: make complains that I don't have rm.
+Why?</A></LI>
+<LI><A HREF="#q3.4">Question 3.4: How do I compile a debugging version
+of the library?</A></LI>
+<LI><A HREF="#q3.5">Question 3.5: I don't like your global Makefile settings.
+How do I change them?</A></LI>
+<LI><A HREF="#q3.6">Question 3.6: Your library sucks. How do I uninstall
+it?</A></LI>
+</UL><P>
+
+<A HREF="#s4">Section 4: Configuration</A>
+
+<UL>
+<LI><A HREF="#q4.1">Question 4.1: How can I find out my computer's IP
+address?</A></LI>
+<LI><A HREF="#q4.2">Question 4.2: How can I find out the DNS servers'
+IP addresses on my network?</A></LI>
+<LI><A HREF="#q4.3">Question 4.3: I've run netsetup, but my libsocket
+programs don't use the new settings. Why?</A></LI>
+<LI><A HREF="#q4.4">Question 4.4: I use a dial-up link and my IP address
+keeps changing. How should I configure libsocket?</A></LI>
+<LI><A HREF="#q4.5">Question 4.5: My computer is on a LAN, but I use DHCP
+and my IP address keeps changing. How should I configure libsocket?</A></LI>
+</UL><P>
+
+<A HREF="#s5">Section 5: Execution</A>
+
+<UL>
+<LI><A HREF="#q5.1">Question 5.1: Why does my program using libsocket
+crash?</A></LI>
+<LI><A HREF="#q5.2">Question 5.2: Why can't my program using libsocket
+create sockets?</A></LI>
+<LI><A HREF="#q5.3">Question 5.3: Why does my program using libsocket
+stop working?</A></LI>
+</UL><P>
+
+<A HREF="#s6">Section 6: Programming with libsocket</A>
+
+<UL>
+<LI><A HREF="#q6.1">Question 6.1: Can I use libsocket with multithreading
+libraries?</A></LI>
+<LI><A HREF="#q6.2">Question 6.2: Are there any Remote Procedure Call (RPC)
+libraries for libsocket?</A></LI>
+<LI><A HREF="#q6.3">Question 6.3: I want to port a Unix program to libsocket.
+What transport protocols, etc. does it support?</A></LI>
+<LI><A HREF="#q6.4">Question 6.4: Why does gcc complain of parse errors when I
+use ioctl()?</A></LI>
+<LI><A HREF="#q6.5">Question 6.5: When I use perror() or strerror(), I don't
+get a meaningful error message for some errors. Why?</A></LI>
+</UL><P>
+
+<A HREF="#s7">Section 7: Miscellaneous Questions</A>
+
+<UL>
+<LI><A HREF="#q7.1">Question 7.1: How do I find out if I have Winsock
+2?</A></LI>
+<LI><A HREF="#q7.2">Question 7.2: How can I uninstall Winsock 2?</A></LI>
+<LI><A HREF="#q7.3">Question 7.3: How can I install Winsock 2?</A></LI>
+</UL><P>
+
+<A HREF="#s8">Section 8: Socket Programming Information</A>
+
+<P>
+
+<A HREF="#s9">Section 9: Other Networking Libraries</A>
+
+<P>
+
+<HR WIDTH="100%">
+
+<H2><A NAME="s1"></A>Section 1: Introduction</H2>
+
+<H3><A NAME="q1.1"></A>Question 1.1: What is libsocket?</H3>
+
+libsocket is a BSD-socket-style networking library for DJGPP programs running
+under Windows.
+
+<P>BSD sockets are the standard way of programming networking on Unix.
+BSD sockets are also available in a modified form on Windows platforms
+in the form of Winsock, which has many common functions. In short, if you're
+used to programming with sockets on Unix, then moving to libsocket should
+be a relatively pain-free transition.
+
+<P>libsocket uses a backdoor that Windows provides to DOS programs to use
+Windows's networking. This backdoor is the Winsock device driver, WSOCK.386
+or WSOCK.VXD.
+
+<P>libsocket also incorporates some source code from Linux, namely the
+resolver. This resolves names of the "foo.bar.com" to IP addresses like
+192.168.0.123.
+
+<H3><A NAME="q1.2"></A>Question 1.2: Who wrote libsocket?</H3>
+
+libsocket was originally put together by Indrek Mandre. Most of the work
+on this library is due to him. Unfortunately he no longer has time to look
+after libsocket, and has handed over the mantle to me, Richard Dawe. Hopefully
+I can keep it up to the high standards Indrek worked to.
+
+<P>The registry code was written by the Regdos Group.
+
+<P>For contributions, please see the <A HREF="lsck_crd.htm">credits</A>, or
+the relevant section in the libsocket manual page
+(use "<TT>man libsocket</TT>").
+
+<H3><A NAME="q1.3"></A>Question 1.3: Which versions of libsocket does this
+FAQ cover?</H3>
+
+<P>Unless the version of libsocket is mentioned, it is not relevant to the
+question. In other words, all versions of libsocket are covered.</P>
+
+<H3><A NAME="q1.4"></A>Question 1.4: I have a question that is not covered
+in the FAQ. What should I do?</H3>
+
+If the question is not in the FAQ, and there is no information about the
+problem in the documentation, or the documentation is not clear enough,
+please e-mail me and I'll try to help. I might put it in the FAQ.
+
+<P><A HREF="#toc">[Top]</A><P>
+
+<HR WIDTH="100%">
+
+<H2><A NAME="s2"></A>Section 2: Operating System Support</H2>
+
+<H3><A NAME="q2.1"></A>Question 2.1: Will libsocket work with DOS?</H3>
+
+libsocket will not work under DOS as it uses low-level Windows functionality.
+It is possible a future version may work with packet drivers, which would
+work with DOS.
+
+<H3><A NAME="q2.2"></A>Question 2.2: Will libsocket work with Windows 3.x?</H3>
+
+Whether libsocket works with Windows 3.x is not known. It should work,
+but it will require manual configuration, as it will not be able to obtain
+networking information from the registry. It will require Microsoft's TCP/IP
+stack, or another company's, to work properly, as TCP/IP support isn't
+built into any version of Windows 3.x.
+
+<H3><A NAME="q2.3"></A>Question 2.3: Will libsocket work with Windows '95?</H3>
+
+<P>Windows '95 is the platform that libsocket has been written on, and is
+hence the most tested. I have only used it on Windows '95 with Service
+Pack 1 installed - this is the original version. I do not know whether
+it works with Operating System Releases 2 or 2.1 (OSR2 and OSR2.1), but
+it should do.</P>
+
+However, if Winsock 2 is present then libsocket will not work - see
+<A HREF="#q5.1">question 5.1</A>, <A HREF="#q5.2">question 5.2</A>,
+<A HREF="#q7.1">question 7.1</A>, <A HREF="#q7.2">question 7.2</A> and
+<A HREF="#q7.3">question 7.3</A>.
+
+<H3><A NAME="q2.4"></A>Question 2.4: Will libsocket work with Windows '98?</H3>
+
+Windows '98 comes with Winsock 2 as standard. libsocket will not work -
+see <A HREF="#q5.1">question 5.1</A> and <A HREF="#q5.2">question 5.2</A>.
+
+<H3><A NAME="q2.5"></A>Question 2.5: Will libsocket work with Windows NT?</H3>
+
+<P>libsocket will not work under Windows NT and probably never will. Windows
+NT is much more securely designed, so the backdoors libsocket uses to access
+Winsock under Windows '95 simply aren't there. As with long filenames for
+DOS programs in Windows NT DOS boxes, this is unlikely to change.</P>
+
+<P>[Later: It looks like a driver to allow LFN access in NT DOS boxes has
+emerged now. However, it's still unlikely that libsocket will ever work under
+NT.]</P>
+
+<H3><A NAME="q2.6"></A>Question 2.6: Will libsocket work with Linux?</H3>
+
+<P>libsocket shouldn't work with Linux, but should compile under it. After
+all, DJGPP is a port of the GNU C compiler to DOS.</P>
+
+<A HREF="#toc">[Top]</A><P>
+
+<HR WIDTH="100%">
+
+<H2><A NAME="s3"></A>Section 3: Installation and Compilation</H2>
+
+<H3><A NAME="q3.1"></A>Question 3.1: How should I rebuild libsocket?</H3>
+
+Use the following set of commands at the DOS prompt to ensure that the
+libsocket source tree is clean, that the dependencies are correct, to compile
+all the library sources and, finally, to install the include files and
+library into the DJGPP tree:
+
+<P><TT>&nbsp;&nbsp;&nbsp; make distclean</TT>
+<BR><TT>&nbsp;&nbsp;&nbsp; make dep</TT>
+<BR><TT>&nbsp;&nbsp;&nbsp; make all</TT>
+<BR><TT>&nbsp;&nbsp;&nbsp; make install</TT><P>
+
+If you wish to compile using long filenames, then use "<TT>make lfn</TT>" too.
+If you haven't installed the man pages, you might like to "<TT>make
+installman</TT>" too. If you'd like to rebuild the HTML versions of the
+man pages, use "<TT>make htmldocs</TT>" (this will take a few minutes &amp;
+requires the source distribution).
+
+<P>To completely rebuild libsocket, you will need the standard set of ZIPs
+required to compile C programs, the GNU Fileutils (see
+<A HREF="#q3.3">question 3.3</A>), man (from man12b.zip) and Perl (from
+perl54b.zip, or <A HREF="http://www.activestate.com/">ActiveState's
+Perl for Win32</A>). If you do not wish to rebuild the HTML versions of
+the man pages, man and Perl are not required.
+
+<H3><A NAME="q3.2"></A>Question 3.2: When I do "<TT>make installman</TT>",
+the man pages are installed into the wrong place. Why?</H3>
+
+The destination for man pages is specified in Makefile.cfg. Change the
+line "<TT>MAN_PLACE = ...</TT>" so that directory pointed to contains the
+directory man/. E.g. if the man pages were to be installed into man/ off
+mymandir/ below the DJGPP directory, you change the line to "<TT>MAN_PLACE
+= $(DJDIR)/mymandir/</TT>".
+
+<H3><A NAME="q3.3"></A>Question 3.3: make complains that I don't have rm. Why?</H3>
+
+The Makefiles rely on rm to remove files. rm is part of the GNU Fileutils,
+which can be downloaded from the site where you got DJGPP. The file you
+need is fil316b.zip.
+
+<H3><A NAME="q3.4"></A>Question 3.4: How do I compile a debugging version of
+the library?</H3>
+
+<P>First of all, you will need the source distribution. After that, it depends
+which version of the library you have:</P>
+
+<UL>
+
+<LI><P><B>Version 0.7.1</B> &amp; later has Makefile targets to configure for
+debugging. Use "<TT>make debug</TT>" to generate a Makefile.cfg with debugging
+from the template file Make-cfg.in. Use "<TT>make nodebug</TT>" to turn this off.
+After generating Makefile.cfg with either of these options, rebuild the
+library using the procedure in <A HREF="#q3.1">question 3.1</A>. Note that
+the Makefile.cfg built with "<TT>make debug</TT>" passes the options "<TT>-g</TT>"
+and "<TT>-DDEBUG</TT>" to gcc, i.e. the constant DEBUG is #define'd.</P></LI>
+
+<LI><P><B>Version 0.7.0</B> &amp; earlier needs Makefile.cfg to edited, and the option
+"<TT>-g</TT>" to the "<TT>CFLAGS</TT>" line. Then rebuild the library as
+described in <A HREF="#q3.1">question 3.1</A>. If you add the option "<TT>-DDEBUG</TT>"
+to the "<TT>CFLAGS</TT>" line, then the source will fail to compile without
+editing. This can be fixed by editing the file r_opts.h, or res_options.h,
+depending on the version, and wrapping it's #define of DEBUG in an #ifndef
+... #endif, like so:</P></LI>
+
+<P><PRE>	#ifndef DEBUG
+	#define DEBUG
+	#endif</PRE></P>
+
+</UL>
+
+<H3><A NAME="q3.5">Question 3.5: I don't like your global Makefile settings.
+How do I change them?</A></H3>
+
+<P>This depends on which version of the library you have:</P>
+
+<UL>
+
+<LI><P><B>Version 0.7.1</B> &amp; later has a template global settings
+Makefile called Make-cfg.in, which should be edited to your requirements. Then
+use "<TT>make debug</TT>" or "<TT>make nodebug</TT>" to create the global
+settings Makefile, Makefile.cfg, with your settings.</P></LI>
+
+<LI><P><B>Version 0.7.0</B> &amp; earlier needs Makefile.cfg to be edited
+directly.</P></LI>
+
+</UL>
+
+<H3><A NAME="q3.6">Question 3.6: Your library sucks. How do I uninstall
+it?</A></H3>
+
+<P>If you haven't used the Makefile target "install" then no action is
+required. Otherwise, it depends on which version of the library you have:</P>
+
+<UL>
+
+<LI><P><B>Version 0.7.3</B> (&amp; later) has a Makefile target called
+"uninstall". Use "<TT>make uninstall</TT>" to uninstall, or look at its
+actions if you'd rather do it manually.</B></P></LI>
+
+<LI><P><B>Version 0.7.2 &amp; earlier</B> require manual uninstallation.
+The files to remove from the DJGPP directory are:</P>
+<UL>
+<LI>include/netdb.h
+<LI>include/winsock.h
+<LI>include/ws.h
+<LI>include/sys/socket.h
+<LI>include/arpa/inet.h
+<LI>lib/libsocke.a or lib/libsocket.a
+</UL></LI>
+
+</UL>
+
+<A HREF="#toc">[Top]</A><P>
+
+<HR WIDTH="100%">
+
+<H2><A NAME="s4"></A>Section 4: Configuration</H2>
+
+<H3><A NAME="q4.1"></A>Question 4.1: How can I find out my computer's IP address?</H3>
+
+<H3><A NAME="q4.2"></A>Question 4.2: How can I find out the DNS servers' IP
+addresses on my network?</H3>
+
+Windows '95 comes with a handy, undocumented utility called winipcfg that
+displays configuration information about all the available network interfaces.
+Click on the "More Info >>" button to display the DNS IP addresses.
+
+<H3><A NAME="q4.3"></A>Question 4.3: I've run netsetup, but my libsocket programs
+don't use the new settings. Why?</H3>
+
+<P>netsetup creates the files hosts.eg, networks.eg, host.conf and resolv.conf
+in the setup/ directory. These have to be copied to the libsocket settings
+directory. If you've set the LIBSOCKET environment variable to point to a
+directory, then copy them there. Otherwise they should be copied to the Windows
+directory (back up the current hosts and networks files!). Remember to edit
+hosts.eg and networks.eg, if necessary, and rename them to hosts and
+networks.</P>
+
+<H3><A NAME="q4.4">Question 4.4: I use a dial-up link and my IP address
+keeps changing. How should I configure libsocket?</A></H3>
+
+<H3><A NAME="q4.5">Question 4.5: My computer is on a LAN, but I use DHCP
+and my IP address keeps changing. How should I configure libsocket?</A></H3>
+
+<P>Both these connections use DHCP, which stands for <U>D</U>ynamic <U>H</U>ost
+<U>C</U>onfiguration <U>P</U>rotocol. This allocates IP addresses dynamically
+and allows them to be managed and assigned from a central point. It also allows
+other sorts of information to given out, like DNS IP addresses. Thus, if a DNS
+IP address is changed using DHCP, no manual reconfiguration of all the client
+computers is necessary.</P>
+
+<P>The problem is thus: libsocket has no way of obtaining the IP addresses
+in its auto-configuration, so it has to be told. But how do you know the IP
+addresses? Here's the solution (fudge?):</P>
+
+<UL>
+
+<LI><P>For the computer's IP address, use 127.0.0.1, the loopback address. This
+will always work. You should see two lines in the hosts file, generated by
+netsetup, like so:</P>
+<P><PRE>
+127.0.0.1	localhost
+127.0.0.1	mycomputername
+</PRE></P></LI>
+
+<LI><P>The DNS IP address is trickier. This is not really a solution, but it
+will probably work for a while. Log in a few times and note the DNS IP address
+as given by 'winipcfg' (see <A HREF="#q4.1">question 4.1</A> and
+<A HREF="#q4.2">question 4.2</A>). Then use this DNS IP address when you run
+netsetup. This technique will work until the DNS IP address changes, which
+may or may not be infrequently.</P></LI>
+
+</UL>
+
+<A HREF="#toc">[Top]</A><P>
+
+<HR WIDTH="100%">
+
+<H2><A NAME="s5"></A>Section 5: Execution</H2>
+
+<H3><A NAME="q5.1"></A>Question 5.1: Why does my program using libsocket crash?</H3>
+
+If you have Winsock 2 installed, then libsocket 0.6 and earlier will cause
+a protection fault. libsocket 0.7.0 should lead to the problem described
+in <A HREF="#q5.2">question 5.2</A> below. libsocket currently does not
+work with Winsock 2. If this is not the case, then there might be a bug
+in your program ;) See <A HREF="#q7.1">question 7.1</A>, <A HREF="#q7.2">question
+7.2</A> and <A HREF="#q7.3">question 7.3</A> for more information.
+
+<H3><A NAME="q5.2"></A>Question 5.2: Why can't my program using libsocket create
+sockets?</H3>
+
+libsocket 0.7.0 &amp; later will stop programs from creating sockets if Winsock
+2 is present, to prevent the protection faults described in
+<A HREF="#q5.1">question 5.1</A>. See <A HREF="#q7.1">question 7.1</A>,
+<A HREF="#q7.2">question 7.2</A> and <A HREF="#q7.3">question 7.3</A> for more
+information.
+
+<H3><A NAME="q5.3"></A>Question 5.3: Why does my program using libsocket stop
+working?</H3>
+
+<P>If you have killed your program by closing the command prompt it is running
+in, and then run the program in a new command prompt, then the program
+may hang or fail to bind to sockets with error 98. It seems that killing
+libsocket programs between one and four times leads to this problem. The
+only solution appears to be to restart Windows, i.e. in order to re-initialise
+WSOCK.VXD.</P>
+
+<A HREF="#toc">[Top]</A><P>
+
+<HR WIDTH="100%">
+
+<H2><A NAME="s6">Section 6: Programming with libsocket</A></H2>
+
+<H3><A NAME="q6.1">Question 6.1: Can I use libsocket with multithreading
+libraries?</A></H3>
+
+libsocket can be used with multithreading libraries for multitasking, with
+a couple of provisos. Firstly, the libsocket code is non-reentrant, which
+means only one libsocket call should be made simultaneously, otherwise a
+crash is likely and data corruption certain. Secondly, the DJGPP libraries
+are non-reentrant. This limits what one can do in threads simultaneously.<P>
+
+I looked at two multithreading libraries for DJGPP, found in the v2tk/
+directory of the DJGPP archive: jtlwp20 and pwdlwp03. The second library is
+based on (an earlier version of?) the first.<P>
+
+With jtlwp20, there appear to be two ways of stopping the libsocket functions
+being called multiply. The first method is to call
+lwpCreateMutex(<function&nbsp;name>) for all the libsocket functions you use.
+The second method is to use place lwpEnterCriticalSection() and
+lwpLeaveCriticalSection() around the code that uses libsocket functions.<P>
+
+With pwdlwp03, one has to create a semaphore using lwp_init_semaphore(),
+then wait for it to become free before using libsocket calls using
+lwp_wait_semaphore() and then release it when one's finished using
+lwp_release_semaphore().<P>
+
+Please see the multithreading libraries' documentation for more details.<P>
+
+While libsocket's code may be non-reentrant, I don't think this totally
+ruins multithreading programs. I think it would still be possible to write
+a Web server that runs well in spite of the limitations.<P>
+
+<H3><A NAME="q6.2">Question 6.2: Are there any Remote Procedure Call (RPC)
+libraries for libsocket?</A></H3>
+
+Currently, there are not. It may, however, be possible to port the Linux RPC
+code to libsocket. It should be available from any decent Linux mirror. It
+has the filename <TT>rpc-0.9.tar.Z</TT>.<P>
+
+<H3><A NAME="q6.3">Question 6.3: I want to port a Unix program to libsocket.
+What transport protocols, etc. does it support?</A></H3>
+
+I was asked this question in relation to porting BSD traceroute to libsocket.
+Unfortunately, it appears that only TCP stream (IPPROTO_TCP and SOCK_STREAM
+options) and UDP datagram (IPPROTO_UDP and SOCK_DGRAM options) sockets can
+be created with libsocket. I think this is a limitation of pre-2.0
+Winsocks. I think Winsock 2.0 allows creation of any type of socket.<P>
+
+<H3><A NAME="q6.4">Question 6.4: Why does gcc complain of parse errors when I
+use ioctl()?</A></H3>
+
+<P>DJGPP includes definitions for ioctl()'s parameters in the include file
+sys/io.h. However, they will not be defined if you include sys/io.h, as they
+are enclosed in an '<TT>#if 0 ... #endif</TT>' pair. There are three possible
+solutions to this problem:</P>
+
+<UL>
+
+<LI><P>Edit sys/io.h so it says '#if 1' instead of '#if 0'. I do not recommend
+this as it may break the compilation of many things - it certainly stops
+libsocket from compiling. Besides, editing DJGPP's standard include files has
+got to be a bad idea.</P></LI>
+
+<LI><P>Use the include file winsock.h, included with libsocket, which defines
+what you need.</P></LI>
+
+<LI><P>Wait for the next version of DJGPP, which will probably have better
+support for ioctl() (see DJGPP's File System Extensions, FSEXT). This isn't
+very helpful.</P></LI>
+
+</UL>
+
+<P>This problem affects the compilation of programs that use non-blocking
+sockets, i.e. the FIONBIO parameter for ioctl(). I would recommend including
+winsock.h to circumvent this problem.</P>
+
+<H3><A NAME="q6.5">Question 6.5: When I use perror() or strerror(), I don't
+get a meaningful error message for some errors. Why?</A></H3>
+
+<P>DJGPP's C library, libc, doesn't come with all the Unix error messages built
+in, so when you use perror() or strerror() with socket errors, no error message
+is known. libsocket provides the functions lsck_perror() and lsck_strerror(),
+which work the same way, to provide these error messages. If the error isn't
+a socket error, then it is passed to the libc perror() and strerror()
+functions. So, the solution is to replace occurrences of perror() with
+lsck_perror() and strerror() with lsck_strerror(), until libc contains all
+the error messages needed.</P>
+
+<P><A HREF="#toc">[Top]</A></P>
+
+<HR WIDTH="100%">
+
+<H2><A NAME="s7"></A>Section 7: Miscellaneous Questions</H2>
+
+<H3><A NAME="q7.1"></A>Question 7.1: How do I find out if I have Winsock 2?</H3>
+
+Look in the Windows system directory and see if there is a file there called
+WSOCK2.VXD, e.g. do "<TT>dir c:\windows\system\wsock2.vxd</TT>". If this
+file is present, then Winsock 2 has been installed.
+
+<H3><A NAME="q7.2"></A>Question 7.2: How can I uninstall Winsock 2?</H3>
+
+<P>It might not be possible to uninstall it, e.g. in the case of Windows '98.
+If the operating system originally came with Winsock 1.1 then it is possible.
+Some programs such as Sun's Java Software Development Kit (JDK) 1.1.5 install
+Winsock 2 for you.</P>
+
+If Winsock 2 has been installed, then there will be a directory called
+ws2bakup/ in your Windows directory. This directory contains a batch file
+called ws2bakup.bat that restores the Winsock 1.1 files. I do not know
+how ws2bakup.bat is supposed to be run, but I have found running it from
+Windows and then from the Command Prompt after a reboot (press F8 and then
+select the Command Prompt option when booting) seems to restore Winsock
+1.1. The batch file restores registry settings (only works under Windows)
+and copies the system files back (only works under DOS). I think if you
+run it from the Command Prompt and then in Windows, it will require an
+extra reboot as the Winsock 2 settings confuse Winsock 1.1 - this statement
+maybe incorrect as it's a while since I did this.
+
+<H3><A NAME="q7.3"></A>Question 7.3: How can I install Winsock 2?</H3>
+
+<P>The simplest way of doing this is to obtain the Winsock 2 SDK for Windows
+'95 from Microsoft's web site. This includes an install program that will
+install Winsock 2 and create the back-up described above. I <EM>know</EM> this
+works as I've been through the install-uninstall cycle several times.</P>
+
+<A HREF="#toc">[Top]</A><P>
+
+<HR WIDTH="100%">
+
+<H2><A NAME="s8"></A>Section 8: Socket Programming Information</H2>
+
+<P>This section has been moved to the <A HREF="lsck_lnk.htm#socket">libsocket
+links page</A>.</P>
+
+<P><A HREF="#toc">[Top]</A></P>
+
+<HR WIDTH="100%">
+
+<H2><A NAME="s9"></A>Section 9: Other Networking Libraries</H2>
+
+<P>This section has been moved to the <A HREF="lsck_lnk.htm#otherlibs">libsocket
+links page</A>.</P>
+
+<P><A HREF="#toc">[Top]</A></P>
+
+<HR>
+
+<P><I>The layout of this page is by Indrek Mandre, and the content is by
+<A HREF="mailto:richdawe@bigfoot.com">Richard Dawe</A>.
+
+<SCRIPT LANGUAGE="JavaScript">
+lastmod = new Date(document.lastModified);
+document.write('This page was last updated on ' + lastmod.toGMTString() + '.');
+</SCRIPT>
+
+</I></P>
+
+<!-- Rich's code ends here -->
+
+<P>
+<HR WIDTH="100%">
+
+	     </TD></TR>
+	   </TABLE>
+	</TD>
+      </TR>
+      <TR>
+        <TD colspan="2" valign="bottom">
+	  <DIV align="right">
+	    <A href="lsck_new.htm"><IMG src="lsck_l.jpg" border=0 alt="[Left]"></A>
+	    <A href="#top"><IMG SRC="lsck_u.jpg" border=0 alt="[Top]"></A>
+	    <A href="lsck_log.htm"><IMG SRC="lsck_r.jpg" border=0 alt="[Right]"></A>
+	  </DIV>
+	</TD>
+      </TR>
+    </TD></TR>
+    </TABLE>
+    </TABLE>
+    </CENTER>
+  </BODY>
+</HTML>
+

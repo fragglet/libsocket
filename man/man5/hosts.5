@@ -1,0 +1,47 @@
+.\" libsocket Copyright 1997, 1998 by Indrek Mandre
+.\" libsocket Copyright 1997, 1998 by Richard Dawe
+.\" Manual pages written by Richard Dawe
+.\"
+.TH HOSTS 5 "17 August 1998" "libsocket 0.7.3" "libsocket Reference"
+.SH NAME
+hosts \- the host name to IP address mapping file
+.SH DESCRIPTION
+This file tells the host name resolver the IP address corresponding to each
+host name. This is useful if there is no DNS server on the network. It can
+also be used if the DNS server does not have a record for a particular host
+name, but its IP address is known.
+.sp
+The file is a plain ASCII file. Comments are denoted by a hash at the start of
+a line. Each line has the following format:
+.sp
+.RS
+.B <IP address> <host name> <alias>
+.RE
+.sp
+e.g.
+.RS
+# hosts - host name to IP address translation file
+.br
+127.0.0.1   localhost
+.br
+192.168.0.2 gertrude
+.br
+192.168.0.3 herbert
+.br
+192.168.0.4 norman
+.br
+192.168.0.5 jonathon jon
+.br
+.RE
+.sp
+There should always be a line refering to
+.IR localhost .
+This is the local computer, and is always accessible.
+.sp
+Note: Windows doesn't use the aliases, so you will need multiple lines for
+the same IP address to fake aliasing.
+.SH FILES
+.IR /etc/hosts " (Linux),"
+.IR C:\eWINDOWS\eHOSTS " (Windows)"
+.SH SEE ALSO
+.BR networks (5)

@@ -1,0 +1,430 @@
+<!--
+  HTML code made by Indrek Mandre
+  Copyright <C> 1998 Indrek Mandre
+  Thank you for reading my HTML code, if you have any questions,
+  please email me: indrek@warp.edu.ee
+ -->
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN"
+   "http://www.w3.org/TR/REC-html40/loose.dtd">
+
+<HTML>
+  <HEAD>
+    <TITLE>libsocket 0.7.3: Changelog</TITLE>
+
+    <META name="author" content="Indrek Mandre">
+    <META name="copyright" content="Copyright &copy; 1998 Indrek Mandre">
+    <META name="keywords" content="libsocket,changelog">
+
+  <SCRIPT LANGUAGE="JavaScript">
+    nms  = new Array('lsck', 'new', 'faq', 'log', 'bug', 'dl', 'aut', 'crd', 'lnk');
+    imag = new Array();
+
+    for (i = 0; i < 9; i++) {
+      imag[i] = new Array();
+      imag[i][0] = new Image();
+      imag[i][1] = new Image();
+      imag[i][0].src = 'l_'  + nms[i] + '.gif';
+      imag[i][1].src = 'lm_' + nms[i] + '.gif';
+    }
+
+    function chit (i, j, k) { i.src = imag[j][k].src; }
+  </SCRIPT>
+
+  </HEAD>
+
+  <BODY bgcolor="#000000" link="#0000FF" alink="#FF0000">
+    <A name="top">
+    <CENTER>
+    <TABLE bgcolor="#FFFFFF" border="0" cellpadding="15">
+    <TR><TD align="center">
+    <TABLE border="0" cellspacing="0" cellpadding="0" bgcolor="#FFFFFF">
+      <TR>
+        <TD width="157" height="124" rowspan=2 bgcolor="#6EA6AC">&nbsp;</TD>
+	<TD colspan=2 height="19" bgcolor="#6EA6AC">&nbsp</TD>
+
+        <!--<TD width="157" height="124" rowspan="2"><IMG src="lsck_ka2.gif" alt="[-=-]"></TD>
+	<TD width="99" height="124" rowspan="2"><IMG src="lsck_ka1.gif" alt="[-=-]"></TD>
+	<TD width="10000" height="19" bgcolor="#6EA6AC">&nbsp;</TD>-->
+      </TR>
+      <TR>
+        <TD width="500" height="105"><IMG src="lsck_log.jpg" alt="[Changelog]"></TD>
+      </TR>
+      <TR>
+        <TD bgcolor="#6EA6AC" width="157" height="19">&nbsp;</TD>
+	<TD width="99" height="19" bgcolor="#6EA6AC">&nbsp</TD>
+	<TD width="500" height="19" bgcolor="#6EA6AC">&nbsp</TD>
+      </TR>
+      <TR>
+        <TD bgcolor="#6EA6AC" rowspan="2" valign="top">
+	  <CENTER>
+	  <TABLE border=0 cellspacing="10" cellpadding="5" width="150" align="center">
+	    <TR><TD><A href="lsck.htm" onMouseOver="chit(document.im0,0,1)" onMouseOut="chit(document.im0,0,0)"><IMG SRC="l_lsck.gif" NAME="im0" BORDER=0></A></TD></TR>
+	    <TR><TD><A href="lsck_new.htm" onMouseOver="chit(document.im1,1,1)" onMouseOut="chit(document.im1,1,0)"><IMG SRC="l_new.gif" NAME="im1" BORDER=0></A></TD></TR>
+	    <TR><TD><A href="lsck_faq.htm" onMouseOver="chit(document.im2,2,1)" onMouseOut="chit(document.im2,2,0)"><IMG SRC="l_faq.gif" NAME="im2" BORDER=0></A></TD></TR>
+	    <TR><TD><IMG SRC="la_log.gif" NAME="im3" BORDER=0></TD></TR>
+	    <TR><TD><A href="lsck_bug.htm" onMouseOver="chit(document.im4,4,1)" onMouseOut="chit(document.im4,4,0)"><IMG SRC="l_bug.gif" NAME="im4" BORDER=0></A></TD></TR>
+	    <TR><TD><A href="lsck_dl.htm" onMouseOver="chit(document.im5,5,1)" onMouseOut="chit(document.im5,5,0)"><IMG SRC="l_dl.gif" NAME="im5" BORDER=0></A></TD></TR>
+	    <TR><TD><A href="lsck_aut.htm" onMouseOver="chit(document.im6,6,1)" onMouseOut="chit(document.im6,6,0)"><IMG SRC="l_aut.gif" NAME="im6" BORDER=0></A></TD></TR>
+	    <TR><TD><A href="lsck_crd.htm" onMouseOver="chit(document.im7,7,1)" onMouseOut="chit(document.im7,7,0)"><IMG SRC="l_crd.gif" NAME="im7" BORDER=0></A></TD></TR>
+	    <TR><TD><A href="lsck_lnk.htm" onMouseOver="chit(document.im8,8,1)" onMouseOut="chit(document.im8,8,0)"><IMG SRC="l_lnk.gif" NAME="im8" BORDER=0></A></TD></TR>
+	    <TR><TD bgcolor="#79B6BD"><A HREF="lsck_man.htm">Library Reference</A> (~330K HTML!)</TD><TR>
+	  </TABLE>
+	  </CENTER>
+	</TD>
+        <TD colspan="2" valign="top">
+	   <TABLE border=0 cellpadding="15">
+	     <TR><TD>
+
+<!-- Content between "Rich's" markers Copyright 1997, 1998 by Richard Dawe -->
+<!-- Rich's code starts here -->
+
+<P ALIGN="CENTER"><A NAME="toc">Version:</A>
+<A HREF="#0.7.3">[0.7.3]</A>
+<A HREF="#0.7.2">[0.7.2]</A>
+<A HREF="#0.7.1">[0.7.1]</A>
+<A HREF="#0.7.0">[0.7.0]</A>
+<A HREF="#0.6">[0.6]</A>
+<A HREF="#0.5">[0.5]</A>
+<A HREF="#0.4">[0.4]</A>
+<A HREF="#0.3">[0.3]</A>
+<A HREF="#0.2">[0.2]</A></P>
+
+<HR>
+
+<H3><A NAME="0.7.3">Version 0.7.3 1998-8-18</A></H3>
+
+<UL>
+
+<LI><P>Rearranged include files so they have their own directory - lsck. These
+can be included using lines like
+"<TT>#include &lt;lsck/blah.h&gt;</TT>". The include files have been
+heavily reorganised, but existing programs shouldn't have to be
+changed.</P></LI>
+
+<LI><P>libsocket's internal functions were renamed so the prefix "<TT>ls_</TT>"
+was changed to "<TT>lsck_</TT>".</P></LI>
+
+<LI><P>Added support to netsetup for the networks file, which allows mapping
+of domain names to network IP addresses - see the man page networks(5). Also
+fixed a couple of typos in netsetup's messages.</P></LI>
+
+<LI><P>Added support for auto-configuration with Windows for Workgroups 3.11.
+The DNS IP address is determined from a section in system.ini.</P></LI>
+
+<LI><P>Restructured the library to allow addition of packet driver
+code.</P></LI>
+
+<LI><P>Added lsck_perror() and lsck_strerror() functions, which work as
+perror() and strerror(), but print/return error messages for socket errors
+too, unlike the libc versions.</P></LI>
+
+<LI><P>Bugs: Configuration files now opened in text mode rather than the
+default file mode; Winsock initialisation now uses the correct ID for
+WSOCK2.VXD rather than the old one, which was wrong; name server now defaults
+to using hosts file if host.conf is not present, rather than hanging;
+resolv_conf_getdomainname() in src/config/domname.c now looks for the
+various filename combinations possible (created long, read short, etc.);
+file extension handling of __FSEXT_ready in src/fsext.c; more checks are
+done on socket function parameters; fixed bugs in the RAS code and the DNS
+IP list code (lsck_getdnsaddrs()).</P></LI>
+
+<LI><P>Demos: The demo program demo/internal.c was renamed to demo/diag.c
+and modified to give lots of diagnostic information about libsocket's
+auto-configuration, in addition to demonstrating the internal functions.
+The demo demo/netnet.c was added to demonstrate lookups from the networks
+file. httpget can now cope with URLs without a trailing slash, e.g.
+http://myhost</P></LI>
+
+<LI><P>Makefiles: Demos now don't have their debugging information stripped.
+Added an uninstall target that removes include files and libraries from the
+DJGPP directory tree. The source distribution Makefile now creates the lib/
+directory if it does not already exist. Also fixed clean targets in top-level
+Makefiles.</P></LI>
+
+<LI><P>Removals: src/resolve/rcmd.c, src/resolve/rexec.c and
+src/resolve/rusrpass.c were removed because they are untested and probably
+won't work as they rely on functions DJGPP doesn't support (properly). They
+implement(ed) remote execution of commands. I will put these back if there
+is demand for them. The man pages for the WS_* functions were removed as the
+functions no longer exist.</P></LI>
+
+<LI><P>Documentation: Added Indrek Mandre's kewl buttons; added questions to
+the FAQ; other updates.</P></LI>
+
+</UL>
+
+<P><A HREF="#toc">[Top]</A></P>
+
+<HR>
+
+<H3><A NAME="0.7.2">Version 0.7.2 1998-6-12</A></H3>
+
+<UL>
+
+<LI><P>The library by default comes ready for building short filename
+programs - use "<TT>make lfn</TT>" to build long filename programs.</P></LI>
+
+<LI><P>Fixed read() and write(). Previously they didn't return the correct
+values for non-blocking sockets when no data was present. winsock.h is now
+installed to support non-blocking sockets properly - please see
+<A HREF="lsck_faq.htm#q3.6">question 3.6 of the FAQ</A> for more
+details.</LI></P>
+
+<LI><P>Added support for F_GETFL parameter on fcntl().</P></LI>
+
+<LI><P>Added some Winsock 2 constants to the include files.</P></LI>
+
+<LI><P>Bugs: Fixed the memory problem I introduced with last version, that
+leads to junk being returned by recv() sometimes. Also fixed send(), recv(),
+sendto(), recvfrom(), getpeername(), getsockname(), getsockopt() and
+setsockopt() to avoid data loss / rubbish being returned.</P></LI>
+
+<LI><P>Configuration: The configuration files should now be found and read,
+no matter what combination of short and long filenames they were created with
+and are being read with. libsocket now looks for several possible
+filenames.</P></LI>
+
+<LI><P>Documentation: Indrek Mandre redesigned the pages. The documentation
+on the Web site should now be the same as that in the archive, or more
+up-to-date. The HTML pages all have short filenames, and therefore can be
+viewed on any version of Windows with a browser. The latest version of
+man2html (1.2) is also included.</P></LI>
+
+<LI><P>Makefiles: Fixed demo/Makefile. Added some new targets to cope with
+short and long filename issues ("<TT>make lfn</TT>" and
+"<TT>make sfn</TT>"). Added debug and nodebug targets to binary
+distribution.</P></LI>
+
+<LI><P>Man pages: Added man pages from Linux for read(), write(), fcntl(),
+ioctl() and select(). Fixed mistakes in a couple of the libsocket man
+pages.</P></LI>
+
+</UL>
+
+<P><A HREF="#toc">[Top]</A></P>
+
+<HR>
+
+<H3><A NAME="0.7.1">Version 0.7.1 1998-5-12</A></H3>
+
+<UL>
+
+<LI><P>Fixed some ambiguities in conditions in the resolver code, so that the
+source could be compiled with gcc 2.8.0 (and later?).</P></LI>
+
+<LI><P>Added code to query the DHCP VxD, to obtain more DNS addresses
+automatically.</P></LI>
+
+<LI><P>Tidied up some of the code.</P></LI>
+
+<LI><P>Fixed many memory leaks and reduced memory usage slightly.</P></LI>
+
+<LI><P>Fixed some bugs in the DNS address obtaining code.</P></LI>
+
+<LI><P>gethostname() will no longer return spaces in host names.</P></LI>
+
+<LI><P>Fixed a bug in callvxd.c that lead to nearly *all* socket functions
+failing :(</P></LI>
+
+<LI><P>Client demo now has name resolving.</P></LI>
+
+<LI><P><A NAME="netsetup-bugfix-2"></A>Found a bug in Netsetup that created
+host.conf incorrectly when no DNS server was present, leading to the computer
+appearing to hang when resolving names. Also fixed some errors in the Netsetup
+Makefile.</P></LI>
+
+<LI><P>Slight updates to the FAQ.</P></LI>
+
+<LI><P>Added a man page for host.conf.</P></LI>
+
+<LI><P>Added two new targets, debug and nodebug, to the top-level Makefile to
+create Makefile.cfg for debugging and non-debugging builds of the
+library.</P></LI>
+
+<LI><P>Moved the library into the contrib/ tree and added manifest
+files.</P></LI>
+
+</UL>
+
+<P><A HREF="#toc">[Top]</A></P>
+
+<HR>
+
+<H3><A NAME="0.7.0">Version 0.7.0 Work-in-progress 1998-5-3</A></H3>
+
+<UL>
+
+<LI><P>Richard Dawe took over maintainance of the library.</P></LI>
+
+<LI><P>The source files renamed to have short filenames. This lead to
+successful compilation after typing "<TT>SET LFN=N</TT>" at the DOS
+prompt.</P></LI>
+
+<LI><P>The Regdos Group's registry code was incorporated, to allow automatic
+configuration using registry settings.</P></LI>
+
+<LI><P>Added Winsock 2 detection. Creation of sockets fails, in order to
+prevent protection faults.</P></LI>
+
+<LI><P>Rearranged the library, and created binary and source
+distributions.</P></LI>
+
+<LI><P>Fixed a bug in the VxD calling code, pointed out by George
+Foot (Later: This was actually a mistake.).</P></LI>
+
+<LI><P>Wrote some new documentation, including a FAQ, and updated the old
+documentation.</P></LI>
+
+<LI><P>Fixed getdomainname() to look at the environment variable
+<TT>LOCALDOMAIN</TT>, resolv.conf or the registry, so it's more likely to
+succeed.</P></LI>
+
+<LI><P>Modified WS_init() to return errors.</P></LI>
+
+<LI><P>Added support for the enviroment variable <TT>LIBSOCKET</TT>, so that
+configuration files could be placed somewhere other than in the Windows
+directory.</P></LI>
+
+<LI><P>Upgraded to the latest version of man2html, the program that converts
+man pages into HTML.</P></LI>
+
+<LI><P>Modified resit to use command-line parameters as well as prompting for
+a name (e.g. the command form "<TT>resit jimbo</TT>" now works).</P></LI>
+
+<LI><P><A NAME="netsetup-bugfix-1"></A>Fixed bug in Netsetup.</P></LI>
+
+<LI><P>Added some defines: FIONREAD, FIONBIO.</P></LI>
+
+<LI><P>Fixed socket() and accept() calls.</P></LI>
+
+<LI><P>Added select() demo, demo/select.c</P></LI>
+
+<LI><P>The library now works with C++.</P></LI>
+
+</UL>
+
+<P><A HREF="#toc">[Top]</A></P>
+
+<HR>
+
+<H3><A NAME="0.6">Version 0.6 1997-12-02</A></H3>
+
+<UL>
+
+<LI><P>Made workaround to djgpp's fsext bug, thanks to Heiko Jappe.</P></LI>
+
+<LI><P>Fixed close(), now fopen() after creating and closing sockets
+works.</P></LI>
+
+<LI><P>Added a huge amount of documentation by Richard Dawe.</P></LI>
+
+<LI><P>Added netsetup script by Richard Dawe.</P></LI>
+
+<LI><P>Lots of minor bugs fixed.</P></LI>
+
+<LI><P>Added fcntl() call and defined some new flags that I would like to see
+in future DJGPP versions: O_NDELAY and O_FNDELAY.</P></LI>
+
+</UL>
+
+<P><A HREF="#toc">[Top]</A></P>
+
+<HR>
+
+<H3><A NAME="0.5">Version 0.5 1997-10-11</A></H3>
+
+<UL>
+
+<LI><P>Fixed misfeatures in Makefiles pointed out by Laszlo Vecsey. Created one
+global Makefile.cfg.</P></LI>
+
+<LI><P>Name resolving now works.</P></LI>
+
+<LI><P>Wrote new demo resit that demonstrates name resolving.</P></LI>
+
+</UL>
+
+<P><A HREF="#toc">[Top]</A></P>
+
+<HR>
+
+<H3><A NAME="0.4">Version 0.4 1997-09-15</A></H3>
+
+<UL>
+
+<LI><P>Fixed the bugfix made in recv(). I discovered that programs crash after
+connect on many Windows '95 installations.</P></LI>
+
+</UL>
+
+<P><A HREF="#toc">[Top]</A></P>
+
+<HR>
+
+<H3><A NAME="0.3">Version 0.3 1997-08-28</A></H3>
+
+<UL>
+
+<LI><P>Fixed bug in recv()/recvfrom() (blocking and return value and EOF
+condition).</P></LI>
+
+<LI><P>connect() now waits for Windows; this means send() just after connect()
+works now.</P></LI>
+
+<LI><P>Wrote new demo httpget that gets http files from WWW
+servers.</P></LI>
+
+</UL>
+
+<P><A HREF="#toc">[Top]</A></P>
+
+<HR>
+
+<H3><A NAME="0.2">Version 0.2 1997-08-22</A></H3>
+
+<UL>
+
+<LI><P>Fixed Makefile bug when make all gave errors at demo directory.</P></LI>
+
+<LI><P>Wrote client.c and server.c as demos at demo directory.</P></LI>
+
+</UL>
+
+<P><A HREF="#toc">[Top]</A></P>
+
+<HR>
+
+<P><I>The layout of this page is by Indrek Mandre, and the content is by
+<A HREF="mailto:richdawe@bigfoot.com">Richard Dawe</A>.
+
+<SCRIPT LANGUAGE="JavaScript">
+lastmod = new Date(document.lastModified);
+document.write('This page was last updated on ' + lastmod.toGMTString() + '.');
+</SCRIPT>
+
+</I></P>
+
+<!-- Rich's code ends here -->
+
+<HR WIDTH="100%">
+	     </TD></TR>
+	   </TABLE>
+	</TD>
+      </TR>
+      <TR>
+        <TD colspan="2" valign="bottom">
+	  <DIV align="right">
+	    <A href="lsck_faq.htm"><IMG src="lsck_l.jpg" border=0 alt="[Left]"></A>
+	    <A href="#top"><IMG SRC="lsck_u.jpg" border=0 alt="[Top]"></A>
+	    <A href="lsck_bug.htm"><IMG SRC="lsck_r.jpg" border=0 alt="[Right]"></A>
+	  </DIV>
+	</TD>
+      </TR>
+    </TD></TR>
+    </TABLE>
+    </TABLE>
+    </CENTER>
+  </BODY>
+</HTML>
+

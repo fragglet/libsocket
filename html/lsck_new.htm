@@ -1,0 +1,204 @@
+<!--
+  HTML code made by Indrek Mandre
+  Copyright <C> 1998 Indrek Mandre
+  Thank you for reading my HTML code, if you have any questions,
+  please email me: indrek@warp.edu.ee
+ -->
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN"
+   "http://www.w3.org/TR/REC-html40/loose.dtd">
+
+<HTML>
+  <HEAD>
+    <TITLE>libsocket 0.7.3: News</TITLE>
+
+    <META name="author" content="Indrek Mandre">
+    <META name="copyright" content="Copyright &copy; 1998 Indrek Mandre">
+    <META name="keywords" content="libsocket,news">
+
+  <SCRIPT LANGUAGE="JavaScript">
+    nms  = new Array('lsck', 'new', 'faq', 'log', 'bug', 'dl', 'aut', 'crd', 'lnk');
+    imag = new Array();
+
+    for (i = 0; i < 9; i++) {
+      imag[i] = new Array();
+      imag[i][0] = new Image();
+      imag[i][1] = new Image();
+      imag[i][0].src = 'l_'  + nms[i] + '.gif';
+      imag[i][1].src = 'lm_' + nms[i] + '.gif';
+    }
+
+    function chit (i, j, k) { i.src = imag[j][k].src; }
+  </SCRIPT>
+
+  </HEAD>
+
+  <BODY bgcolor="#000000" link="#0000FF" alink="#FF0000">
+    <A name="top">
+    <CENTER>
+    <TABLE bgcolor="#FFFFFF" border="0" cellpadding="15">
+    <TR><TD align="center">
+    <TABLE border="0" cellspacing="0" cellpadding="0" bgcolor="#FFFFFF">
+      <TR>
+        <TD width="157" height="124" rowspan=2 bgcolor="#6EA6AC">&nbsp;</TD>
+	<TD colspan=2 height="19" bgcolor="#6EA6AC">&nbsp</TD>
+
+        <!--<TD width="157" height="124" rowspan="2"><IMG src="lsck_ka2.gif" alt="[-=-]"></TD>
+	<TD width="99" height="124" rowspan="2"><IMG src="lsck_ka1.gif" alt="[-=-]"></TD>
+	<TD width="10000" height="19" bgcolor="#6EA6AC">&nbsp;</TD>-->
+      </TR>
+      <TR>
+        <TD width="500" height="105"><IMG src="lsck_new.jpg" alt="[News]"></TD>
+      </TR>
+      <TR>
+        <TD bgcolor="#6EA6AC" width="157" height="19">&nbsp;</TD>
+	<TD width="99" height="19" bgcolor="#6EA6AC">&nbsp</TD>
+	<TD width="500" height="19" bgcolor="#6EA6AC">&nbsp</TD>
+      </TR>
+      <TR>
+        <TD bgcolor="#6EA6AC" rowspan="2" valign="top">
+	  <CENTER>
+	  <TABLE border=0 cellspacing="10" cellpadding="5" width="150" align="center">
+	    <TR><TD><A href="lsck.htm" onMouseOver="chit(document.im0,0,1)" onMouseOut="chit(document.im0,0,0)"><IMG SRC="l_lsck.gif" NAME="im0" BORDER=0></A></TD></TR>
+	    <TR><TD><IMG SRC="la_new.gif" NAME="im1" BORDER=0></TD></TR>
+	    <TR><TD><A href="lsck_faq.htm" onMouseOver="chit(document.im2,2,1)" onMouseOut="chit(document.im2,2,0)"><IMG SRC="l_faq.gif" NAME="im2" BORDER=0></A></TD></TR>
+	    <TR><TD><A href="lsck_log.htm" onMouseOver="chit(document.im3,3,1)" onMouseOut="chit(document.im3,3,0)"><IMG SRC="l_log.gif" NAME="im3" BORDER=0></A></TD></TR>
+	    <TR><TD><A href="lsck_bug.htm" onMouseOver="chit(document.im4,4,1)" onMouseOut="chit(document.im4,4,0)"><IMG SRC="l_bug.gif" NAME="im4" BORDER=0></A></TD></TR>
+	    <TR><TD><A href="lsck_dl.htm" onMouseOver="chit(document.im5,5,1)" onMouseOut="chit(document.im5,5,0)"><IMG SRC="l_dl.gif" NAME="im5" BORDER=0></A></TD></TR>
+	    <TR><TD><A href="lsck_aut.htm" onMouseOver="chit(document.im6,6,1)" onMouseOut="chit(document.im6,6,0)"><IMG SRC="l_aut.gif" NAME="im6" BORDER=0></A></TD></TR>
+	    <TR><TD><A href="lsck_crd.htm" onMouseOver="chit(document.im7,7,1)" onMouseOut="chit(document.im7,7,0)"><IMG SRC="l_crd.gif" NAME="im7" BORDER=0></A></TD></TR>
+	    <TR><TD><A href="lsck_lnk.htm" onMouseOver="chit(document.im8,8,1)" onMouseOut="chit(document.im8,8,0)"><IMG SRC="l_lnk.gif" NAME="im8" BORDER=0></A></TD></TR>
+	    <TR><TD bgcolor="#79B6BD"><A HREF="lsck_man.htm">Library Reference</A> (~330K HTML!)</TD><TR>
+	  </TABLE>
+	  </CENTER>
+	</TD>
+        <TD colspan="2" valign="top">
+	   <TABLE border=0 cellpadding="15">
+	     <TR><TD>
+
+<!-- Content between "Rich's" markers Copyright 1997, 1998 by Richard Dawe -->
+<!-- Rich's code starts here -->
+
+<H3><A NAME="1998-8-18">18<SUP>th</SUP> August 1998</A></H3>
+
+<P><STRONG>Release of version 0.7.3.</STRONG></P>
+
+<P>I have tested this version more throughly than
+previous versions, so hopefully I've caught more bugs. Please see the
+<A HREF="lsck_log.htm#0.7.3">changelog for version 0.7.3</A> for details of
+the updates.</P>
+
+<H3><A NAME="1998-7-15">15<SUP>th</SUP> July 1998</A></H3>
+
+<P>Some people have informed of a problem with libsocket where error messages
+like:</P>
+
+<P><PRE>	Nameserver: [(null)]</PRE></P>
+
+<P>are obtained. This is due to a really stupid bug of mine in the resolver
+code. Sorry.</P>
+
+<P>The problem can be fixed easily in the source, if you have the source
+distribution. In the files:
+
+<P><PRE>	contrib/lsck072/src/resolve/ghstnmad.c
+	contrib/lsck072/src/resolve/r_init.c</PRE></P>
+
+<P>change all occurrences of &quot;!access&quot; to &quot;access&quot.
+The resolver should now work correctly.</P>
+
+<P>The patches to the two distributions can be downloaded below. Please
+note that I have updated the archives, so any new downloads already have
+the fixed binaries / sources.</P>
+
+<P ALIGN=CENTER><TABLE BORDER=1>
+
+<TR ALIGN=CENTER><TH>Description</TH><TH>Contains</TH><TH>Download URL</TH></TR>
+
+<TR ALIGN=CENTER>
+<TD><A HREF="lsck072b-patch.zip">Binary distribution patch</A></TD>
+<TD>New library libsocke.a</TD>
+<TD><A HREF="lsck072b-patch.zip">http://www.geocities.com/SiliconValley/<BR>
+Lab/3216/lsck072b-patch.zip</A></TD></TR>
+
+<TR ALIGN=CENTER>
+<TD><A HREF="lsck072s-patch.zip">Source distribution patch</A></TD>
+<TD>Resolver source updates (see above)</TD>
+<TD><A HREF="lsck072s-patch.zip">http://www.geocities.com/SiliconValley/<BR>
+Lab/3216/lsck072s-patch.zip</A></TD></TR>
+
+</TABLE></P>
+
+<P>As a side note, I am making progress on libsocket 0.7.3, which should
+be out (hopefully) in 2-4 weeks. There haven't been many changes yet - I've
+been restructuring the library so I can incorporate packet driver support
+for DOS networking. The packet driver support will probably be in a later
+version though. Also, I should finally be able to test the library with a
+dial-up link.</P>
+
+<P>Thanks to those who have offered support and encouragement for
+libsocket. I just hope it works for you ;)</P>
+
+<HR>
+
+<H3><A NAME="1998-6-18">18<SUP>th</SUP> June 1998</A></H3>
+
+<P>While preparing libsocket for distribution via the DJGPP archive, I fixed
+a couple of things:</P>
+
+<UL>
+
+<LI><P>Some unnecessary files have been removed from the binary distribution -
+contrib\lsck072b\misc\man2html\* - they were only needed in the source
+distribution.</P></LI>
+
+<LI><P>The library also uses contrib\lsck072 now, instead of contrib\lsck072b or
+contrib\lsck072s.</P></LI>
+
+<LI><P>Some minor bugs were fixed in accept(), socket() and getdomainname().
+socket() will now return -1 when it doesn't have enough memory to create a socket,
+rather than a file descriptor (as it did before).</P></LI>
+
+</UL>
+
+<P>Apologies to those who tried to download libsocket, but were prevented
+as the ZIP files were corrupted. Please look at the
+<A HREF="lsck_dl.htm">libsocket Download page</A> to download the new
+versions.</P>
+
+<HR>
+
+<P><I>The layout of this page is by Indrek Mandre, and the content is by
+<A HREF="mailto:richdawe@bigfoot.com">Richard Dawe</A>.
+
+<SCRIPT LANGUAGE="JavaScript">
+lastmod = new Date(document.lastModified);
+document.write('This page was last updated on ' + lastmod.toGMTString() + '.');
+</SCRIPT>
+
+</I></P>
+
+<HR WIDTH="100%">
+
+<!-- Rich's code ends here -->
+
+	     </TD></TR>
+	   </TABLE>
+	</TD>
+      </TR>
+      <TR>
+        <TD colspan="2" valign="bottom">
+	  <DIV align="right">
+	    <A href="lsck.htm"><IMG src="lsck_l.jpg" border=0 alt="[Left]"></A>
+	    <A href="#top"><IMG SRC="lsck_u.jpg" border=0 alt="[Top]"></A>
+	    <A href="lsck_faq.htm"><IMG SRC="lsck_r.jpg" border=0 alt="[Right]"></A>
+	  </DIV>
+	</TD>
+      </TR>
+    </TD></TR>
+    </TABLE>
+    </TABLE>
+    </CENTER>
+  </BODY>
+</HTML>
+
